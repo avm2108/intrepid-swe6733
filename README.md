@@ -12,5 +12,6 @@
 -
 
 ## Product Backlog
-- Our team decided to use Jira as our primary tool for task tracking throughoout the project. The product backlog can be found here https://intrepidemerg.atlassian.net/jira/software/projects/IN/boards/1
+- Our team decided to use Jira as our primary tool for task tracking throughoout the project. The product backlog can be found here 
+https://intrepidemerg.atlassian.net/jira/software/projects/IN/boards/1/backlog
 
