@@ -32,3 +32,6 @@
 - Our team decided to use Jira as our primary tool for task tracking throughoout the project. The product backlog can be found here 
 https://intrepidemerg.atlassian.net/jira/software/projects/IN/boards/1/backlog
 
+1. Ordering Rationale 
+- Intrepid's product backlog will be ordered by stages of development, which can help the development team prioritize tasks, manage complexity, and deliver value to stakeholders more efficiently. By focusing on frontend development tasks first, the team can create a user-friendly and engaging interface that meets the needs and expectations of its target audience, while also gathering feedback and iterating quickly to improve the app's design and functionality. After ordering the backlog by stages of development each task will then be prioritized by risk, helping the team prioritize the most critical and high-risk tasks first, reducing the likelihood of delays, failures, or unforeseen issues that may impact the overall project timeline and success.
+
