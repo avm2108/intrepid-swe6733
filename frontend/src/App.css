@@ -1,0 +1,25 @@
+* { box-sizing: border-box; }
+body { padding: 0; margin: 0; }
+
+.App {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: #282c34;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+}
+
+.App-header {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #282c34;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+}

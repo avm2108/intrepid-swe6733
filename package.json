@@ -1,0 +1,26 @@
+{
+  "name": "intrepid-swe6733",
+  "version": "1.0.0",
+  "description": "Adventure-themed web app designed to connect outdoorsy people with similar interests and skill-levels and allow them to communicate and plan activities.",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run start-frontend",
+    "prepare-environment": "npm install && npm install --prefix frontend",
+    "start-frontend": "npm start --prefix frontend",
+    "test-frontend": "npm test --prefix frontend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/avm2108/intrepid-swe6733.git"
+  },
+  "author": "Jeffrey Ganulin, Justin Hall, Edward Jeninsky III, Arbern Lim, Alexis McNeill, Milly Namukasa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/avm2108/intrepid-swe6733/issues"
+  },
+  "homepage": "https://github.com/avm2108/intrepid-swe6733#readme",
+  "dependencies": {
+    "concurrently": "^7.6.0"
+  },
+  "private": true
+}

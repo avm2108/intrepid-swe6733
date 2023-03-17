@@ -1,0 +1,12 @@
+/* CustomLink.jsx */
+a,
+a:link,
+a:visited {
+    color: rgb(198, 118, 199);
+    text-decoration: none;
+}
+
+a:hover {
+    color: white;
+    text-decoration: underline;
+}
