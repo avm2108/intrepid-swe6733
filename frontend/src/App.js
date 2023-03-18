@@ -3,7 +3,6 @@ import { Toaster } from 'react-hot-toast';
 
 // Components and styles
 import './App.css';
-import CustomLink from './components/CustomLink';
 import Header from './components/Header';
 
 // Pages
@@ -22,7 +21,9 @@ function App() {
       <Toaster /> {/* This allows us to show toasts / notification popups */}
       {/* The <Routes /> component is a React Router feature that renders the first child <Route /> that matches the current URL */}
       <Header />
-      <Routes> 
+      <Routes>
+        {/* Index attribute specifies what'll be shown at the '/' url. We'll have to extend this to detect
+          if the user's logged in and show that appropriate "homepage" */}
         <Route index element={<GuestHome />} />
         {/* The path specifies the URL that'll provide the component specified in the 'element' */}
         <Route path="/login" element={<Login />} />

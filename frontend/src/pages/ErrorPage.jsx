@@ -1,3 +1,8 @@
+/**
+ * <ErrorPage /> is displayed when a user hits a URL that does not match to a route.
+ * @param {*} props 
+ * @returns {JSX.Element} <ErrorPage />
+ */
 export default function ErrorPage(props) {
     return (
         <>
