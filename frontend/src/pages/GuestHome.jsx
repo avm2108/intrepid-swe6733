@@ -1,10 +1,15 @@
 import Helmet from "react-helmet";
 import CustomLink from "../components/CustomLink";
 
-// This is a "functional component" that renders the home page for guests (users who aren't logged in)
+/**
+ * <GuestHome /> - The homepage for guests (users who aren't logged in)
+ * @param {*} props 
+ * @returns {JSX.Element} <GuestHome />
+ */
 export default function GuestHome(props) {
     return (
         <>
+            {/* Helmet allows us to add custom meta tags without serverside rendering */}
             <Helmet>
                 <title>Intrepid - Home</title>
             </Helmet>

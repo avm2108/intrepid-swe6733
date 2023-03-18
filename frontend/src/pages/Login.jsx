@@ -6,9 +6,9 @@ import CustomLink from '../components/CustomLink';
 import LabeledInput from '../components/LabeledInput';
 
 
-/** <Login />
- * @description Renders the login page
- * @params {Object} props - The props passed to the component
+/** 
+ * <Login />: Renders the login page
+ * @param {Object} props - The props passed to the component
  * @returns {JSX.Element} <Login />
  */
 export default function Login(props) {
@@ -33,7 +33,8 @@ export default function Login(props) {
 
     return (
         <>
-            <Helmet> {/* This allows us to change the page title, meta tags, etc. */}
+            {/* This allows us to change the page title, meta tags, etc. */}
+            <Helmet>
                 <title>Intrepid - Login</title>
             </Helmet>
             <h1>Login</h1>

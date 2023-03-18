@@ -5,6 +5,12 @@ import Helmet from 'react-helmet';
 import CustomLink from '../components/CustomLink';
 import LabeledInput from '../components/LabeledInput';
 
+
+/**
+ * <Register />: Renders the register page, accepting sign up information from the user
+ * @param {Object} props - The props passed to the component
+ * @returns {JSX.Element} <Register />
+ */
 function Register(props) {
     const [formState, setFormState] = useState({});
 
