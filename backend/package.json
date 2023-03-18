@@ -1,0 +1,34 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Intrepid backend for API and database operations",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/avm2108/intrepid-swe6733.git"
+  },
+  "author": "Jeffrey Ganulin, Justin Hall, Edward Jeninsky III, Arbern Lim, Alexis McNeill, Milly Namukasa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/avm2108/intrepid-swe6733/issues"
+  },
+  "homepage": "https://github.com/avm2108/intrepid-swe6733#readme",
+  "private": true,
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-validator": "^6.15.0",
+    "mongoose": "^7.0.2",
+    "nodemon": "^2.0.21",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0"
+  }
+}

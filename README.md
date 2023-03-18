@@ -37,7 +37,7 @@ A web app that connects outdoor enthusiasts with each other based on their share
 - Intrepid's stakeholders include end-users, the product owner, and the Intrepid development team members. 
 
 ## Product Backlog
-- Our team decided to use Jira as our primary tool for task tracking throughoout the project. The product backlog can be found here 
+- Our team decided to use Jira as our primary tool for task tracking throughout the project. The product backlog can be found here 
 https://intrepidemerg.atlassian.net/jira/software/projects/IN/boards/1/backlog
 
 1. Ordering Rationale 
