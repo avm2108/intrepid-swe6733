@@ -1,6 +1,16 @@
 * { box-sizing: border-box; }
 body { padding: 0; margin: 0; }
 
+:root {
+    --color-light-green: #2BEF83;
+    --color-dark-green: #24786D;
+    --color-red: #FF2D1B;
+    --color-gray: #797C7B;
+    --color-light-gray: #F2F7FB;
+    --color-black: #000e08;
+    --color-aqua: #93eee2;
+}
+
 .App {
     min-height: 100vh;
     width: 100%;
@@ -8,7 +18,7 @@ body { padding: 0; margin: 0; }
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    background-color: #282c34;
+    background-color: var(--color-black);
     color: white;
     font-family: 'Roboto', sans-serif;
 }
@@ -19,7 +29,64 @@ body { padding: 0; margin: 0; }
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    background-color: #282c34;
     color: white;
     font-family: 'Roboto', sans-serif;
+}
+
+
+
+
+/* Flexbox utility classes*/
+.flexDirectionRow {
+    display: flex;
+    flex-direction: row;
+}
+
+.flexDirectionColumn {
+    display: flex;
+    flex-direction: column;
+}
+
+.alignItemsCenter {
+    align-items: center;
+}
+
+.justifyContentCenter {
+    justify-content: center;
+}
+
+.justifyContentSpaceBetween {
+    justify-content: space-between;
+}
+
+.justifyContentSpaceAround {
+    justify-content: space-around;
+}
+
+.justifyContentSpaceEvenly {
+    justify-content: space-evenly;
+}
+
+.justifyContentFlexStart {
+    justify-content: flex-start;
+}
+
+.justifyContentFlexEnd {
+    justify-content: flex-end;
+}
+
+.alignItemsFlexStart {
+    align-items: flex-start;
+}
+
+.alignItemsFlexEnd {
+    align-items: flex-end;
+}
+
+.alignItemsStretch {
+    align-items: stretch;
+}
+
+.alignItemsBaseline {
+    align-items: baseline;
 }

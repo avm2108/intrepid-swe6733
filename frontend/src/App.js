@@ -20,7 +20,7 @@ function App() {
     <div className="App">
       <Toaster /> {/* This allows us to show toasts / notification popups */}
       {/* The <Routes /> component is a React Router feature that renders the first child <Route /> that matches the current URL */}
-      <Header />
+      {/* <Header /> */}
       <Routes>
         {/* Index attribute specifies what'll be shown at the '/' url. We'll have to extend this to detect
           if the user's logged in and show that appropriate "homepage" */}
