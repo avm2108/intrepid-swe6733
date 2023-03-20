@@ -5,7 +5,6 @@ import { toast } from 'react-hot-toast';
 import CustomLink from '../components/CustomLink';
 import LabeledInput from '../components/LabeledInput';
 
-
 /** 
  * <Login />: Renders the login page
  * @param {Object} props - The props passed to the component
@@ -44,7 +43,8 @@ export default function Login(props) {
                 <LabeledInput label="Password" id="password" name="password" type="password" value={formState.password} onChange={handleInputChange} required />
                 <button type="submit">Login</button>
             </form>
-            
+
+            {/* This is just for debugging purposes */}
             <div style={{ maxWidth: '300px', margin: '0 auto' }}>
                 <h2>Debugging</h2>
                 <p>Form state:</p>
