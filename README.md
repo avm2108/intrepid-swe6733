@@ -5,7 +5,7 @@ A web app that connects outdoor enthusiasts with each other based on their share
 ## Group 1 Members & Roles
 - Developer: Jeffrey Ganulin
 - Developer: Justin Hall
-- Developer: Edward Jesinsky II
+- Developer: Edward Jesinsky III
 - Developer: Arbern Lim
 - Product Owner: Alexis McNeill
 - Scrum Master: Milly Namukasa
