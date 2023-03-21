@@ -1,7 +1,7 @@
-node_modules
+**/node_modules
 
 # IDE specific files
-.idea/*
+**/.idea
 *.iws
 .DS_Store
 .sass-cache

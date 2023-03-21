@@ -74,3 +74,6 @@ npm start
 ```
 - This will start the frontend development server. A browser window should open automatically and navigate to http://localhost:3000. If it does not, you can manually navigate to that URL.
 - Additionally, the backend server will start on port 5000. You can test that it is running by navigating to http://localhost:5000/api/test. You should see a message that says "API is running...".
+
+# Configuration for backend
+* TODO Create template .env or give instructions on how to create one
