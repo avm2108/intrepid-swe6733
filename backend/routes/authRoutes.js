@@ -7,49 +7,12 @@ authRouter.get("/test", (req, res) => {
     res.json({ message: "Auth router works" });
 });
 
-
-authRouter.post('/login', validateWithRules, (req, res, next) => {
-    // If there were errors they would have been returned by the validateLogin middleware,
-    // so we can continue here assuming that the user's input is valid if they've reached this point
-
-    // Authenticate the user with the local strategy
-    passport.authenticate('local-login', { session: false }, (err, user, info) => {
-        // If there is an err, return it
-        if (err) {
-            return res.status(500).json({ error: err });
-        }
-
-        // If there is no user, return a message
-        if (!user) {
-            return res.status(400).json({ error: info.message });
-        }
-
-        // If authentication was successful, log the user in
-        // In our case, this will generate a JWT for the user
-        // and return it to the client via a signed cookie
-        req.login(user, { session: false }, (err) => {
-            console.log("Logging in test user: " + user);
-            // If there is an err, return it
-            if (err) {
-                return res.status(500).json({ err: err });
-            }
-
-            // If there is no err, generate a JWT for the user
-            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-            // Return the JWT to the user
-            res.cookie('jwt', { token }, { httpOnly: true, signed: true, sameSite: 'strict' });
-            res.status(200).json({ data: { user: user, token: token } });
-        });
-    });
-});
-
+// TODO: Decide on an auth strategy for login and protected endpoints
+// We have to consider that we'll also need to handle 3rd party auth, so we'll need to be able to handle multiple auth strategies
+// authRouter.post('/login', validateWithRules, );
 
 // Registration via email and password, we'll validate the user's input before executing this function via the validateRegister middleware
 authRouter.post('/register', validateWithRules, async (req, res, next) => {
-    // If there were errors they would have been returned by the validateRegister middleware, so we can continue
-    // here assuming that the user's input is valid if they've reached this point
-
     // Populating a new instance of our User model with the user's input
     const user = new User({
         name: req.body.name,
@@ -65,7 +28,8 @@ authRouter.post('/register', validateWithRules, async (req, res, next) => {
     } catch (err) {
         // If there was an error, it's likely related to failed validation, so we'll return the error messages
         console.log("Error saving user to database: " + JSON.stringify(err));
-        // If there's an 'errors' object, determine the paths that caused the errors
+        // If there's an 'errors' object, it'll be from Mongoose validation;
+        // So determine the paths that caused the errors
         // We want to format it so that we have an array of objects, each with a key of the path that caused the error
         if (err.errors) {
             // Create an array to hold the err messages
@@ -76,16 +40,21 @@ authRouter.post('/register', validateWithRules, async (req, res, next) => {
             }
             // Return the err messages
             if (errorMessages.length > 0) {
+                console.log("Error messages: " + JSON.stringify(errorMessages));
                 return res.status(500).json({ error: errorMessages });
             }
+        } else if (err.code === 11000) {
+            // If the Mongoose error was that a unique field already exists, return a message
+            // In our case the only unique field is the email address
+            return res.status(400).json({ error: { email: 'A user with that email already exists' } });
         }
         // There was an error not related to validation, return it
+        console.log("Other error in registration: " + err)
         return res.status(500).json({ error: err });
     }
 });
 
-
-// Logout the user
+// TODO: Logout the user, this'll depend on the strategy we use for login
 authRouter.post('/logout', (req, res, next) => {
     // Potentially we could have a token blacklist and add the token to it here, until it expires
     // But for now, the simplest way is to just clear the cookie
@@ -95,5 +64,5 @@ authRouter.post('/logout', (req, res, next) => {
     res.status(200).json({ message: 'User logged out successfully' });
 });
 
-// Export the router
+// Export the router to be used in our server.js file
 module.exports = authRouter;
