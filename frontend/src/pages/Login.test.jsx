@@ -57,7 +57,31 @@ describe('Login Page', () => {
                 <Login />
             </BrowserRouter>
         )
-        expect(screen.getByRole('button', { name: /login/i })).toHaveValue("")
+        expect(screen.getByRole('textbox', { name: /email/i })).toHaveValue("")
+    });
+
+    it('renders blank value of password field before user input', () => {
+        render(
+            <BrowserRouter>
+                <Login />
+            </BrowserRouter>
+        )
+        expect(screen.getByLabelText(/password/i)).toHaveValue("")
+    });
+
+    it('will not display toast when form fields are blank when submitted', async () => {
+        user.setup()
+        render(
+            <BrowserRouter>
+                <Login />
+            </BrowserRouter>
+        );
+        const emailField = screen.getByRole('textbox', { name: /email/i })
+        await user.type(emailField, "test@email.add")
+        const passwordField = screen.getByLabelText(/password/i)
+        await user.type(passwordField, "1234")
+        user.click(screen.getByRole('button', { name: /login/i }));
+        expect(toast.success).not.toHaveBeenCalledWith('You clicked the login button');
     });
 
     it('renders typed in value after user input on email field', async () => {
