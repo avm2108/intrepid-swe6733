@@ -1,0 +1,22 @@
+/* CustomLink.jsx */
+a {
+    font-family: 'Assistant';
+    font-style: normal;
+    /* font-weight: 700;
+    font-size: 14px; */
+    /* line-height: 14px; */
+    /* identical to box height, or 100% */
+
+    letter-spacing: 0.1px;
+    color: #B9C1BE;
+    text-decoration: none;
+}
+
+a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+.green {
+    color: #24786D;
+}

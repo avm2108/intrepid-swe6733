@@ -1,0 +1,25 @@
+.CTAButton {
+    font-family: Roboto;
+    font-size: 16px;
+    line-height: 16px;
+    font-weight: 400;
+    border-radius: 16px;
+    height: 48px;
+    width: 327px;
+    cursor: pointer;
+}
+
+.CTAButton:disabled {
+    background-color: #F3F6F6;
+    color: #797C7B;
+}
+
+.CTAButton-white {
+    background-color: #FFFFFF;
+    color: #000000;
+}
+
+.CTAButton-green {
+    background-color: #24786D;
+    color: #FFFFFF;
+}

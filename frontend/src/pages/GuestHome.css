@@ -1,0 +1,144 @@
+main {
+    background-color: var(--volor-black);
+    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    flex-grow: 1;
+}
+
+.bgGradient {
+    position: absolute;
+    /* width: 577.31px;
+    height: 244.52px; */
+    top: 10%;
+    width: 30%;
+    height: 30%;
+    margin: 0 auto;
+    background: linear-gradient(271.23deg, #6A1611 36.61%, #0A1832 106.23%);
+    opacity: 0.63;
+    filter: blur(74px);
+    transform: rotate(134.23deg);
+    z-index: 1;
+}
+
+.contentContainer {
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    flex-grow: 1;
+    padding: 1em;
+}
+
+.hero h4 {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 18px;
+    /* identical to box height, or 75% */
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.hero h1 {
+    font-family: 'Roboto';
+    font-weight: 500;
+    font-size: 64px;
+    line-height: 78px;
+    /* or 122% */
+    display: flex;
+    align-items: center;
+    color: #FFFFFF;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1;
+}
+
+.description {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 26px;
+    /* or 162% */
+    color: var(--color-gray);
+}
+
+.socials {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.socials-divider {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin: 20px auto;
+}
+
+.socials-divider hr {
+    display: inline-block;
+    width: 50%;
+    border: 1px solid white;
+    background: #000000;
+}
+
+.socials-divider span {
+    font-family: 'Adamina';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 14px;
+    /* identical to box height, or 100% */
+    text-align: center;
+    letter-spacing: 0.1px;
+    /* margin: 0 10px; */
+}
+
+.socials-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 50%;
+}
+
+.socials-buttons button {
+    width: 50px;
+    height: 50px;
+    background: #FFFFFF;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    display: block;
+}
+
+.existingAcctText {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 26px;
+    /* or 162% */
+    text-align: center;
+    color: var(--color-gray);
+    margin: 5px auto;
+}
