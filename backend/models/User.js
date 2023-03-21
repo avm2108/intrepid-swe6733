@@ -69,6 +69,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: [true, "Date of birth is required"],
     },
+    // The following will be defined in the User Profile flow, not during initial registration
     gender: {
         type: String,
         trim: true,
@@ -102,13 +103,14 @@ UserSchema.methods.isCorrectPassword = async function (password) {
     }
 };
 
-UserSchema.pre('save', async function (next) {
+// Before saving a new instance of the User model, hash/encrypt the password
+UserSchema.pre('save', async function(next) {
     try {
         // If password is not modified, move on
         if (!this.isModified('password')) next();
         // Otherwise, first generate salt
         const salt = await bcrypt.genSalt(10);
-        // Then hash the password using it
+        // Then hash the password using the salt
         const hashedPassword = await bcrypt.hash(this.password, salt);
         // Replace plain text password with hashed password
         this.password = hashedPassword;

@@ -25,6 +25,7 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-validator": "^6.15.0",
+    "intrepid-swe6733": "file:..",
     "mongoose": "^7.0.2",
     "nodemon": "^2.0.21",
     "passport": "^0.6.0",
