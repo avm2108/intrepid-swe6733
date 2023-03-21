@@ -37,7 +37,7 @@ A web app that connects outdoor enthusiasts with each other based on their share
 - Intrepid's stakeholders include end-users, the product owner, and the Intrepid development team members. 
 
 ## Product Backlog
-- Our team decided to use Jira as our primary tool for task tracking throughoout the project. The product backlog can be found here 
+- Our team decided to use Jira as our primary tool for task tracking throughout the project. The product backlog can be found here 
 https://intrepidemerg.atlassian.net/jira/software/projects/IN/boards/1/backlog
 
 1. Ordering Rationale 
@@ -52,6 +52,12 @@ https://intrepidemerg.atlassian.net/jira/software/projects/IN/boards/1/backlog
 ```bash
 node --version
 ```
+- [MongoDB Community Edition](https://www.mongodb.com/download-center/community)
+* Download and install MongoDB Community Edition, to have access to a local MongoDB instance.
+* You might want to download [MongoDB Compass](https://www.mongodb.com/download-center/compass) as well, to have a GUI for interacting with your local MongoDB instance. Alternatively there are some plugins to interface with it in VS Code and other IDEs.
+* Once installed, create a new database titled `intrepid`; this is where the application will store its data.
+* User information will be stored in a collection titled `users`, and it should automatically create this for you on your first
+registration of a test user, however if you encounter errors you may need to create this collection manually.
 
 ## Installation
 1. Clone the repository
@@ -60,10 +66,14 @@ node --version
 ```bash
 npm run prepare-environment
 ```
-- This will install the dependencies needed by the frontend (and backend TBD).
+- This will install the dependencies needed by the frontend and the backend.
 3. Start the application
 * From the root project directory run:
 ```bash
 npm start
 ```
 - This will start the frontend development server. A browser window should open automatically and navigate to http://localhost:3000. If it does not, you can manually navigate to that URL.
+- Additionally, the backend server will start on port 5000. You can test that it is running by navigating to http://localhost:5000/api/test. You should see a message that says "API is running...".
+
+# Configuration for backend
+* TODO Create template .env or give instructions on how to create one

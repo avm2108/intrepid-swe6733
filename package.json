@@ -4,9 +4,10 @@
   "description": "Adventure-themed web app designed to connect outdoorsy people with similar interests and skill-levels and allow them to communicate and plan activities.",
   "main": "index.js",
   "scripts": {
-    "start": "npm run start-frontend",
-    "prepare-environment": "npm install && npm install --prefix frontend",
+    "start": "concurrently \"npm run start-frontend\" \"npm run start-backend\"",
+    "prepare-environment": "npm install && npm install --prefix frontend && npm install --prefix backend",
     "start-frontend": "npm start --prefix frontend",
+    "start-backend": "npm start --prefix backend",
     "test-frontend": "npm test --prefix frontend"
   },
   "repository": {
