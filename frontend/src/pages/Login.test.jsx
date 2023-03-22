@@ -51,7 +51,7 @@ describe('Login Page', () => {
         expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument()
     });
 
-    it('renders blank value of email field before user input', () => {
+    it('renders blank value for email field before user input', () => {
         render(
             <BrowserRouter>
                 <Login />
@@ -60,7 +60,7 @@ describe('Login Page', () => {
         expect(screen.getByRole('textbox', { name: /email/i })).toHaveValue("")
     });
 
-    it('renders blank value of password field before user input', () => {
+    it('renders blank value for password field before user input', () => {
         render(
             <BrowserRouter>
                 <Login />
@@ -76,12 +76,8 @@ describe('Login Page', () => {
                 <Login />
             </BrowserRouter>
         );
-        const emailField = screen.getByRole('textbox', { name: /email/i })
-        await user.type(emailField, "test@email.add")
-        const passwordField = screen.getByLabelText(/password/i)
-        await user.type(passwordField, "1234")
-        user.click(screen.getByRole('button', { name: /login/i }));
-        expect(toast.success).not.toHaveBeenCalledWith('You clicked the login button');
+        await user.click(screen.getByRole('button', { name: /login/i }));
+        expect(toast).not.toHaveBeenCalled();
     });
 
     it('renders typed in value after user input on email field', async () => {
@@ -93,7 +89,7 @@ describe('Login Page', () => {
         )
         const emailField = screen.getByRole('textbox', { name: /email/i })
         await user.type(emailField, "test@email.add")
-        expect(screen.getByRole('textbox', { name: /email/i })).toHaveValue("test@email.add")
+        expect(emailField).toHaveValue("test@email.add")
     });
 
     it('renders typed in value after user input on password field', async () => {
@@ -105,7 +101,7 @@ describe('Login Page', () => {
         )
         const passwordField = screen.getByLabelText(/password/i)
         await user.type(passwordField, "1234")
-        expect(screen.getByLabelText(/password/i)).toHaveValue("1234")
+        expect(passwordField).toHaveValue("1234")
     });
 
     it('displays toast when form is submitted', () => {
