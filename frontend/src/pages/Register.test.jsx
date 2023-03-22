@@ -15,6 +15,7 @@ describe('Register Page', () => {
         )
         expect(screen.getByRole('heading', { name: /register/i })).toBeInTheDocument()
     });
+
     it('renders link to login if have account', () => {
         render(
             <BrowserRouter>
