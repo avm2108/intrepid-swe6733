@@ -5,7 +5,7 @@
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
+    "@testing-library/user-event": "^14.0.0",
     "intrepid-swe6733": "file:..",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -22,14 +22,24 @@
     "build": "react-scripts build",
     "test": "react-scripts test --verbose",
     "testNoInteractive": "react-scripts test --verbose --watchAll=false",
-    "coverage": "react-scripts test --coverage --verbose",
+    "coverage": "react-scripts test --verbose --coverage --watchAll --collectCoverageFrom='src/pages/**/*.{js,jsx}' ----collectCoverageFrom='src/pages/**/*.{types,stories,constants,test,spec}.{js,jsx}'",
     "coverageNoInteractive": "react-scripts test --coverage --verbose --watchAll=false"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
+      "react-app/jest",
+      "plugin:jest-dom/recommended"
     ]
+  },
+  "jest": {
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "statements": 80
+      }
+    }
   },
   "browserslist": {
     "production": [
