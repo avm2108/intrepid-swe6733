@@ -33,9 +33,8 @@ const authRouter = require("./routes/authRoutes");
 // Activate our API endpoints
 app.use("/api/auth", authRouter);
 
-
 app.get("/test", (req, res) => {
-    res.send("Hello World");
+    res.send("API is running...");
 });
 
 // Serve static assets if in production
