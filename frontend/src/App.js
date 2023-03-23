@@ -10,6 +10,7 @@ import GuestHome from './pages/GuestHome';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ErrorPage from './pages/ErrorPage';
+import ReduxSandbox from './pages/ReduxSandbox';
 
 /**
  * <App /> is the root component of the app. It renders the root layout and child routes.
@@ -28,6 +29,8 @@ function App() {
         {/* The path specifies the URL that'll provide the component specified in the 'element' */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        {/*-- Example page consuming data from Redux store --*/}
+        <Route path="/reduxsandbox" element={<ReduxSandbox />} />
         {/* The * wildcard path matches any URL that doesn't match any other <Route /> */}
         <Route path="*" element={<ErrorPage />} />
       </Routes>
