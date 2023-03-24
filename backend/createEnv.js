@@ -1,4 +1,4 @@
-// Using NodeJS to craate .env file in this directory
+// This script creates a .env file with a template for the environment variables
 // This'll be run automatically in the dependencies installation process
 // If you want to run it manually, run the following command in the terminal
 // node createEnv.js
@@ -6,8 +6,7 @@
 const fs = require('fs');
 
 const template =
-    `
-# Specify the port on which the Express server will listen
+`# Specify the port on which the Express server will listen
 PORT=5000
 # Create a random string as a secret key for the JSON Web Token
 JWT_SECRET=
