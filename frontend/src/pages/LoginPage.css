@@ -1,0 +1,113 @@
+main {
+    background-color: var(--volor-black);
+    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    flex-grow: 1;
+}
+
+.bgLogin {
+    position: absolute;
+    top: 10%;
+    width: 30%;
+    height: 30%;
+    margin: 0 auto;
+    background: linear-gradient(271.23deg, #6A1611 36.61%, #0A1832 106.23%);
+    opacity: 0.63;
+    filter: blur(74px);
+    transform: rotate(134.23deg);
+    z-index: 1;
+}
+
+.contentContainer {
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    flex-grow: 0.0;
+    padding: 1em;
+}
+
+.logintittle {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 200;
+    font-size: 32px;
+    line-height: 18px;
+    text-align: center;
+    color: white;
+}
+
+
+.noAccount {
+    font-size: 28px;
+    font-family: 'Roboto';
+    font-weight: 200;
+}
+
+.emailHeader {
+    font-family: 'Roboto';
+    color: white;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 24px;
+    line-height: 24px;
+    text-align: center;
+}
+
+.passwordheader {
+    font-family: 'Roboto';
+    color: white;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 24px;
+    line-height: 24px;
+    text-align: center;
+}
+
+.forgotPassword {
+    font-family: 'Roboto';
+    color: whitesmoke;
+    font-size: 24px;
+    font-weight: 200;
+    text-align: center;
+    display: flex;
+
+
+}
+
+.label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    border-bottom: 32px;
+}
+
+.input[type="password"] {
+    padding: 10px;
+    border: 1px solid;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.input[type="password"]:focus {
+    outline: none;
+    border-color: red;
+    box-shadow: 0 0 5px red;
+}
+
+.submit {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    font-weight: bolder;
+    border-radius: 32px;
+}

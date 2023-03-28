@@ -5,6 +5,8 @@ import { toast } from 'react-hot-toast';
 import CustomLink from '../components/CustomLink';
 import LabeledInput from '../components/LabeledInput';
 
+import "./LoginPage.css";
+
 /** 
  * <Login />: Renders the login page
  * @param {Object} props - The props passed to the component
@@ -35,21 +37,42 @@ export default function Login(props) {
             {/* This allows us to change the page title, meta tags, etc. */}
             <Helmet>
                 <title>Intrepid - Login</title>
-            </Helmet>
-            <h1>Login</h1>
-            <p>Don't have an account yet? <CustomLink to="/register">Register today.</CustomLink></p>
-            <form onSubmit={handleSubmit}>
-                <LabeledInput label="Email" id="email" name="email" type="email" value={formState.email} onChange={handleInputChange} required />
-                <LabeledInput label="Password" id="password" name="password" type="password" value={formState.password} onChange={handleInputChange} required />
-                <button type="submit">Login</button>
-            </form>
+                <script src="https://kit.fontawesome.com/37ce2b2559.js" crossorigin="anonymous"></script>
+            </Helmet >
 
-            {/* This is just for debugging purposes */}
-            <div style={{ maxWidth: '300px', margin: '0 auto' }}>
-                <h2>Debugging</h2>
-                <p>Form state:</p>
-                <pre>{JSON.stringify(formState, null, 2)}</pre>
-            </div>
+            <main>
+                <div className="bgLogin"></div>
+                <div className="contentContainer">
+                    <div className="logintittle">
+                        <h1>Login</h1>
+                    </div>
+                    <div className="noAccount">
+                        <p>Don't have an account yet? <CustomLink to="/register">Register today.</CustomLink></p>
+                    </div>
+                    <form onSubmit={handleSubmit}>
+                        <div className="emailHeader">
+                            <LabeledInput label="Email" id="email" name="email" type="email" value={formState.email} onChange={handleInputChange} required />
+                        </div>
+
+                        <LabeledInput className="inputArea"
+                            label="Password" id="password" name="password" type="password" value={formState.password} onChange={handleInputChange} required />
+
+                        <button type="submit">Login</button>
+
+                    </form>
+
+                    <div className='forgotPassword'>
+                        <h6>Forgot password?</h6>
+                    </div>
+
+                    {/* This is just for debugging purposes */}
+                    <div style={{ maxWidth: '300px', margin: '0 auto' }}>
+                        <h2>Debugging</h2>
+                        <p>Form state:</p>
+                        <pre>{JSON.stringify(formState, null, 2)}</pre>
+                    </div>
+                </div>
+            </main >
         </>
     )
 }
