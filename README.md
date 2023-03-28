@@ -11,6 +11,7 @@ A web app that connects outdoor enthusiasts with each other based on their share
 - Scrum Master: Milly Namukasa
 
 ## Technology Stack
+- Communication: Microsoft Teams
 - Frontend: React, JavaScript, HTML, CSS, ...TBD
 - Backend: TBD (Node.js, Express ??)
 - Database: TBD (MongoDB ??)
@@ -39,6 +40,7 @@ A web app that connects outdoor enthusiasts with each other based on their share
 ## Product Backlog
 - Our team decided to use Jira as our primary tool for task tracking throughout the project. The product backlog can be found here 
 https://intrepidemerg.atlassian.net/jira/software/projects/IN/boards/1/backlog
+- Team kanban board: https://intrepidemerg.atlassian.net/jira/software/projects/IN/boards/1
 
 1. Ordering Rationale 
 - Intrepid's product backlog will be ordered by stages of development, which can help the development team prioritize tasks, manage complexity, and deliver value to stakeholders more efficiently. By focusing on frontend development tasks first, the team can create a user-friendly and engaging interface that meets the needs and expectations of its target audience, while also gathering feedback and iterating quickly to improve the app's design and functionality. After ordering the backlog by stages of development each task will then be prioritized by risk, helping the team prioritize the most critical and high-risk tasks first, reducing the likelihood of delays, failures, or unforeseen issues that may impact the overall project timeline and success.
