@@ -2,7 +2,7 @@ import Helmet from "react-helmet";
 import CustomLink from "../components/CustomLink";
 import CTAButton from "../components/CTAButton";
 
-import "./GuestHome.css";
+import styles from "./GuestHome.module.css";
 
 /**
  * <GuestHome /> - The homepage for guests (users who aren't logged in)
@@ -18,17 +18,17 @@ export default function GuestHome(props) {
                 {/* Give us access to the FA icons */}
                 <script src="https://kit.fontawesome.com/37ce2b2559.js" crossorigin="anonymous"></script>
             </Helmet>
-            <main>
-                <div className="bgGradient"></div>
-                <div className="contentContainer">
-                    <div className="hero">
+            <main className={styles.main}>
+                <div className={styles.bgGradient}></div>
+                <div className={styles.contentContainer}>
+                    <div className={styles.hero}>
                         <h4>Intrepid</h4>
                         <h1>Where adventurers connect</h1>
                     </div>
-                    <div className="content">
-                        <div className="description">Our dating app is great for connecting with adventurers just like yourself!</div>
-                        <div className="socials">
-                            <div className="socials-buttons">
+                    <div className={styles.hero}>
+                        <div className={styles.description}>Our dating app is great for connecting with adventurers just like yourself!</div>
+                        <div className={styles.socials}>
+                            <div className={styles.socialsButtons}>
                                 <button>
                                     <i className="fab fa-facebook-f" title="Sign up with Facebook"></i>
                                 </button>
@@ -39,15 +39,15 @@ export default function GuestHome(props) {
                                     <i className="fab fa-apple" title="Sign up with Apple"></i>
                                 </button>
                             </div>
-                            <div className="socials-divider">
+                            <div className={styles.socialsDivider}>
                                 <hr /><span>OR</span><hr />
                             </div>
                             <div>
-                                <CTAButton className="CTAButton-white">
+                                <CTAButton>
                                     <CustomLink style={{ display: "block", color: 'var(--color-black)' }} to="/register">Sign up with email</CustomLink>
                                 </CTAButton>
                                 <br />
-                                <div className="existingAcctText">Existing account? <CustomLink to="/login">Login</CustomLink></div>
+                                <div className={styles.existingAcctText}>Existing account? <CustomLink to="/login">Login</CustomLink></div>
                             </div>
                         </div>
                     </div>

@@ -1,3 +1,5 @@
+import styles from "./LabeledInput.module.css";
+
 /**
  * LabeledInput component for forms, consisting of a label and a specified input
  * @param {string props.id} ID - The ID of the input, used to identify it
@@ -25,7 +27,7 @@ export default function LabeledInput(props) {
     let orientationStyle = orientation === "horizontal" ? { display: "flex", flexDirection: "row", alignItems: "center" } : { display: "flex", flexDirection: "column", alignItems: "flex-start" };
 
     return (
-        <div key={"container"+id} className={"LabeledInput " + (containerClassName ||"")} style={{ ...containerStyle, ...orientationStyle }}>
+        <div key={"container" + id} className={styles.LabeledInput + (containerClassName ? ` ${containerClassName}` : "")} style={{ ...containerStyle, ...orientationStyle }}>
             <label htmlFor={id} className={labelClassName} style={labelStyle}>{label}</label>
             {(type === "textarea") ?
                 <textarea disabled={!!disabled} key={id} id={id} name={id} defaultValue={defaultValue} placeholder={placeholder} className={inputClassName} style={inputStyle} required={!!required} {...rest} />

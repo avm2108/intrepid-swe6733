@@ -1,5 +1,6 @@
-main {
-    background-color: var(--volor-black);
+.main {
+    background-color: var(--color-black);
+    color: white;
     margin: 0 auto;
     width: 100%;
     height: 100%;
@@ -27,11 +28,12 @@ main {
 
 .contentContainer {
     z-index: 200;
+    margin: 2% auto;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    flex-grow: 1;
+    flex-grow: 0.75;
     padding: 1em;
 }
 
@@ -84,7 +86,7 @@ main {
     margin-top: 20px;
 }
 
-.socials-divider {
+.socialsDivider {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -93,14 +95,14 @@ main {
     margin: 20px auto;
 }
 
-.socials-divider hr {
+.socialsDivider hr {
     display: inline-block;
     width: 50%;
     border: 1px solid white;
     background: #000000;
 }
 
-.socials-divider span {
+.socialsDivider span {
     font-family: 'Adamina';
     font-style: normal;
     font-weight: 400;
@@ -112,7 +114,7 @@ main {
     /* margin: 0 10px; */
 }
 
-.socials-buttons {
+.socialsButtons {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -120,7 +122,7 @@ main {
     width: 50%;
 }
 
-.socials-buttons button {
+.socialsButtons button {
     width: 50px;
     height: 50px;
     background: #FFFFFF;
