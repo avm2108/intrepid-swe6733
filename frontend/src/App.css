@@ -1,5 +1,11 @@
-* { box-sizing: border-box; }
-body { padding: 0; margin: 0; }
+* {
+    box-sizing: border-box;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+}
 
 :root {
     --color-light-green: #2BEF83;
@@ -18,8 +24,6 @@ body { padding: 0; margin: 0; }
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    background-color: var(--color-black);
-    color: white;
     font-family: 'Roboto', sans-serif;
 }
 
@@ -32,9 +36,6 @@ body { padding: 0; margin: 0; }
     color: white;
     font-family: 'Roboto', sans-serif;
 }
-
-
-
 
 /* Flexbox utility classes*/
 .flexDirectionRow {
@@ -90,3 +91,14 @@ body { padding: 0; margin: 0; }
 .alignItemsBaseline {
     align-items: baseline;
 }
+/* End flexbox utility classes */
+
+/* Generic utility classes */
+.width-100 {
+    width: 100%;
+}
+
+.centerText {
+    text-align: center;
+}
+/* End utility classes */

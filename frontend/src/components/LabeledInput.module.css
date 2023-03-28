@@ -1,0 +1,25 @@
+.LabeledInput input {
+    outline: 0;
+    border: 0;
+    margin: 5px;
+    padding: 2px;
+    min-height: 30px;
+    min-width: 300px;
+    border-bottom: 2px solid #CDD1D0;
+    background-color: white;
+}
+
+.LabeledInput input:focus {
+    outline: 0;
+    border-radius: 7px;
+    border-bottom: 1px solid var(--color-light-green);
+    background-color: var(--color-light-gray);
+}
+
+.LabeledInput label {
+    color: var(--color-dark-green);
+    font-family: "Assistant";
+    font-size: 14px;
+    font-weight: 700;
+    margin-top: 1em;
+}

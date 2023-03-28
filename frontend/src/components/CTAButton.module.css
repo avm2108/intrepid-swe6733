@@ -2,11 +2,13 @@
     font-family: Roboto;
     font-size: 16px;
     line-height: 16px;
-    font-weight: 400;
+    font-weight: 700;
     border-radius: 16px;
     height: 48px;
-    width: 327px;
+    width: 20.438em;
     cursor: pointer;
+    border: 0;
+    outline: 0;
 }
 
 .CTAButton:disabled {
