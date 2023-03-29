@@ -74,9 +74,64 @@ npm start
 - This will start the frontend development server. A browser window should open automatically and navigate to http://localhost:3000. If it does not, you can manually navigate to that URL.
 
  # Daily Scrum
+  Jeffrey Ganulin
+    What was done
+    Updating the ReadMe for building instructions and useful instructions for configurations
+    What to be done
+    - Perform code-reivew on unit test 
+    - Discuss models needed and the ERD in place or the back end
+    No blockers
+    
+Edward Jesinsky III
+ What was done
+   - Secure database
+   - Building the schema
+ What to do
+   - Continue building the schema 
+   - set-up the crud end points to be used for the API
+    No blockers
+    
+Justin Hall
+ What was done
+  - Research how to implement the UI for the registration page
+ What to be done
+  - Continue with research on React and implement the changes necessary
+   No blockers
+    
+ Arbern Lim
+   What was done
+     - Test for Login, Registration and Guest Pages
+     - Made code coverage available
+   What to be done
+    - Set up for Redux State Management
+  NO HUDDLE
+  
+ Milly Namukasa
+  What was done 
+   - Research on NodeJS and how to implement the Login UI
+   - Set up the coding environment
+  What has to be done
+    - Implement the Login page UI
+     No blockers
+ 
+ Alexis McNeil
+   What was done.
+     - Finished up the wireframes 
+     - Pair programming with Milly
+  What was done
+     - Implement changes from the wireframes a
+     - Set up the user profile.
+ 
+ No blockers
+    
+    
+    
+    
+    
  - Link https://youtu.be/2xIdpS4ja2I
  
- #Sprint Review
+ # Sprint Review
+ 
  - Link https://youtu.be/MmpQmlcEAao 
  
  # Sprint Retrospective 
