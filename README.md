@@ -97,7 +97,7 @@ Edward Jesinsky III
     No blockers
     
 Justin Hall
- What was done
+What was done
   - Research how to implement the UI for the registration page
   
  What to be done
@@ -106,11 +106,14 @@ Justin Hall
    No blockers
     
  Arbern Lim
-   What was done
-     - Test for Login, Registration and Guest Pages
-     - Made code coverage available
+ What was done
+- Test for Login, Registration and Guest Pages
+- Made code coverage available
+
    What to be done
-    - Set up for Redux State Management
+   - Set up for Redux State Management
+   
+   
   NO HUDDLE
   
  Milly Namukasa
