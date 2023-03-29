@@ -75,11 +75,16 @@ npm start
 
  # Daily Scrum
   Jeffrey Ganulin
+  
     What was done
-    Updating the ReadMe for building instructions and useful instructions for configurations
+    
+   - Updating the ReadMe for building instructions and useful instructions for configurations
+  
     What to be done
+    
     - Perform code-reivew on unit test 
     - Discuss models needed and the ERD in place or the back end
+    
     No blockers
     
 Edward Jesinsky III
@@ -116,12 +121,13 @@ Justin Hall
  
  Alexis McNeil
  
-   What was done
-    - Finished up the wireframes
-      - Pair programming with Milly
+   What was done 
+   - Finished up the wireframes
+   - Pair Programming with Milly
+   
   What was done
-     - Implement changes from the wireframes a
-     - Set up the user profile.
+  - Implement changes from the wireframes 
+  - Set up the user profile.
  
  No blockers
     
