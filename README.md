@@ -121,7 +121,8 @@ What was done
    - Research on NodeJS and how to implement the Login UI
    - Set up the coding environment
   What has to be done
-    - Implement the Login page UI
+  - Implement the Login page UI
+  
      No blockers
  
  Alexis McNeil
