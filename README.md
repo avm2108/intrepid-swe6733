@@ -107,12 +107,11 @@ What was done
     
  Arbern Lim
  What was done
-- Test for Login, Registration and Guest Pages
+- Unit Tests for Login, Registration and Guest Pages
 - Made code coverage available
 
    What to be done
    - Set up for Redux State Management
-   
    
   No hurdles
   
