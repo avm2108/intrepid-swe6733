@@ -11,6 +11,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import ErrorPage from './pages/ErrorPage';
 import ReduxSandbox from './pages/ReduxSandbox';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 /**
  * <App /> is the root component of the app. It renders the root layout and child routes.
@@ -29,6 +31,8 @@ function App() {
         {/* The path specifies the URL that'll provide the component specified in the 'element' */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/reset-password/:key" element={<ResetPassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         {/*-- Example page consuming data from Redux store --*/}
         <Route path="/reduxsandbox" element={<ReduxSandbox />} />
         {/* The * wildcard path matches any URL that doesn't match any other <Route /> */}
