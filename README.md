@@ -72,3 +72,14 @@ npm run prepare-environment
 npm start
 ```
 - This will start the frontend development server. A browser window should open automatically and navigate to http://localhost:3000. If it does not, you can manually navigate to that URL.
+
+ ## Daily Scrum
+ - Link https://youtu.be/2xIdpS4ja2I
+ 
+ ## Sprint Review
+ - Link https://youtu.be/MmpQmlcEAao 
+ 
+ ## Sprint Retrospective 
+ - Link https://youtu.be/J0DoE9CHe0w
+ 
+ 
