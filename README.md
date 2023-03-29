@@ -115,9 +115,10 @@ Justin Hall
      No blockers
  
  Alexis McNeil
-   What was done.
-     - Finished up the wireframes 
-     - Pair programming with Milly
+ 
+   What was done
+    - Finished up the wireframes
+      - Pair programming with Milly
   What was done
      - Implement changes from the wireframes a
      - Set up the user profile.
