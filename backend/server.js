@@ -29,9 +29,11 @@ app.disable("x-powered-by");
 
 // Import our API endpoint definitions
 const authRouter = require("./routes/authRoutes");
+const publicRouter = require("./routes/publicRoutes");
 
 // Activate our API endpoints
 app.use("/api/auth", authRouter);
+app.use("/api", publicRouter);
 
 app.get("/test", (req, res) => {
     res.send("API is running...");
