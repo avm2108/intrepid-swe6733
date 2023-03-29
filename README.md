@@ -114,7 +114,7 @@ What was done
    - Set up for Redux State Management
    
    
-  NO HUDDLE
+  No hurdles
   
  Milly Namukasa
   What was done 
