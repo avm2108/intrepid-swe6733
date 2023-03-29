@@ -99,8 +99,10 @@ Edward Jesinsky III
 Justin Hall
  What was done
   - Research how to implement the UI for the registration page
+  
  What to be done
   - Continue with research on React and implement the changes necessary
+  
    No blockers
     
  Arbern Lim
@@ -130,9 +132,6 @@ Justin Hall
   - Set up the user profile.
  
  No blockers
-    
-    
-    
     
     
  - Link https://youtu.be/2xIdpS4ja2I
