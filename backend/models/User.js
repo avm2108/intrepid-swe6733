@@ -1,50 +1,8 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const { ProfileSchema } = require("./Profile");
+const { SocialAccountSchema } = require("/SocialAccount");
 
-// Define the Location schema
-const LocationSchema = new mongoose.Schema({
-    city: {
-        type: String,
-        // required: true,
-        trim: true
-    },
-    state: {
-        type: String,
-        // required: true,
-        trim: true
-    },
-    country: {
-        type: String,
-        // required: true,
-        trim: true
-    }
-}, { _id: false }); // Don't create an _id for this subdocument
-
-// Define the Interest schema
-// We should probably extract this (into a separate model) and define a central set of allowed activities
-// And then the user can have references to the activity in that set combined with their skill level
-// That way we don't have to have a bunch of duplicate data with names like "hiking" and "Hiking" and "HIKING"
-const InterestSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-        trim: true
-        // enum: ["hiking", "biking", "swimming", "running", "yoga", "pilates", "weightlifting", "rock climbing", "bouldering", "ice climbing", "mountaineering", "backpacking", "camping", "skiing", "snowboarding", "snowshoeing", "snowmo
-    },
-    // I'm thinking this could be a little icon that appears next to the activity name, definitely optional
-    image: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    skillLevel: {
-        type: Number,
-        required: true,
-        trim: true
-    }
-}, { _id: false });
-
-// Define the User schema
 const UserSchema = new mongoose.Schema({
     email: {
         type: String,
@@ -69,29 +27,15 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: [true, "Date of birth is required"],
     },
-    // The following will be defined in the User Profile flow, not during initial registration
-    gender: {
-        type: String,
-        trim: true,
+    profile: {
+        type: ProfileSchema,
     },
-    location: {
-        type: LocationSchema,
+    socialAccounts: {
+        type: [SocialAccountSchema],
     },
-    profilePicture: {
-        type: String,
-        trim: true,
-        default: ""
-    },
-    bio: {
-        type: String,
-        trim: true,
-        default: "",
-        maxlength: 200
-    },
-    interests: {
-        type: [InterestSchema],
-        trim: true,
-        default: []
+    verifiedAccount: {
+        type: Boolean,
+        default: false  
     },
 });
 
