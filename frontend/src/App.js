@@ -13,6 +13,7 @@ import ErrorPage from './pages/ErrorPage';
 import ReduxSandbox from './pages/ReduxSandbox';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import { MatchPage } from './pages/MatchPage';
 
 /**
  * <App /> is the root component of the app. It renders the root layout and child routes.
@@ -35,6 +36,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         {/*-- Example page consuming data from Redux store --*/}
         <Route path="/reduxsandbox" element={<ReduxSandbox />} />
+        <Route path="/match-page" element={<MatchPage />} />
         {/* The * wildcard path matches any URL that doesn't match any other <Route /> */}
         <Route path="*" element={<ErrorPage />} />
       </Routes>
