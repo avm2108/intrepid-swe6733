@@ -90,22 +90,31 @@ npm start
     No blockers
     
 **Edward Jesinsky III**
- What was done
-   - Secure database
-   - Building the schema
- What to do
+  What was done
+  
+  - Secure database
+  
+  - Building the schema
+ 
+  What to do
+   
    - Continue building the schema 
-   - set-up the crud end points to be used for the API
-    No blockers
+   
+   - Set-up the CRUD end points to be used for the API
+    
+  No blockers
     
 **Justin Hall**
-What was done
+  
+  What was done
+  
   - Research how to implement the UI for the registration page
   
- What to be done
+  What to be done
+  
   - Continue with research on React and implement the changes necessary
   
-   No blockers
+  No blockers
     
  **Arbern Lim**
  What was done
@@ -115,30 +124,37 @@ What was done
    What to be done
    - Set up for Redux State Management
    
-  No hurdles
+  No blockers
   
  **Milly Namukasa**
+ 
   What was done 
+   
    - Research on NodeJS and how to implement the Login UI
+   
    - Set up the coding environment
    
   What has to be done
+  
   - Implement the Login page UI
   
-     No blockers
+  No blockers
  
  **Alexis McNeill**
  
    What was done 
+   
    - Finished up the wireframes
+   
    - Pair Programming with Milly
    
   What was done
+  
   - Implement changes from the wireframes 
+  
   - Set up the user profile.
  
- No blockers
-    
+  No blockers
     
  - Link https://youtu.be/2xIdpS4ja2I
  
