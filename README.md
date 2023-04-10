@@ -73,8 +73,10 @@ npm start
 ```
 - This will start the frontend development server. A browser window should open automatically and navigate to http://localhost:3000. If it does not, you can manually navigate to that URL.
 
- # Daily Scrum
-  Jeffrey Ganulin
+ # Sprint One 
+ 
+ ## Daily Scrum
+  **Jeffrey Ganulin**
   
     What was done
     
@@ -87,7 +89,7 @@ npm start
     
     No blockers
     
-Edward Jesinsky III
+**Edward Jesinsky III**
  What was done
    - Secure database
    - Building the schema
@@ -96,7 +98,7 @@ Edward Jesinsky III
    - set-up the crud end points to be used for the API
     No blockers
     
-Justin Hall
+**Justin Hall**
 What was done
   - Research how to implement the UI for the registration page
   
@@ -105,7 +107,7 @@ What was done
   
    No blockers
     
- Arbern Lim
+ **Arbern Lim**
  What was done
 - Unit Tests for Login, Registration and Guest Pages
 - Made code coverage available
@@ -115,7 +117,7 @@ What was done
    
   No hurdles
   
- Milly Namukasa
+ **Milly Namukasa**
   What was done 
    - Research on NodeJS and how to implement the Login UI
    - Set up the coding environment
@@ -125,7 +127,7 @@ What was done
   
      No blockers
  
- Alexis McNeil
+ **Alexis McNeill**
  
    What was done 
    - Finished up the wireframes
@@ -140,11 +142,11 @@ What was done
     
  - Link https://youtu.be/2xIdpS4ja2I
  
- # Sprint Review
+ ## Sprint 1 Review
  
  - Link https://youtu.be/MmpQmlcEAao 
  
- # Sprint Retrospective 
+ ## Sprint 1 Retrospective 
  - Link https://youtu.be/J0DoE9CHe0w
  
  
