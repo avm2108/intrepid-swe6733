@@ -6,11 +6,41 @@ const { generateCsrf, verifyCsrf } = require('../services/csrfProtection');
 const User = require('../models/User');
 const { ProfileSchema } = require('../models/Profile');
 
-// TODO: We'll have to decide how to incorporate viewing another user's profile, i.e. what the route structure will be
 // TODO: Add validation for the profile create and update routes
 // TODO: Handle image uploads
+
+/** 
+ * @route   GET /api/profile/:id
+ * @desc    Get the profile of the user with the given ID
+ * @access  Private
+ * @param  {String} id - The ID of the user whose profile we want to get
+ * @returns {Object} - JSON object containing user's profile info
+ */
+profileRouter.get('/:id', async (req, res, next) => {
+    // Attempt to find the user with the given ID
+    try {
+        const user = await User.findById(req.params.id);
+        if (user) {
+            // If the user exists, return their profile
+            return res.status(200).json({
+                profile: user.profile
+            });
+        } else {
+            // If the user doesn't exist, return an error
+            return res.status(404).json({
+                error: "User profile not found"
+            });
+        }
+    } catch (err) {
+        console.log("Error getting user profile: ", err);
+        return res.status(500).json({
+            error: "There was an error getting the user profile, please try again later"
+        });
+    }
+});
+
 /**
- * @route   GET /profile
+ * @route   GET ./api/profile
  * @desc    Get the current user's profile
  * @access  Private
  * @returns {Object} - JSON object containing user's profile info
@@ -32,13 +62,13 @@ profileRouter.get('/', verifyCsrf, passport.authenticate('jwt-strategy', { sessi
 });
 
 /**
- * @route   POST /profile
+ * @route   POST /api/profile
  * @desc    Create a new profile for the current user
  * @access  Private
  * @returns {Object} - JSON object containing user's profile info
- * @body    {String?} gender - The user's gender
+ * @body    {String} gender - The user's gender
  * @body    {String?} bio - The user's bio
- * @body    {Object?} location - The user's location
+ * @body    {Object} location - The user's location
  * @body    -- {String} location.city - The user's city
  * @body    -- {String} location.state - The user's state
  * @body    -- {String} location.country - The user's country
@@ -47,17 +77,13 @@ profileRouter.get('/', verifyCsrf, passport.authenticate('jwt-strategy', { sessi
  * @body    -- {String} image[i].file - The image's URL/path
  * @body    -- {String} image[i].caption - The image's caption/desc.
  * @body    -- {Number} image[i].position - The index of the image in the array
- * @body    {Object?} interests[] - The user's interests
- * @body    -- {String} interests[i].interest - The interest's name
- * @body    -- {Number} interests[i].skillLevel - The interest's skill level
- * @body    -- {Number} interests[i].yearsExperience - The interest's years of experience
- * @body    -- {String} interests[i].description - Any additional info about the user's interest
- * @body    {Object?} preferences - The user's preferences
- * @body    -- {String[]?} gender - The genders the user is interested in
- * @body    -- {Object?} ageRange - The age range the user is interested in
+ * @body    {String[]} interests - The user's interests
+ * @body    {Object} preferences - The user's preferences
+ * @body    -- {String[]} gender - The genders the user is interested in
+ * @body    -- {Object} ageRange - The age range the user is interested in
  * @body    ---- {Number} ageRange.min - The minimum age the user is interested in
  * @body    ---- {Number} ageRange.max - The maximum age the user is interested in
- * @body    -- {Object?} distance - The distance between users the user is interested in
+ * @body    -- {Object} distance - The distance between users the user is interested in
  * @body    ---- {Number} distance.min - The minimum distance the user is interested in
  * @body    ---- {Number} distance.max - The maximum distance the user is interested in
  */
@@ -95,6 +121,7 @@ profileRouter.post('/', verifyCsrf, passport.authenticate('jwt-strategy', { sess
         } catch (err) {
             console.log("Error updating profile: ", err);
             if (err.errors) {
+                const errorMessages = {};
                 // Loop through the errors object
                 for (const key in err.errors) {
                     errorMessages[key] = err.errors[key].message;
@@ -114,26 +141,23 @@ profileRouter.post('/', verifyCsrf, passport.authenticate('jwt-strategy', { sess
 });
 
 /**
- * @route   PUT /profile
+ * @route   PUT /api/profile
  * @desc    Update the current user's profile
  * @access  Private
  * @returns {Object} - JSON object containing user's profile info
+ 
  * @body    {String} gender - The user's gender
  * @body    {String?} bio - The user's bio
  * @body    {Object} location - The user's location
  * @body    -- {String} location.city - The user's city
  * @body    -- {String} location.state - The user's state
  * @body    -- {String} location.country - The user's country
- * @body    -- {String?} location.coordinates - The user's coordinates
+ * @body    -- {String} location.coordinates - The user's coordinates
  * @body    {Object?} profilePictures[] - The user's images
  * @body    -- {String} image[i].file - The image's URL/path
  * @body    -- {String} image[i].caption - The image's caption/desc.
  * @body    -- {Number} image[i].position - The index of the image in the array
- * @body    {Object} interests[] - The user's interests
- * @body    -- {String} interests[i].interest - The interest's name
- * @body    -- {Number} interests[i].skillLevel - The interest's skill level
- * @body    -- {Number} interests[i].yearsExperience - The interest's years of experience
- * @body    -- {String} interests[i].description - Any additional info about the user's interest
+ * @body    {String[]} interests - The user's interests
  * @body    {Object} preferences - The user's preferences
  * @body    -- {String[]} gender - The genders the user is interested in
  * @body    -- {Object} ageRange - The age range the user is interested in
@@ -172,9 +196,18 @@ profileRouter.put('/', verifyCsrf, passport.authenticate('jwt-strategy', { sessi
     } catch (err) {
         console.log("Error updating profile: ", err);
         if (err.errors) {
+            const errorMessages = {};
             // Loop through the Mongoose errors object
             for (const key in err.errors) {
-                errorMessages[key] = err.errors[key].message;
+                // We need to format the error differently if the error is due to a nested object
+                // Such as in the case of an invalid interest the error would look like "profile.interests.1.name"
+                // But we want to return the error as "interests": "Invalid interest name"
+                if (key.includes(".")) {
+                    const nestedKey = key.split(".")[1];
+                    errorMessages[nestedKey] = err.errors[key].message;
+                } else {
+                    errorMessages[key] = err.errors[key].message;
+                }
             }
             // Return the err messages if there are any
             if (Object.keys(errorMessages).length > 0) {

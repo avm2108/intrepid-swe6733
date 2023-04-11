@@ -27,6 +27,7 @@ const PreferencesSchema = new Schema({
     ageRange: {
         type: AgeRangeSchema,
         required: false,
+        _id: false
     },
     distance: {
         type: Number,

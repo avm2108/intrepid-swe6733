@@ -3,9 +3,50 @@ const passport = require('passport');
 const { verifyCsrf } = require('../services/csrfProtection');
 const User = require('../models/User');
 
-// TODO: Documentation
 // TODO: Social media provider acct binding
 
+/**
+ * @route   GET /api/account/:id
+ * @desc    Get a given user's account details based on their ID
+ * @access  Private
+ * @param   {string} id - The user's ID
+ * @returns {object} user - The user's account details
+ */
+accountRouter.get('/:id', verifyCsrf, passport.authenticate('jwt-strategy', { session: false }), async (req, res, next) => {
+    // Attempt to find the user by their ID
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({
+                message: "No user with that ID found"
+            });
+        }
+        // Exclude the password field from the response
+        res.status(200).json({
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                dateOfBirth: user.dateOfBirth,
+            }
+        });
+    } catch (err) {
+        console.log("Error getting user by ID: ", err);
+        return res.status(500).json({
+            message: "There was an error getting the user's account details, please try again later"
+        });
+    }
+});
+
+/**
+ * @route   PUT /api/account/password
+ * @desc    Update the current user's password
+ * @access  Private
+ * @param   {string} oldPassword - The user's current password
+ * @param   {string} newPassword - The user's new password
+ * @param   {string} confirmPassword - The user's new password, repeated to confirm it
+ * @returns {object} message - A message indicating whether the password was updated successfully
+ */
 accountRouter.put("/password", verifyCsrf, passport.authenticate("jwt-strategy", { session: false }), async (req, res, next) => {
     if (!req.user) {
         return res.status(401).json({
@@ -40,7 +81,12 @@ accountRouter.put("/password", verifyCsrf, passport.authenticate("jwt-strategy",
     }
 });
 
-// Get the current user's account-related data
+/**
+ * @route   GET /api/account
+ * @desc    Get the current user's account details
+ * @access  Private
+ * @returns {object} user - The user's account details
+ */
 accountRouter.get('/', verifyCsrf, passport.authenticate('jwt-strategy', { session: false }), async (req, res, next) => {
     // If the user is logged in, req.user will be populated with the user's data
     // If the user is not logged in, req.user will be undefined
@@ -62,7 +108,15 @@ accountRouter.get('/', verifyCsrf, passport.authenticate('jwt-strategy', { sessi
     }
 });
 
-// Update the current user's account-related data
+/**
+ * @route   PUT /api/account
+ * @desc    Update the current user's account details
+ * @access  Private
+ * @param   {string} name - The user's name
+ * @param   {string} email - The user's email address
+ * @param   {string} dateOfBirth - The user's date of birth
+ * @returns {object} user - The user's updated account details
+ */
 accountRouter.put('/', verifyCsrf, passport.authenticate("jwt-strategy", { session: false }), async (req, res, next) => {
     // If the user is logged in, req.user will be populated with the user's data
     // If the user is not logged in, req.user will be undefined
@@ -125,8 +179,14 @@ accountRouter.put('/', verifyCsrf, passport.authenticate("jwt-strategy", { sessi
     }
 });
 
-// Delete the current user's account
-accountRouter.delete('/', verifyCsrf, passport.authenticate("jwt-strategy", { session: false }), async (req, res, next) => {
+/**
+ * @route   POST /api/account/delete
+ * @desc    Delete the current user's account
+ * @access  Private
+ * @param   {string} password - The user's password
+ * @returns {object} message - A message indicating whether the account was deleted successfully
+ */
+accountRouter.post('/delete', verifyCsrf, passport.authenticate("jwt-strategy", { session: false }), async (req, res, next) => {
     // If the user is logged in, req.user will be populated with the user's data
     // If the user is not logged in, req.user will be undefined
     if (!req.user) {
@@ -148,7 +208,7 @@ accountRouter.delete('/', verifyCsrf, passport.authenticate("jwt-strategy", { se
         } else {
             // The password is incorrect, so we can't delete the user's account
             return res.status(401).json({
-                message: "Incorrect password"
+                message: "You entered an incorrect password"
             });
         }
     } catch (err) {
