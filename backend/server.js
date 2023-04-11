@@ -14,12 +14,12 @@ require('dotenv').config();
 const app = express();
 
 // Define any middleware, each request will go through these/have their functionality or processing applied
+// Enable cookies to be parsed, and use the secret defined in our environment variables to sign/decrypt them
+app.use(cookieParser(process.env.COOKIE_SECRET));
+
 // Enable request bodies in either json or urlencoded format to be parsed
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Enable cookies to be parsed, and use the secret defined in our environment variables to sign/decrypt them
-app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // Enable CORS, and allow credentials (cookies, tokens, etc.) to be passed; ideally limit it to only the client's origin
 app.use(cors({ credentials: true }));
@@ -29,15 +29,15 @@ app.disable("x-powered-by");
 
 // Import our API endpoint definitions
 const authRouter = require("./routes/authRoutes");
+const accountRouter = require("./routes/accountRoutes");
+const profileRouter = require("./routes/profileRoutes");
 const publicRouter = require("./routes/publicRoutes");
 
 // Activate our API endpoints
 app.use("/api/auth", authRouter);
+app.use("/api/account", accountRouter);
+app.use("/api/profile", profileRouter);
 app.use("/api", publicRouter);
-
-app.get("/test", (req, res) => {
-    res.send("API is running...");
-});
 
 // Serve static assets if in production
 /* if (process.env.NODE_ENV === "production") {
@@ -52,7 +52,7 @@ app.get("/test", (req, res) => {
 
 // Start the server
 dbConnect().then(() => {
-    app.listen(process.env.PORT, () => {
+    app.listen(process.env.PORT || 5000, () => {
         console.log(`Server running on port ${process.env.PORT}`);
     });
 }).catch(err => {

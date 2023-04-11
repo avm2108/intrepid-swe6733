@@ -1,11 +1,14 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const { ProfileSchema } = require("./Profile");
-const { SocialAccountSchema } = require("/SocialAccount");
+const ProfileSchema = require("./Profile");
+const SocialAccountSchema = require("./SocialAccount");
 
 const UserSchema = new mongoose.Schema({
     email: {
         type: String,
+        pattern: [/\S+@\S+\.\S+/, "Please enter a valid email address"],
+        minlength: [5, "Email must be at least 5 characters"],
+        maxlength: [50, "Email must be less than 50 characters"],
         required: [true, "Email is required"],
         trim: true,
         unique: [true, "An account with this email already exists"],
@@ -14,14 +17,14 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: [true, "Password is required"],
         trim: true,
-        minlength: 8
+        minlength: [8, "Password must be at least 8 characters"],
     },
     name: {
         type: String,
         required: [true, "Name is required"],
         trim: true,
-        minlength: 3,
-        maxlength: 50
+        minlength: [3, "Name must be at least 3 characters"],
+        maxlength: [50, "Name must be less than 50 characters"],
     },
     dateOfBirth: {
         type: String,
@@ -29,17 +32,31 @@ const UserSchema = new mongoose.Schema({
     },
     profile: {
         type: ProfileSchema,
+        _id: false,
     },
     socialAccounts: {
         type: [SocialAccountSchema],
+        _id: false,
     },
-    verifiedAccount: {
-        type: Boolean,
-        default: false  
+    // TODO: Is this necessary for the MVP?
+    // verifiedAccount: {
+    //     type: Boolean,
+    //     default: false  
+    // },
+    // Don't return the __v field when querying the database
+    __v: {
+        type: Number,
+        select: false
     },
+/*     likedUsers: {
+        type: [objectId],
+        ref: "users",
+        default: [],
+        _id: false,
+    }, */
 });
 
-UserSchema.methods.isCorrectPassword = async function (password) {
+UserSchema.methods.isValidPassword = async function (password) {
     try {
         return await bcrypt.compare(password, this.password);
     } catch (error) {
@@ -64,4 +81,4 @@ UserSchema.pre('save', async function(next) {
     }
 });
 
-module.exports = mongoose.model("User", UserSchema);
+module.exports = User = mongoose.model("users", UserSchema);

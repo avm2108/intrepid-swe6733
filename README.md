@@ -15,9 +15,11 @@ The application is viewable in its current state at: http://intrepid.jgproductio
 
 ## Technology Stack
 - Communication: Microsoft Teams
-- Frontend: React, JavaScript, HTML, CSS, ...TBD
-- Backend: TBD (Node.js, Express ??)
-- Database: TBD (MongoDB ??)
+- Project Management: Jira
+- Version Control: Git
+- Frontend: React, JavaScript, HTML, CSS
+- Backend: Node.js, Express
+- Database: MongoDB via Mongoose for Node
 - External APIs: Social-media Providers TBD
 
 ## Product Vision
@@ -48,8 +50,6 @@ https://intrepidemerg.atlassian.net/jira/software/projects/IN/boards/1/backlog
 1. Ordering Rationale 
 - Intrepid's product backlog will be ordered by stages of development, which can help the development team prioritize tasks, manage complexity, and deliver value to stakeholders more efficiently. By focusing on frontend development tasks first, the team can create a user-friendly and engaging interface that meets the needs and expectations of its target audience, while also gathering feedback and iterating quickly to improve the app's design and functionality. After ordering the backlog by stages of development each task will then be prioritized by risk, helping the team prioritize the most critical and high-risk tasks first, reducing the likelihood of delays, failures, or unforeseen issues that may impact the overall project timeline and success.
 
-........
-
 # Building and Running the Application
 ## Prerequisites
 - [Node.js](https://nodejs.org/en/download/)
@@ -57,6 +57,12 @@ https://intrepidemerg.atlassian.net/jira/software/projects/IN/boards/1/backlog
 ```bash
 node --version
 ```
+- [MongoDB Community Edition](https://www.mongodb.com/download-center/community)
+* Download and install MongoDB Community Edition, to have access to a local MongoDB instance.
+* You might want to download [MongoDB Compass](https://www.mongodb.com/download-center/compass) as well, to have a GUI for interacting with your local MongoDB instance. Alternatively there are some plugins to interface with it in VS Code and other IDEs.
+* Once installed, create a new database titled `intrepid`; this is where the application will store its data.
+* User information will be stored in a collection titled `users`, and it should automatically create this for you on your first
+registration of a test user, however if you encounter errors you may need to create this collection manually.
 
 ## Installation
 1. Clone the repository
@@ -66,103 +72,70 @@ node --version
 npm run prepare-environment
 ```
 - This will install the dependencies needed by the frontend and the backend.
-3. Start the application
+3. The previous step will also create a ".env" configuration file in the root of the backend directory. This file contains environmental variables that are used by the backend server, and as each developer will have different values for these variables, it is not included in the repository. The .env file holds fields by default to specify the port on which the backend server will run, the MongoDB connection string, and the secret key used to sign JWTs and cookies. You will need to fill in these fields with the appropriate values for your local environment.
+4. Start the application
 * From the root project directory run:
 ```bash
 npm start
 ```
 - This will start the frontend development server. A browser window should open automatically and navigate to http://localhost:3000. If it does not, you can manually navigate to that URL.
+- Additionally, the backend server will start on port 5000 by default. You can test that it is running by navigating to http://localhost:5000/api/test. You should see a message that says "API is running...".
 
- # Sprint One 
- 
- ## Daily Scrum
-  **Jeffrey Ganulin**
-  
-    What was done
-    
-   - Updating the ReadMe for building instructions and useful instructions for configurations
-  
-    What to be done
-    
-    - Perform code-reivew on unit test 
-    - Discuss models needed and the ERD in place or the back end
-    
-    No blockers
-    
+# Sprint One 
+## Daily Scrum
+- Link https://youtu.be/2xIdpS4ja2I
+
+**Jeffrey Ganulin**
+* What was done:
+  - Updating the ReadMe for building instructions and useful instructions for configurations
+* What to be done:
+  - Perform code-reivew on unit test 
+  - Discuss models needed and the ERD in place or the back end
+* No blockers
+
 **Edward Jesinsky III**
-  What was done
-  
+* What was done:
   - Secure database
-  
   - Building the schema
- 
-  What to do
-   
-   - Continue building the schema 
-   
-   - Set-up the CRUD end points to be used for the API
-    
-  No blockers
-    
-**Justin Hall**
-  
-  What was done
-  
-  - Research how to implement the UI for the registration page
-  
-  What to be done
-  
-  - Continue with research on React and implement the changes necessary
-  
-  No blockers
-    
- **Arbern Lim**
- What was done
-- Unit Tests for Login, Registration and Guest Pages
-- Made code coverage available
+* What to do:
+  - Continue building the schema 
+  - Set-up the CRUD end points to be used for the API  
+* No blockers
 
-   What to be done
-   - Set up for Redux State Management
-   
-  No blockers
-  
- **Milly Namukasa**
- 
-  What was done 
-   
-   - Research on NodeJS and how to implement the Login UI
-   
-   - Set up the coding environment
-   
-  What has to be done
-  
+**Justin Hall**
+* What was done:  
+  - Research how to implement the UI for the registration page
+* What to be done:  
+  - Continue with research on React and implement the changes necessary
+* No blockers
+
+**Arbern Lim**
+* What was done:
+  - Unit Tests for Login, Registration and Guest Pages
+  - Made code coverage available
+* What to be done:
+  - Set up for Redux State Management
+* No blockers
+
+**Milly Namukasa**
+* What was done: 
+  - Research on NodeJS and how to implement the Login UI
+  - Set up the coding environment
+* What has to be done:
   - Implement the Login page UI
-  
-  No blockers
- 
- **Alexis McNeill**
- 
-   What was done 
-   
-   - Finished up the wireframes
-   
-   - Pair Programming with Milly
-   
-  What was done
-  
+* No blockers
+
+**Alexis McNeill**
+* What was done:
+  - Finished up the wireframes
+  - Pair Programming with Milly
+* What was done:
   - Implement changes from the wireframes 
-  
-  - Set up the user profile.
- 
-  No blockers
-    
- - Link https://youtu.be/2xIdpS4ja2I
- 
- ## Sprint 1 Review
- 
- - Link https://youtu.be/MmpQmlcEAao 
- 
- ## Sprint 1 Retrospective 
- - Link https://youtu.be/J0DoE9CHe0w
- 
- 
+  - Set up the user profile UI
+* No blockers
+
+## Sprint 1 Review
+- Link https://youtu.be/MmpQmlcEAao 
+
+## Sprint 1 Retrospective 
+- Link https://youtu.be/J0DoE9CHe0w

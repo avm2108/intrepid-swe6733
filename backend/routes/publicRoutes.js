@@ -2,6 +2,10 @@ const publicRouter = require('express').Router();
 const validateWithRules = require('../services/validation');
 const User = require('../models/User');
 
+publicRouter.get("/test", (req, res) => {
+   res.send("API is running...");
+});
+
 publicRouter.post("/forgot-password", (req, res) => {
  // generate one time key
  // store key in database with expiration

@@ -20,4 +20,4 @@ const ProfileImageSchema = new mongoose.Schema({
     }
 });
 
-module.exports = { mongoose.model("ProfileImage", ProfileImageSchema) as ProfileImageModel, ProfileImageSchema };
+module.exports = ProfileImageSchema;

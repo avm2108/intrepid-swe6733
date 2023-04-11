@@ -5,7 +5,7 @@ const dbConnect = async () => {
     await mongoose.connect(process.env.MONGODB_URI,
         {
             useNewUrlParser: true,
-            family: 4,
+            family: 4, // Using IPv6 has caused issues with Mongoose in the past
             useUnifiedTopology: true,
             serverSelectionTimeoutMS: process.env.MONGODB_TIMEOUT,
         })
