@@ -72,12 +72,8 @@ jobs:
             - v1-dependencies-{{ checksum "package-lock.json" }}
             - v1-dependencies-
       - run:
-          name: "Install jest-junit"
-          command: |
-            npm install --save-dev jest-junit
-      - run:
-          name: Run tests with JUnit as reporter
-          command: jest --ci --runInBand --reporters=default --reporters=jest-junit
+          name: Run unit tests
+          command: npm run test-CI
           environment:
             JEST_JUNIT_OUTPUT_DIR: ./test-results/
       - store_test_results:

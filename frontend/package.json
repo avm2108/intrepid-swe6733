@@ -10,6 +10,7 @@
     "axios": "^1.3.5",
     "eslint-plugin-jest-dom": "^4.0.3",
     "intrepid-swe6733": "file:..",
+    "jest-junit": "^15.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
@@ -30,7 +31,8 @@
     "test": "react-scripts test --verbose",
     "testNoInteractive": "react-scripts test --verbose --watchAll=false",
     "coverage": "react-scripts test --verbose --coverage --watchAll --collectCoverageFrom='src/pages/**/*.{js,jsx}' ----collectCoverageFrom='src/pages/**/*.{types,stories,constants,test,spec}.{js,jsx}'",
-    "coverageNoInteractive": "react-scripts test --coverage --verbose --watchAll=false"
+    "coverageNoInteractive": "react-scripts test --coverage --verbose --watchAll=false",
+    "test-CI": "react-scripts test --verbose --ci --runInBand --reporters=default --reporters=jest-junit"
   },
   "eslintConfig": {
     "extends": [
