@@ -63,9 +63,10 @@ jobs:
     docker:
       - image: cimg/node:18.12.1
     resource_class: large
-    working_directory: ~/project/frontend
+    working_directory: ~/project/
     steps:
-      # - checkout
+      - checkout
+      - run: cd frontend
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package-lock.json" }}
@@ -88,7 +89,7 @@ jobs:
     # parallelism: 2
   build-backend:
     docker:
-      - image: circleci/node:18.12.1
+      - image: cimg/node:18.12.1
     resource_class: small
     working_directory: ~/project/
     steps:
