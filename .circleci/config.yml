@@ -65,12 +65,12 @@ jobs:
             npm run test-CI
             ls -la
           environment:
-            JEST_JUNIT_OUTPUT_DIR: /project/frontend/test-results/
-            TEST_REPORT_PATH: /project/frontend/test-results/
+            JEST_JUNIT_OUTPUT_DIR: ~/project/frontend/test-results/
+            TEST_REPORT_PATH: ~/project/frontend/test-results/
       - store_test_results:
-          path: /project/frontend/
+          path: ~/project/frontend/
       - store_artifacts:
-          path: /project/frontend/
+          path: ~/project/frontend/
           destination: junit.xml
       - save_cache:
           paths:
