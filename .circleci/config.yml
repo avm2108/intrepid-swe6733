@@ -60,18 +60,16 @@ jobs:
           command: |
             cd frontend
             ls -la
-            cat package.json
             echo "Running frontend unit tests"
             npm run test-CI
-            ls -la
           environment:
             JEST_JUNIT_OUTPUT_DIR: ~/project/frontend/test-results/
             TEST_REPORT_PATH: ~/project/frontend/test-results/
+      - run: |
+          cd ~/project/frontend
+          ls -la
       - store_test_results:
-          path: ~/project/frontend/test-results/
-      - store_artifacts:
-          path: ~/project/frontend/test-results/
-          destination: junit.xml
+          path: ~/project/frontend/
       - save_cache:
           paths:
             - node_modules
