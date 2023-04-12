@@ -66,7 +66,6 @@ jobs:
     working_directory: ~/project/
     steps:
       - checkout
-      - run: cd frontend
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package-lock.json" }}
@@ -74,13 +73,14 @@ jobs:
       - run:
           name: Run unit tests
           command: |
+            cd frontend
             ls -la
-            cat 'package.json'
+            cat package.json
             npm run test-CI
           environment:
-            JEST_JUNIT_OUTPUT_DIR: ./test-results/
+            JEST_JUNIT_OUTPUT_DIR: ../test-results/
       - store_test_results:
-          path: ./test-results/
+          path: ../test-results/
       - save_cache:
           paths:
             - node_modules
