@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const { UserSchema } = require("./User");
+const UserSchema = require("./User");
+const { chatMessageSchema } = require("./ChatMessage");
 
+// TODO: How are we planning to keep track of a match that one person has accepted while waiting on the other person to accept?
 const MatchSchema = new mongoose.Schema({
     user1: {
         type: UserSchema,
@@ -22,7 +23,13 @@ const MatchSchema = new mongoose.Schema({
         type: Boolean,
         required: false,
         trim: true
-    }
+    },
+    // In a way the chats for a particular match could be a subdocument of the match
+/*     chats: {
+        type: [chatMessageSchema],
+        required: false,
+        trim: true
+    } */
 });
 
-module.exports = { mongoose.model("Match", MatchSchema) as MatchModel, MatchSchema };
+module.exports = { Match: mongoose.model("matches", MatchSchema), MatchSchema: MatchSchema };

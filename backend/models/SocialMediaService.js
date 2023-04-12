@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
 
 const SocialMediaServiceSchema = new mongoose.Schema({
     serviceName: {
@@ -29,4 +28,4 @@ const SocialMediaServiceSchema = new mongoose.Schema({
     }
 });
 
-module.exports = { mongoose.model("SocialMediaService", SocialMediaServiceSchema) as SocialMediaServiceModel, SocialMediaServiceSchema };
+module.exports = { SocialMediaService: mongoose.model("socialMediaServices", SocialMediaServiceSchema), SocialMediaServiceSchema: SocialMediaServiceSchema };

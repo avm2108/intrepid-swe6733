@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
+import axios from 'axios';
 
 /*-- Redux imports --*/
 import { Provider } from 'react-redux';
@@ -21,6 +22,15 @@ const store = configureStore({
 })
 sagaMiddleware.run(intrepidSaga)
 
+/*-- Axios configuration --*/
+// Ensure Axios sends the HttpOnly JWT cookies with every request
+if (process.env.NODE_ENV === 'development') {
+  // Set this to the port your backend server is running on
+  axios.defaults.baseURL = `http://127.0.0.1:5000/`;
+  // So rather than typing http://localhost:5000/api/auth/login,
+  // we can just type /api/users/login in axios requests
+}
+axios.defaults.withCredentials = true;
 
 // Attach React functionality to the root element
 const root = ReactDOM.createRoot(document.getElementById('root'));

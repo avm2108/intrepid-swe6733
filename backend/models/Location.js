@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
 
 // TODO: we should have geo coordinates in order to do distance calculations
 const LocationSchema = new mongoose.Schema({
@@ -9,6 +8,7 @@ const LocationSchema = new mongoose.Schema({
         trim: true
     },
     state: {
+        // TODO: Should this be more generalized like 'region' for countries which don't have 'states'            type: String,
         type: String,
         required: true,
         trim: true
@@ -17,7 +17,13 @@ const LocationSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true
+    },
+    // TODO: We'll need to determine coords from the given location, and is an effective way to store them?
+    coordinates: {
+        type: String,
+        required: false,
+        trim: true
     }
 });
 
-module.exports = { mongoose.model("Location", LocationSchema) as LocationModel, LocationSchema };
+module.exports = LocationSchema;
