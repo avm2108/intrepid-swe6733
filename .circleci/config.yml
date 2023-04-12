@@ -73,7 +73,10 @@ jobs:
             - v1-dependencies-
       - run:
           name: Run unit tests
-          command: npm run test-CI
+          command: |
+            ls -la
+            cat 'package.json'
+            npm run test-CI
           environment:
             JEST_JUNIT_OUTPUT_DIR: ./test-results/
       - store_test_results:

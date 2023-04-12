@@ -32,7 +32,7 @@
     "testNoInteractive": "react-scripts test --verbose --watchAll=false",
     "coverage": "react-scripts test --verbose --coverage --watchAll --collectCoverageFrom='src/pages/**/*.{js,jsx}' ----collectCoverageFrom='src/pages/**/*.{types,stories,constants,test,spec}.{js,jsx}'",
     "coverageNoInteractive": "react-scripts test --coverage --verbose --watchAll=false",
-    "test-CI": "react-scripts test --verbose --ci --runInBand --reporters=default --reporters=jest-junit"
+    "test-CI": "react-scripts test --verbose --ci --runInBand --reporters=default --reporters=jest-junit --watchAll=false"
   },
   "eslintConfig": {
     "extends": [
