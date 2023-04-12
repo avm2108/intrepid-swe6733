@@ -25,3 +25,5 @@ yarn-error.log*
 # Ignore IDE specific files
 .idea
 .vscode
+
+junit.xml
