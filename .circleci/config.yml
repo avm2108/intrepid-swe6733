@@ -54,28 +54,13 @@ jobs:
       - run: |
           cd frontend
           echo "Installing React dependencies"
-          npm install
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package-lock.json" }}
-  test-frontend:
-    docker:
-      - image: cimg/node:18.12.1
-    resource_class: large
-    working_directory: ~/project/
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package-lock.json" }}
-            - v1-dependencies-
+          npm ci
       - run:
           name: Run unit tests
           command: |
-            cd frontend
             ls -la
             cat package.json
+            echo "Running frontend unit tests"
             npm run test-CI
           environment:
             JEST_JUNIT_OUTPUT_DIR: ../test-results/
@@ -85,6 +70,32 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package-lock.json" }}
+  # test-frontend:
+  #   docker:
+  #     - image: cimg/node:18.12.1
+  #   resource_class: large
+  #   working_directory: ~/project/
+  #   steps:
+  #     - checkout
+  #     - restore_cache:
+  #         keys:
+  #           - v1-dependencies-{{ checksum "package-lock.json" }}
+  #           - v1-dependencies-
+  #     - run:
+  #         name: Run unit tests
+  #         command: |
+  #           cd frontend
+  #           ls -la
+  #           cat package.json
+  #           npm run test-CI
+  #         environment:
+  #           JEST_JUNIT_OUTPUT_DIR: ../test-results/
+  #     - store_test_results:
+  #         path: ../test-results/
+  #     - save_cache:
+  #         paths:
+  #           - node_modules
+  #         key: v1-dependencies-{{ checksum "package-lock.json" }}
     # parallelism: 2
   build-backend:
     docker:
