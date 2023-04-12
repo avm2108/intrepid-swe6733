@@ -54,7 +54,7 @@ jobs:
       - run: |
           cd frontend
           echo "Installing React dependencies"
-          npm ci
+          npm install
       - run:
           name: Run unit tests
           command: |
