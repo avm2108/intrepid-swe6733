@@ -49,7 +49,7 @@ export default function ForgotPassword(props) {
                             <LabeledInput labelClassName="AuthLabel" inputClassName="AuthInput" label="Your email" id="email" name="email" type="email" value={formState.email} onChange={handleInputChange} required />
                         </div>
                         <CTAButton type="submit">
-                            Forgot Password
+                            Submit
                         </CTAButton>
                     </form>
                 </div>

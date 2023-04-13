@@ -5,7 +5,7 @@ import user from '@testing-library/user-event';
 
 jest.mock('react-hot-toast');
 
-describe('GuestHome Page', () => {
+describe('GuestHome Page', () => {  
     it('renders guest home page title', () => {
         render(
             <BrowserRouter>
