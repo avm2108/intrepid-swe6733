@@ -13,7 +13,7 @@ describe('Register Page', () => {
                 <Register />
             </BrowserRouter>
         )
-        expect(screen.getByRole('heading', { name: /register/i })).toBeInTheDocument()
+        expect(screen.getByRole('heading', {  name: /sign up with email/i})).toBeInTheDocument()
     });
 
     it('renders link to login if have account', () => {
@@ -22,7 +22,7 @@ describe('Register Page', () => {
                 <Register />
             </BrowserRouter>
         )
-        expect(screen.getByRole('link', { name: /login here\./i })).toBeInTheDocument()
+        expect(screen.getByRole('link', {  name: /go to login/i})).toBeInTheDocument()
     });
 
     it('renders email field', () => {
@@ -52,13 +52,22 @@ describe('Register Page', () => {
         expect(screen.getByLabelText(/confirm password/i)).toBeInTheDocument()
     });
 
+    it('renders birthday field', () => {
+        render(
+            <BrowserRouter>
+                <Register />
+            </BrowserRouter>
+        )
+        expect(screen.getByLabelText(/your birthdate/i)).toBeInTheDocument()
+    });
+
     it('renders login button', () => {
         render(
             <BrowserRouter>
                 <Register />
             </BrowserRouter>
         )
-        expect(screen.getByRole('button', { name: /register/i })).toBeInTheDocument()
+        expect(screen.getByRole('button', {  name: /create an account/i})).toBeInTheDocument()
     });
 
     it('renders blank value for email field before user input', () => {
@@ -68,6 +77,15 @@ describe('Register Page', () => {
             </BrowserRouter>
         )
         expect(screen.getByRole('textbox', { name: /email/i })).toHaveValue("")
+    });
+
+    it('renders blank value for name field before user input', () => {
+        render(
+            <BrowserRouter>
+                <Register />
+            </BrowserRouter>
+        )
+        expect(screen.getByRole('textbox', {  name: /your name/i})).toHaveValue("")
     });
 
     it('renders blank value for password field before user input', () => {
@@ -88,6 +106,16 @@ describe('Register Page', () => {
         expect(screen.getByLabelText(/confirm password/i)).toHaveValue("")
     });
 
+
+    it('renders blank value for birthdate field before user input', () => {
+        render(
+            <BrowserRouter>
+                <Register />
+            </BrowserRouter>
+        )
+        expect(screen.getByLabelText(/your birthdate/i)).toHaveValue("")
+    });
+
     it('will not display toast when form fields are blank when submitted', async () => {
         user.setup()
         render(
@@ -95,8 +123,20 @@ describe('Register Page', () => {
                 <Register />
             </BrowserRouter>
         );
-        await user.click(screen.getByRole('button', { name: /register/i }));
+        await user.click(screen.getByRole('button', {  name: /create an account/i}));
         expect(toast).not.toHaveBeenCalled();
+    });
+
+    it('renders typed in value after user input on name field', async () => {
+        user.setup()
+        render(
+            <BrowserRouter>
+                <Register />
+            </BrowserRouter>
+        )
+        const nameField = screen.getByRole('textbox', {  name: /your name/i})
+        await user.type(nameField, "Horatia")
+        expect(nameField).toHaveValue("Horatia")
     });
 
     it('renders typed in value after user input on email field', async () => {
@@ -135,6 +175,18 @@ describe('Register Page', () => {
         expect(confirmPasswordField).toHaveValue("1234")
     });
 
+    it('renders typed in value after user input on birthdate field', async () => {
+        user.setup()
+        render(
+            <BrowserRouter>
+                <Register />
+            </BrowserRouter>
+        )
+        const birthdateField = screen.getByLabelText(/your birthdate/i)
+        await user.type(birthdateField, "2023-04-12")
+        expect(birthdateField).toHaveValue("2023-04-12")
+    });
+
     it('will not display toast when password and confirm password field values don\'t match', async () => {
         user.setup()
         render(
@@ -146,10 +198,9 @@ describe('Register Page', () => {
         await user.type(passwordField, "1234")
         const confirmPasswordField = screen.getByLabelText(/confirm password/i)
         await user.type(confirmPasswordField, "1234")
-        await user.click(screen.getByRole('button', { name: /register/i }));
+        await user.click(screen.getByRole('button', {  name: /create an account/i}));
         expect(toast).not.toHaveBeenCalled();
     });
-
 
     it('displays toast when form is submitted', () => {
         render(
@@ -157,7 +208,7 @@ describe('Register Page', () => {
                 <Register />
             </BrowserRouter>
         );
-        fireEvent.click(screen.getByRole('button', { name: /register/i }));
+        fireEvent.click(screen.getByRole('button', {  name: /create an account/i}));
         expect(toast.success).toHaveBeenCalledWith('You clicked the register button');
     });
 

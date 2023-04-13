@@ -22,7 +22,7 @@ describe('Login Page', () => {
                 <Login />
             </BrowserRouter>
         )
-        expect(screen.getByRole('link', { name: /register today\./i })).toBeInTheDocument()
+        expect(screen.getByRole('link', {  name: /register today/i})).toBeInTheDocument()
     });
 
     it('renders email field', () => {
@@ -49,7 +49,7 @@ describe('Login Page', () => {
                 <Login />
             </BrowserRouter>
         )
-        expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument()
+        expect(screen.getByRole('button', {  name: /log in/i})).toBeInTheDocument()
     });
 
     it('renders blank value for email field before user input', () => {
@@ -77,7 +77,7 @@ describe('Login Page', () => {
                 <Login />
             </BrowserRouter>
         );
-        await user.click(screen.getByRole('button', { name: /login/i }));
+        await user.click(screen.getByRole('button', { name: /log in/i }));
         expect(toast).not.toHaveBeenCalled();
     });
 
@@ -111,7 +111,7 @@ describe('Login Page', () => {
                 <Login />
             </BrowserRouter>
         );
-        fireEvent.click(screen.getByRole('button', { name: /login/i }));
+        fireEvent.click(screen.getByRole('button', { name: /log in/i }));
         expect(toast.success).toHaveBeenCalledWith('You clicked the login button');
     });
 
