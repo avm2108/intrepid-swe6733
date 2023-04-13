@@ -26,7 +26,8 @@ sagaMiddleware.run(intrepidSaga)
 // Ensure Axios sends the HttpOnly JWT cookies with every request
 if (process.env.NODE_ENV === 'development') {
   // Set this to the port your backend server is running on
-  axios.defaults.baseURL = `http://127.0.0.1:5000/`;
+  // TODO: Make this dynamic if we're going to deploy to Heroku (process.env.REACT_APP_BACKEND_API_URL)
+  axios.defaults.baseURL = `http://127.0.0.1:5000`;
   // So rather than typing http://localhost:5000/api/auth/login,
   // we can just type /api/users/login in axios requests
 }
