@@ -34,5 +34,27 @@ describe('Forgot Password Page', () => {
         expect(screen.getByRole('button', {  name: /submit/i})).toBeInTheDocument()
     });
 
+    it('displays toast when form is submitted', () => {
+        render(
+            <BrowserRouter>
+                <ForgotPassword />
+            </BrowserRouter>
+        );
+        fireEvent.click(screen.getByRole('button', {  name: /submit/i}));
+        expect(toast.success).toHaveBeenCalledWith('You clicked the forgot password button');
+    });
+
+    it('updates form state correctly on input change', () => {
+        render(
+            <BrowserRouter>
+                <ForgotPassword />
+            </BrowserRouter>
+        );
+    
+        const emailInput = screen.getByLabelText('Your email')
+        fireEvent.change(emailInput, { target: { value: 'test@intrepid.com' } });
+    
+        expect(emailInput).toHaveValue('test@intrepid.com');
+      });
  
 });
