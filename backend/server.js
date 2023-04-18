@@ -21,11 +21,9 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Enable CORS to allow requests from the client
+// Enable CORS bypass for the frontend, and allow credentials (cookies, etc.) to be passed
 app.use(cors({
-    // Configure allowed origins
-    origin: process.env.CLIENT_ORIGIN,
-    // And allow credentials(cookies, tokens, etc.) to be passed; ideally limit it to only the client's origin
+    origin: [process.env.CLIENT_ORIGIN || "http://localhost:3000"],
     credentials: true
 }));
 

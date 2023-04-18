@@ -23,11 +23,11 @@ const store = configureStore({
 sagaMiddleware.run(intrepidSaga)
 
 /*-- Axios configuration --*/
-// Ensure Axios sends the HttpOnly JWT cookies with every request
-// So rather than typing http://localhost:5000/api/auth/login,
-// we can just type /api/users/login in axios requests
-// Set this to the port your backend server is running on
+// Add a baseURL to every request so rather than typing
+// http://localhost:5000/api/auth/login,
+// we can just type /api/auth/login in axios requests
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+// Ensure Axios sends the HttpOnly JWT cookies with every request
 axios.defaults.withCredentials = true;
 
 // Attach React functionality to the root element
