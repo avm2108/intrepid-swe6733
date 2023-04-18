@@ -105,14 +105,14 @@ describe('Login Page', () => {
         expect(passwordField).toHaveValue("1234")
     });
 
-    it('displays toast when form is submitted', () => {
+    it('doesn\'t display toast when form is submitted', () => {
         render(
             <BrowserRouter>
                 <Login />
             </BrowserRouter>
         );
         fireEvent.click(screen.getByRole('button', { name: /log in/i }));
-        expect(toast.success).toHaveBeenCalledWith('You clicked the login button');
+        expect(toast.success).not.toHaveBeenCalled();
     });
 
 });

@@ -24,12 +24,10 @@ sagaMiddleware.run(intrepidSaga)
 
 /*-- Axios configuration --*/
 // Ensure Axios sends the HttpOnly JWT cookies with every request
-if (process.env.NODE_ENV === 'development') {
-  // Set this to the port your backend server is running on
-  axios.defaults.baseURL = `http://127.0.0.1:5000/`;
-  // So rather than typing http://localhost:5000/api/auth/login,
-  // we can just type /api/users/login in axios requests
-}
+// So rather than typing http://localhost:5000/api/auth/login,
+// we can just type /api/users/login in axios requests
+// Set this to the port your backend server is running on
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 axios.defaults.withCredentials = true;
 
 // Attach React functionality to the root element

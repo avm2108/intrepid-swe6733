@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { toast } from 'react-hot-toast';
 import { BrowserRouter } from 'react-router-dom';
 import ForgotPassword from './ForgotPassword';
@@ -13,7 +13,7 @@ describe('Forgot Password Page', () => {
                 <ForgotPassword />
             </BrowserRouter>
         )
-        expect(screen.getByRole('heading', {  name: /forgot password @ intrepid/i})).toBeInTheDocument()
+        expect(screen.getByRole('heading', {  name: /forgot password/i})).toBeInTheDocument()
     });
 
     it('renders the email textbox', () => {
@@ -34,17 +34,19 @@ describe('Forgot Password Page', () => {
         expect(screen.getByRole('button', {  name: /submit/i})).toBeInTheDocument()
     });
 
-    it('displays toast when form is submitted', () => {
+    it('doesn\' display toast when form is submitted', async () => {
+        user.setup();
         render(
             <BrowserRouter>
                 <ForgotPassword />
             </BrowserRouter>
         );
-        fireEvent.click(screen.getByRole('button', {  name: /submit/i}));
-        expect(toast.success).toHaveBeenCalledWith('You clicked the forgot password button');
+        await user.click(screen.getByRole('button', {  name: /submit/i}));
+        expect(toast).not.toHaveBeenCalled();
     });
 
-    it('updates form state correctly on input change', () => {
+    it('updates form state correctly on input change', async () => {
+        user.setup();
         render(
             <BrowserRouter>
                 <ForgotPassword />
@@ -52,9 +54,8 @@ describe('Forgot Password Page', () => {
         );
     
         const emailInput = screen.getByLabelText('Your email')
-        fireEvent.change(emailInput, { target: { value: 'test@intrepid.com' } });
+        await user.type(emailInput, 'test@intrepid.com');
     
         expect(emailInput).toHaveValue('test@intrepid.com');
-      });
- 
+    });
 });

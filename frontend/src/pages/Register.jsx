@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import Helmet from 'react-helmet';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 import CustomLink from '../components/CustomLink';
 import LabeledInput from '../components/LabeledInput';
@@ -8,26 +10,100 @@ import CTAButton from '../components/CTAButton';
 
 import styles from './Register.module.css';
 
+const friendlyFieldNames = {
+    name: 'Name',
+    email: 'Email',
+    password: 'Password',
+    confirmPassword: 'Confirm Password',
+    dateOfBirth: 'Date of Birth',
+};
+
 /**
  * <Register />: Renders the register page, accepting sign up information from the user
  * @param {Object} props - The props passed to the component
  * @returns {JSX.Element} <Register />
  */
 function Register(props) {
+    const navigate = useNavigate();
     const [formState, setFormState] = useState({
         name: '',
         email: '',
         password: '',
         confirmPassword: '',
-        birthdate: '',
+        dateOfBirth: '',
         disabled: false,
         errors: {},
     });
 
     // When the submit button is clicked, this function is called
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        toast.success('You clicked the register button');
+        // Ensure the necessary fields are passed
+        if (!formState.name || !formState.email || !formState.password || !formState.confirmPassword || !formState.dateOfBirth) {
+            toast.error('Please fill out all fields.');
+            return;
+        }
+        // Disable form while waiting for submit
+        setFormState((prevState) => ({
+            ...prevState,
+            disabled: true,
+        }));
+
+        const res = await axios.post('/api/auth/register', formState)
+            .then((response) => {
+                return response;
+            }).catch(
+            (error) => {
+                return error.response;
+            }
+        )
+
+        if (res.status === 200 || res.status === 201) {
+            toast.success('Registration successful! Please log in.');
+            setFormState((prevState) => ({
+                ...prevState,
+                disabled: true,
+                errors: {},
+            }));
+            navigate('/login');
+        } else {
+            toast.error('Something went wrong, please try again.');
+            const { data } = res;
+            // If the response doesn't have an errors object, it's a server error
+            if (!data || !data.errors) {
+                setFormState((prevState) => ({
+                    ...prevState,
+                    disabled: false,
+                    errors: {
+                        ...prevState.errors,
+                        general: {
+                            friendlyName: "Server Error",
+                            message: "Something went wrong, please try again.",
+                        }
+                    },
+                }));
+                return;
+            }
+            // Otherwise, we'll transform the errors object into a more friendly format
+            // "Username": "Username is already taken"
+            const transformedErrors = {};
+            Object.keys(data.errors).forEach((key) => {
+                // The error value might be an array ex. "dateOfBirth": ["You must be at least 18 to register", "Date of Birth must be a valid date"]
+                if (Array.isArray(data.errors[key])) {
+                    // TODO: Might not be necessary to show all of those array vals - we can just take the first value for now
+                    data.errors[key] = data.errors[key][0];
+                }
+                transformedErrors[key] = {
+                    friendlyName: friendlyFieldNames[key],
+                    message: data.errors[key],
+                };
+            });
+            setFormState((prevState) => ({
+                ...prevState,
+                disabled: false, // Re-enable the form
+                errors: transformedErrors,
+            }));
+        }
     }
 
     // Whenever a form input changes, this function is called
@@ -56,13 +132,13 @@ function Register(props) {
                     <form className={styles.registerForm} onSubmit={handleSubmit}>
                         <div className={styles.socials}>
                             <div className={styles.socialsButtons}>
-                                <button>
+                                <button onClick={e => e.preventDefault()}>
                                     <i className="fab fa-facebook-f" title="Sign up with Facebook"></i>
                                 </button>
-                                <button>
+                                <button onClick={e => e.preventDefault()}>
                                     <i className="fab fa-google" title="Sign up with Google"></i>
                                 </button>
-                                <button>
+                                <button onClick={e => e.preventDefault()}>
                                     <i className="fab fa-apple" title="Sign up with Apple"></i>
                                 </button>
                             </div>
@@ -70,12 +146,24 @@ function Register(props) {
                                 <hr /><span>OR</span><hr />
                             </div>
                         </div>
+                        {Object.keys(formState.errors).length > 0 && (
+                            <div className="errorsContainer">
+                                <h3>Please fix the following errors:</h3>
+                                <ul className="errorsList">
+                                    {Object.keys(formState.errors).map((key) => (
+                                        <li className="errorItem" key={key}>
+                                            <strong>{formState.errors[key].friendlyName}</strong>: {formState.errors[key].message}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
                         <div className={styles.registerInputs}>
                             <LabeledInput label="Your name" id="name" name="name" type="text" value={formState.name} onChange={(e) => handleInputChange(e)} required />
                             <LabeledInput label="Your email" id="email" name="email" type="email" value={formState.email} onChange={(e) => handleInputChange(e)} required />
                             <LabeledInput label="Password" id="password" name="password" type="password" value={formState.password} onChange={(e) => handleInputChange(e)} required />
                             <LabeledInput label="Confirm Password" id="confirmPassword" name="confirmPassword" type="password" value={formState.confirmPassword} onChange={(e) => handleInputChange(e)} required />
-                            <LabeledInput label="Your birthdate" id="birthdate" name="birthdate" type="date" value={formState.birthdate} onChange={(e) => handleInputChange(e)} required />
+                            <LabeledInput label="Your Birth Date" id="dateOfBirth" name="dateOfBirth" type="date" value={formState.dateOfBirth} onChange={(e) => handleInputChange(e)} required />
                         </div>
                         <CTAButton type="submit">
                             Create an account

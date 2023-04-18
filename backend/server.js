@@ -1,3 +1,6 @@
+// Allow our app access to environment variables defined in .env
+require('dotenv').config();
+
 // Import dependencies
 const path = require("path");
 const express = require("express");
@@ -6,9 +9,6 @@ const cors = require("cors");
 
 // Import our database connection function
 const dbConnect = require("./services/dbConnect");
-
-// Allow our app access to environment variables defined in .env
-require('dotenv').config();
 
 // Create an Express to manifest our server
 const app = express();
@@ -21,8 +21,13 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Enable CORS, and allow credentials (cookies, tokens, etc.) to be passed; ideally limit it to only the client's origin
-app.use(cors({ credentials: true }));
+// Enable CORS to allow requests from the client
+app.use(cors({
+    // Configure allowed origins
+    origin: process.env.CLIENT_ORIGIN,
+    // And allow credentials(cookies, tokens, etc.) to be passed; ideally limit it to only the client's origin
+    credentials: true
+}));
 
 // Disable the X-Powered-By header to prevent information leakage about the server
 app.disable("x-powered-by");
@@ -33,7 +38,17 @@ const accountRouter = require("./routes/accountRoutes");
 const profileRouter = require("./routes/profileRoutes");
 const publicRouter = require("./routes/publicRoutes");
 
+// For debugging, we can output any incoming requests as well as their bodies
+app.use((req, res, next) => {
+    console.log("Request received: " + req.method + " " + req.url);
+    console.log("Request body: " + JSON.stringify(req.body));
+    console.log("Request cookies: " + JSON.stringify(req.cookies));
+
+    next();
+});
+
 // Activate our API endpoints
+// TODO: Might want to reorganize these to be more RESTful
 app.use("/api/auth", authRouter);
 app.use("/api/account", accountRouter);
 app.use("/api/profile", profileRouter);
