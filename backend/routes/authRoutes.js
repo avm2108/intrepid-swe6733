@@ -13,17 +13,20 @@ const User = require('../models/User');
  * @param {string} password - The user's password
  * @returns {object} - The user's data and a csrf token, with a signed HttpOnly JWT cookie, or an error message if the user's email or password is incorrect
  */
-authRouter.post('/login', generateCsrf, validateWithRules, async (req, res, next) => {
+authRouter.post('/login', validateWithRules, generateCsrf, async (req, res, next) => {
     // We can assume these fields are valid, since they were validated by the validateWithRules middleware
     const { email, password } = req.body;
 
     console.log("Attempting to log in with email: " + email);
 
     // Attempt to locate the user in MongoDB by their email
-    await User.findOne({ email: email }).then(async (user) => {
+    try {
+        const user = await User.findOne({ email: email });
+        
         if (!user) {
+            console.log("No user found with email: " + email);
             // If the user wasn't found, return an error message
-            return res.status(400).json({ error: { email: 'No user found with that email' } });
+            return res.status(400).json({ errors: { email: 'No user found with that email' } });
         }
 
         if (process.env.NODE_ENV === "development")
@@ -55,11 +58,11 @@ authRouter.post('/login', generateCsrf, validateWithRules, async (req, res, next
         } else {
             // If the passwords don't match, return an error message
             /*             // TODO: We could make this message more general to not give away that the email was correct
-                        return res.status(401).json({ error: { password: 'Incorrect password' } }); */
+                        return res.status(401).json({ errors:{ password: 'Incorrect password' } }); */
             // TODO: We could make this message more general to not give away that the email was correct
-            return res.status(401).json({ error: { email: "The credentials you entered are incorrect or don't match an existing account." } });
+            return res.status(401).json({ errors: { email: "The credentials you entered are incorrect or don't match an existing account." } });
         }
-    }).catch((err) => {
+    } catch(err) {
         // If there was an error, most likely it's related to the database
         // Check if it's a validation error
         if (err.errors) {
@@ -81,8 +84,12 @@ authRouter.post('/login', generateCsrf, validateWithRules, async (req, res, next
 
         console.log("Error in /login: " + err);
         // If it's not a validation error, return the error
-        return res.status(500).json({ error: err });
-    });
+        return res.status(500).json({
+            errors: {
+                message: err
+            }
+        });
+    }
 });
 
 // Registration via email and password, we'll validate the user's input before executing this function via the validateRegister middleware
@@ -92,6 +99,7 @@ authRouter.post('/login', generateCsrf, validateWithRules, async (req, res, next
  * @access Public
  * @param {string} email - The user's email address
  * @param {string} password - The user's password
+ * @param {string} confirmPassword - The user's password confirmation
  * @param {string} name - The user's name
  * @param {string} dateOfBirth - The user's date of birth
  * @returns {object} - A success message if the user was created successfully or an error message if the email is already in use
@@ -102,6 +110,7 @@ authRouter.post('/register', validateWithRules, async (req, res, next) => {
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
+        confirmPassword: req.body.confirmPassword,
         dateOfBirth: req.body.dateOfBirth,
     });
 
@@ -133,7 +142,7 @@ authRouter.post('/register', validateWithRules, async (req, res, next) => {
             return res.status(400).json({ errors: { email: 'A user with that email already exists' } });
         }
         // There was an error not related to validation, return it
-        return res.status(500).json({ error: err });
+        return res.status(500).json({ errors:err });
     }
 });
 
@@ -153,14 +162,11 @@ authRouter.post('/logout', (req, res, next) => {
         signed: true
     });
 
-    // TODO: Clear the CSRF token cookie
-    /*res.clearCookie('csrfToken', {
-        httpOnly: false,
+    res.clearCookie('csrfToken', {
+        httpOnly: true,
         secure: (process.env.NODE_ENV === "production"),
         signed: false
-    });*/
-
-    // TODO: Blacklist the token?
+    });
 
     // Send a success message
     res.status(200).json({ message: 'User logged out successfully' });

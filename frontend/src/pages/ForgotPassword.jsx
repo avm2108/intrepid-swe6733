@@ -9,9 +9,9 @@ import CTAButton from '../components/CTAButton';
 import styles from "./ForgotPassword.module.css";
 
 /** 
- * <Login />: Renders the login page
+ * <ForgotPassword />: Renders the forgot password page
  * @param {Object} props - The props passed to the component
- * @returns {JSX.Element} <Login />
+ * @returns {JSX.Element} <ForgotPassword />
  */
 export default function ForgotPassword(props) {
     const [formState, setFormState] = useState({});
@@ -19,7 +19,6 @@ export default function ForgotPassword(props) {
     // When the submit button is clicked, this function is called
     const handleSubmit = (e) => {
         e.preventDefault();
-        toast.success('You clicked the forgot password button');
     };
 
     // Whenever a form input changes, this function is called
@@ -38,12 +37,14 @@ export default function ForgotPassword(props) {
             {/* This allows us to change the page title, meta tags, etc. */}
             <Helmet>
                 <title>Intrepid - Forgot Password</title>
-                <script src="https://kit.fontawesome.com/37ce2b2559.js" crossorigin="anonymous"></script>
-            </Helmet >
+            </Helmet>
 
             <main className={styles.loginMain}>
                 <div className={styles.loginContainer}>
-                    <h1 className={styles.loginTitle}>Forgot Password @ Intrepid</h1>
+                    <h1 className={styles.loginTitle}>Forgot Password</h1>
+                    <div className="flexDirectionRow justifyContentCenter">
+                        <CustomLink to="/login" type="green">Go to Login</CustomLink>
+                    </div>
                     <form className={styles.loginForm} onSubmit={handleSubmit}>
                         <div className={styles.loginInputs}>
                             <LabeledInput labelClassName="AuthLabel" inputClassName="AuthInput" label="Your email" id="email" name="email" type="email" value={formState.email} onChange={handleInputChange} required />

@@ -28,13 +28,15 @@ profileRouter.get('/:id', async (req, res, next) => {
         } else {
             // If the user doesn't exist, return an error
             return res.status(404).json({
-                error: "User profile not found"
+                errors: {
+                    message: "User profile not found"
+                }
             });
         }
     } catch (err) {
         console.log("Error getting user profile: ", err);
         return res.status(500).json({
-            error: "There was an error getting the user profile, please try again later"
+            errors:"There was an error getting the user profile, please try again later"
         });
     }
 });
@@ -56,7 +58,7 @@ profileRouter.get('/', verifyCsrf, passport.authenticate('jwt-strategy', { sessi
         // Indicate the profile doesn't exist
         // TODO: We'll need to redirect to the profile create page clientside
         return res.status(404).json({
-            error: "Profile not found",
+            errors:"Profile not found",
         });
     }
 });
@@ -93,7 +95,7 @@ profileRouter.post('/', verifyCsrf, passport.authenticate('jwt-strategy', { sess
     // If the user is not logged in, req.user will be undefined
     if (req.user.profile) {
         return res.status(400).json({
-            error: "A profile already exists for this user"
+            errors:"A profile already exists for this user"
         });
     } else {
         // Create a new profile for the user
@@ -134,7 +136,9 @@ profileRouter.post('/', verifyCsrf, passport.authenticate('jwt-strategy', { sess
                 }
             }
             return res.status(500).json({
-                error: "There was an error creating your profile, please try again later"
+                errors: {
+                    message: "There was an error creating your profile, please try again later"
+                }
             });
         }
     }
@@ -172,7 +176,7 @@ profileRouter.put('/', verifyCsrf, passport.authenticate('jwt-strategy', { sessi
     // If the user does not have a profile, redirect to the profile creation page
     if (!req.user.profile) {
         return res.status(404).json({
-            error: "No profile exists for this user yet"
+            errors:"No profile exists for this user yet"
         });
     }
 
@@ -217,7 +221,9 @@ profileRouter.put('/', verifyCsrf, passport.authenticate('jwt-strategy', { sessi
             }
         }
         return res.status(500).json({
-            error: "There was an error updating your profile, please try again later"
+            errors: {
+                message: "There was an error updating your profile, please try again later"
+            }
         });
     }
 });
