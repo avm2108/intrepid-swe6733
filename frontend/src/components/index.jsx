@@ -15,7 +15,7 @@ export default function ComponentsPage() {
             <CustomLink style={{ display: "block", color: 'var(--color-black)' }} to="/register">Sign up with email</CustomLink>
             <Header />
             <LabeledInput />
-            <FooterNavigation />
+            {/* <FooterNavigation /> */}
             
         </div>
     )

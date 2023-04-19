@@ -13,7 +13,7 @@ import ErrorPage from './pages/ErrorPage';
 import ReduxSandbox from './pages/ReduxSandbox';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
-import { MatchPage } from './pages/MatchPage';
+import {MatchPage}  from './pages/MatchPage';
 import ComponentsPage from './components';
 
 /**
