@@ -1,0 +1,12 @@
+.bottomNav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background-color: #fff;
+    border-top: 1px solid #eaeaea;
+    padding: 0.5rem 0;
+    display: flex;
+    width: 100%;
+}
