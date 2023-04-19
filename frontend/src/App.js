@@ -3,7 +3,6 @@ import { Toaster } from 'react-hot-toast';
 
 // Components and styles
 import './App.css';
-// import Header from './components/Header';
 
 // Pages
 import GuestHome from './pages/GuestHome';
@@ -12,11 +11,10 @@ import Register from './pages/Register';
 import ErrorPage from './pages/ErrorPage';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
-
-import {MatchPage}  from './pages/MatchPage';
-import ComponentsPage from './components';
-
+import PrivateRoute from './pages/PrivateRoute';
 import ReduxSandbox from './pages/ReduxSandbox';
+import { MatchPage }  from './pages/MatchPage';
+import ComponentsPage from './pages/ComponentsTest';
 import DemoProfile from './pages/DemoProfile';
 
 
@@ -25,6 +23,7 @@ import DemoProfile from './pages/DemoProfile';
  * @returns {JSX.Element} <App />
  */
 function App() {
+  {/* TODO: we need access to the user or a 'loggedIn' prop here to conditionally show the footer and to allow access to protected routes */ }
   return (
     <div className="App">
       <Toaster /> {/* This allows us to show toasts / notification popups */}
@@ -42,15 +41,16 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         {/*-- Example page consuming data from Redux store --*/}
         <Route path="/reduxsandbox" element={<ReduxSandbox />} />
-
         <Route path="/match-page" element={<MatchPage />} />
-
         {/* Demo Route to display logged in user's info */}
         <Route path="/demoProfile" element={<DemoProfile />} />
-
+        {/* <Route element={<PrivateRoute user={user} />}> */}
+          {/* Any routes that require a user to be logged in go here; */}
+        {/* </Route> */}
         {/* The * wildcard path matches any URL that doesn't match any other <Route /> */}
         <Route path="*" element={<ErrorPage />} />
       </Routes>
+      {/* TODO: { user.loggedIn && <Footer /> } */}
     </div>
   );
 }

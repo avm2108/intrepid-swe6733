@@ -134,7 +134,7 @@ authRouter.post('/register', validateWithRules, async (req, res, next) => {
             }
             // Return the err messages
             if (errorMessages.length > 0) {
-                return res.status(500).json({ errors: errorMessages });
+                return res.status(400).json({ errors: errorMessages });
             }
         } else if (err.code === 11000) {
             // If the Mongoose error was that a unique field already exists, return a message

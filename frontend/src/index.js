@@ -4,6 +4,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import axios from 'axios';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 /*-- Redux imports --*/
 import { Provider } from 'react-redux';
@@ -30,6 +31,9 @@ axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 // Ensure Axios sends the HttpOnly JWT cookies with every request
 axios.defaults.withCredentials = true;
 
+// Create a globally accessible MUI theme
+const theme = createTheme({});
+
 // Attach React functionality to the root element
 const root = ReactDOM.createRoot(document.getElementById('root'));
 // Render the App component inside the root element, representing the entire app
@@ -37,9 +41,12 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   /*-- make the Redux store available to all components  --*/
   <Provider store={store}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    {/* Make MUI theme available to all components */}
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ThemeProvider>
   </Provider>
 );
 
