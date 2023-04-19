@@ -15,7 +15,7 @@ describe('MatchPage', () => {
   it('renders "Light \'em Matches" button', () => {
     render(<MatchPage />);
 
-    const button = screen.getByRole('button', { name: /Light 'em Matches/i });
+    const button = screen.getByRole('button', { name: /start here/i });
     expect(button).toBeInTheDocument();
   });
 
@@ -29,7 +29,7 @@ describe('MatchPage', () => {
 
   it('closes the modal when clicked outside the modal area', () => {
     render(<MatchPage />);
-    const button = screen.getByRole('button', { name: /light 'em matches/i });
+    const button = screen.getByRole('button', { name: /start here/i });
     fireEvent.click(button);
     const modalBackground = screen.getByTestId('modal-background');
     fireEvent.click(modalBackground);
