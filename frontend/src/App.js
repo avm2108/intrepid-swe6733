@@ -14,6 +14,7 @@ import ReduxSandbox from './pages/ReduxSandbox';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import { MatchPage } from './pages/MatchPage';
+import ComponentsPage from './components';
 
 /**
  * <App /> is the root component of the app. It renders the root layout and child routes.
@@ -30,6 +31,7 @@ function App() {
           if the user's logged in and show that appropriate "homepage" */}
         <Route index element={<GuestHome />} />
         {/* The path specifies the URL that'll provide the component specified in the 'element' */}
+        <Route path="/components" element={<ComponentsPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/reset-password/:key" element={<ResetPassword />} />
