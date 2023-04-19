@@ -21,7 +21,7 @@ describe('MatchPage', () => {
 
   it('should show MatchesDisplay modal when the button is clicked', () => {
     render(<MatchPage />);
-    const button = screen.getByRole('button', { name: /light 'em matches/i });
+    const button = screen.getByRole('button', { name: /start here/i });
     fireEvent.click(button);
     const modal = screen.getByText(/Intrepid recommends:/i);
     expect(modal).toBeInTheDocument();
