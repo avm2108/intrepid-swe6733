@@ -23,14 +23,11 @@ const store = configureStore({
 sagaMiddleware.run(intrepidSaga)
 
 /*-- Axios configuration --*/
+// Add a baseURL to every request so rather than typing
+// http://localhost:5000/api/auth/login,
+// we can just type /api/auth/login in axios requests
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 // Ensure Axios sends the HttpOnly JWT cookies with every request
-if (process.env.NODE_ENV === 'development') {
-  // Set this to the port your backend server is running on
-  // TODO: Make this dynamic if we're going to deploy to Heroku (process.env.REACT_APP_BACKEND_API_URL)
-  axios.defaults.baseURL = `http://127.0.0.1:5000`;
-  // So rather than typing http://localhost:5000/api/auth/login,
-  // we can just type /api/users/login in axios requests
-}
 axios.defaults.withCredentials = true;
 
 // Attach React functionality to the root element

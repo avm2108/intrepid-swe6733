@@ -26,11 +26,11 @@ const rules = {
         // Password should contain at least one number, one lowercase letter, one uppercase letter, and one special character
         body('password', 'Password must contain at least one number, one lowercase letter, one uppercase letter, and one special character').if(body('password').notEmpty()).matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{6,50}$/),
     ],
-    password2: [
-        // Password2 should be equal to password
-        body('password2', 'Password confirmation is required').notEmpty(),
-        // Ensure that the password and password2 fields match
-        body('password2', 'Passwords do not match').if(body('password2').notEmpty()).custom((value, { req }) => value === req.body.password),
+    confirmPassword: [
+        // confirmPassword should be equal to password
+        body('confirmPassword', 'Password confirmation is required').notEmpty(),
+        // Ensure that the password and confirmPassword fields match
+        body('confirmPassword', 'Passwords do not match').if(body('confirmPassword').notEmpty()).custom((value, { req }) => value === req.body.password),
     ],
     dateOfBirth: [
         // Ensure that the date of birth is valid, and that the user is at least 18 years old
@@ -38,11 +38,11 @@ const rules = {
         body('dateOfBirth', 'Date of birth is invalid').if(body('dateOfBirth').notEmpty()).isDate(),
         body('dateOfBirth', 'You must be at least 18 years old to register').if(body('dateOfBirth').notEmpty()).custom((value, { req }) => {
             const today = new Date();
-            const birthDate = new Date(value);
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const m = today.getMonth() - birthDate.getMonth();
+            const dateOfBirth = new Date(value);
+            let age = today.getFullYear() - dateOfBirth.getFullYear();
+            const m = today.getMonth() - dateOfBirth.getMonth();
             // If the user's birthday has not yet occurred this year, subtract 1 from their age
-            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            if (m < 0 || (m === 0 && today.getDate() < dateOfBirth.getDate())) {
                 age--; // Since they haven't had their birthday yet, they are not yet 1 year older
             }
             return age >= 18;
@@ -60,7 +60,7 @@ const validateWithRules = (req, res, next) => {
             ...rules.name,
             ...rules.email,
             ...rules.password,
-            ...rules.password2,
+            ...rules.confirmPassword,
             ...rules.dateOfBirth,
         ]
     } else if (req.path === '/login' || req.path === '/test') {

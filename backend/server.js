@@ -1,3 +1,6 @@
+// Allow our app access to environment variables defined in .env
+require('dotenv').config();
+
 // Import dependencies
 const path = require("path");
 const express = require("express");
@@ -6,9 +9,6 @@ const cors = require("cors");
 
 // Import our database connection function
 const dbConnect = require("./services/dbConnect");
-
-// Allow our app access to environment variables defined in .env
-require('dotenv').config();
 
 // Create an Express to manifest our server
 const app = express();
@@ -36,7 +36,17 @@ const accountRouter = require("./routes/accountRoutes");
 const profileRouter = require("./routes/profileRoutes");
 const publicRouter = require("./routes/publicRoutes");
 
+// For debugging, we can output any incoming requests as well as their bodies
+app.use((req, res, next) => {
+    console.log("Request received: " + req.method + " " + req.url);
+    console.log("Request body: " + JSON.stringify(req.body));
+    console.log("Request cookies: " + JSON.stringify(req.cookies));
+
+    next();
+});
+
 // Activate our API endpoints
+// TODO: Might want to reorganize these to be more RESTful
 app.use("/api/auth", authRouter);
 app.use("/api/account", accountRouter);
 app.use("/api/profile", profileRouter);

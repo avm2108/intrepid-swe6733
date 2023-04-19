@@ -18,7 +18,9 @@ accountRouter.get('/:id', verifyCsrf, passport.authenticate('jwt-strategy', { se
         const user = await User.findById(req.params.id);
         if (!user) {
             return res.status(404).json({
-                message: "No user with that ID found"
+                errors: {
+                    message: "No user with that ID found"
+                }
             });
         }
         // Exclude the password field from the response
@@ -33,7 +35,9 @@ accountRouter.get('/:id', verifyCsrf, passport.authenticate('jwt-strategy', { se
     } catch (err) {
         console.log("Error getting user by ID: ", err);
         return res.status(500).json({
-            message: "There was an error getting the user's account details, please try again later"
+            errors: {
+                message: "There was an error getting the user's account details, please try again later"
+            }
         });
     }
 });
@@ -50,18 +54,24 @@ accountRouter.get('/:id', verifyCsrf, passport.authenticate('jwt-strategy', { se
 accountRouter.put("/password", verifyCsrf, passport.authenticate("jwt-strategy", { session: false }), async (req, res, next) => {
     if (!req.user) {
         return res.status(401).json({
-            message: "You must be logged in to update your password"
+            errors: {
+                message: "You must be logged in to update your password"
+            }
         });
     }
 
     // Determine if the new password is the same as the old password, and if so, return an error
     if (await req.user.isValidPassword(req.body.oldPassword) || req.body.oldPassword === req.body.newPassword) {
         return res.status(400).json({
-            message: "The new password must be different from the old password"
+            errors: {
+                message: "The new password must be different from the old password"
+            }
         });
     } else if (req.body.newPassword !== req.body.confirmPassword) {
         return res.status(400).json({
-            message: "The new password and confirmation password must match"
+            errors: {
+                message: "The new password and confirmation password must match"
+            }
         });
     }
 
@@ -70,13 +80,16 @@ accountRouter.put("/password", verifyCsrf, passport.authenticate("jwt-strategy",
         req.user.password = req.body.newPassword;
         // The password will be hashed behind the scenes before saving to the database
         await req.user.save();
-        res.status(200).json({
+        
+        return res.status(200).json({
             message: "Password updated successfully"
         });
     } catch (err) {
         console.log("Error updating password: ", err);
         return res.status(500).json({
-            message: "There was an error updating your password, please try again later"
+            errors: {
+                message: "There was an error updating your password, please try again later"
+            }
         });
     }
 });
@@ -103,7 +116,9 @@ accountRouter.get('/', verifyCsrf, passport.authenticate('jwt-strategy', { sessi
         });
     } else {
         res.status(401).json({
-            message: "You must be logged in to view your account"
+            errors: {
+                message: "You must be logged in to view your account"
+            }
         });
     }
 });
@@ -122,7 +137,9 @@ accountRouter.put('/', verifyCsrf, passport.authenticate("jwt-strategy", { sessi
     // If the user is not logged in, req.user will be undefined
     if (!req.user) {
         return res.status(401).json({
-            message: "You must be logged in to update your account"
+            errors: {
+                message: "You must be logged in to update your account"
+            }
         });
     }
 
@@ -174,7 +191,9 @@ accountRouter.put('/', verifyCsrf, passport.authenticate("jwt-strategy", { sessi
             }
         }
         return res.status(500).json({
-            message: "There was an error updating your account, please try again later"
+            errors: {
+                message: "There was an error updating your account, please try again later"
+            }
         });
     }
 });
@@ -191,7 +210,9 @@ accountRouter.post('/delete', verifyCsrf, passport.authenticate("jwt-strategy", 
     // If the user is not logged in, req.user will be undefined
     if (!req.user) {
         return res.status(401).json({
-            message: "You must log in to access this resource."
+            errors: {
+                message: "You must log in to access this resource."
+            }
         });
     }
 
@@ -203,18 +224,22 @@ accountRouter.post('/delete', verifyCsrf, passport.authenticate("jwt-strategy", 
             await user.remove();
             // Delete the user's account
             return res.status(200).json({
-                message: "Your account has been deleted"
+                    message: "Your account has been deleted"
             });
         } else {
             // The password is incorrect, so we can't delete the user's account
             return res.status(401).json({
-                message: "You entered an incorrect password"
+                errors: {
+                    message: "You entered an incorrect password"
+                }
             });
         }
     } catch (err) {
         console.log("Error deleting account: ", err);
         return res.status(500).json({
-            message: "There was an error deleting your account, please try again later"
+            errors: {
+                message: "There was an error deleting your account, please try again later"
+            }
         });
     }
 });
