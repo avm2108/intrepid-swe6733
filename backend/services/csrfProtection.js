@@ -36,7 +36,10 @@ const verifyCsrf = (req, res, next) => {
     } else {
         // If the token is invalid, return an error
         res.status(403).json({
-            error: 'Invalid CSRF token. Make sure you\'re taking it from cookie.csrfToken and passing it in headers as X-CSRF-Token or in a hidden form field with name=\'csrfToken\'' });
+            errors: {
+                message: 'Invalid CSRF token. Make sure you\'re taking it from cookie.csrfToken and passing it in headers as X-CSRF-Token or in a hidden form field with name=\'csrfToken\''
+            }
+        });
     }
 };
 

@@ -1,10 +1,16 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { toast } from 'react-hot-toast';
 import { BrowserRouter } from 'react-router-dom';
 import Register from './Register';
 import user from '@testing-library/user-event';
 
-jest.mock('react-hot-toast');
+// Mock react-hot-toast's toast module, specifically the functions toast.error, toast.success, etc.
+jest.mock('react-hot-toast', () => ({
+    toast: {
+        error: jest.fn(),
+        success: jest.fn(),
+    },
+}));
 
 describe('Register Page', () => {
     it('renders register page title', () => {
@@ -58,7 +64,7 @@ describe('Register Page', () => {
                 <Register />
             </BrowserRouter>
         )
-        expect(screen.getByLabelText(/your birthdate/i)).toBeInTheDocument()
+        expect(screen.getByLabelText(/your birth date/i)).toBeInTheDocument()
     });
 
     it('renders login button', () => {
@@ -107,16 +113,16 @@ describe('Register Page', () => {
     });
 
 
-    it('renders blank value for birthdate field before user input', () => {
+    it('renders blank value for dateOfBirth field before user input', () => {
         render(
             <BrowserRouter>
                 <Register />
             </BrowserRouter>
         )
-        expect(screen.getByLabelText(/your birthdate/i)).toHaveValue("")
+        expect(screen.getByLabelText(/your birth date/i)).toHaveValue("")
     });
 
-    it('will not display toast when form fields are blank when submitted', async () => {
+    it('will display toast when form fields are blank when submitted', async () => {
         user.setup()
         render(
             <BrowserRouter>
@@ -124,7 +130,7 @@ describe('Register Page', () => {
             </BrowserRouter>
         );
         await user.click(screen.getByRole('button', {  name: /create an account/i}));
-        expect(toast).not.toHaveBeenCalled();
+        expect(toast.error).toHaveBeenCalled();
     });
 
     it('renders typed in value after user input on name field', async () => {
@@ -175,19 +181,19 @@ describe('Register Page', () => {
         expect(confirmPasswordField).toHaveValue("1234")
     });
 
-    it('renders typed in value after user input on birthdate field', async () => {
+    it('renders typed in value after user input on dateOfBirth field', async () => {
         user.setup()
         render(
             <BrowserRouter>
                 <Register />
             </BrowserRouter>
         )
-        const birthdateField = screen.getByLabelText(/your birthdate/i)
-        await user.type(birthdateField, "2023-04-12")
-        expect(birthdateField).toHaveValue("2023-04-12")
+        const dateOfBirthField = screen.getByLabelText(/your birth date/i)
+        await user.type(dateOfBirthField, "2023-04-12")
+        expect(dateOfBirthField).toHaveValue("2023-04-12")
     });
 
-    it('will not display toast when password and confirm password field values don\'t match', async () => {
+    it('will display error toast when password and confirm password field values don\'t match', async () => {
         user.setup()
         render(
             <BrowserRouter>
@@ -197,19 +203,56 @@ describe('Register Page', () => {
         const passwordField = screen.getByLabelText(/^Password$/)
         await user.type(passwordField, "1234")
         const confirmPasswordField = screen.getByLabelText(/confirm password/i)
-        await user.type(confirmPasswordField, "1234")
+        await user.type(confirmPasswordField, "1233544")
         await user.click(screen.getByRole('button', {  name: /create an account/i}));
-        expect(toast).not.toHaveBeenCalled();
+        expect(toast.error).toHaveBeenCalledTimes(1);
     });
 
-    it('displays toast when form is submitted', () => {
+    it('displays toast when form is submitted', async () => {
         render(
             <BrowserRouter>
                 <Register />
             </BrowserRouter>
         );
-        fireEvent.click(screen.getByRole('button', {  name: /create an account/i}));
-        expect(toast.success).toHaveBeenCalledWith('You clicked the register button');
+        // Fill up the form
+        const nameField = screen.getByLabelText(/your name/i)
+        // Ensure it's there
+        expect(nameField).toBeInTheDocument()
+        await user.type(nameField, "Horatia")
+        // Ensure it's filled up
+        expect(nameField).toHaveValue("Horatia")
+
+        const emailField = screen.getByLabelText(/email/i)
+        // Ensure it's there
+        expect(emailField).toBeInTheDocument()
+        const val = `test${Math.floor(Math.random() * 334)}@email.com`;
+        await user.type(emailField, val);
+        // Ensure it's filled up
+        expect(emailField).toHaveValue(val)
+
+        const passwordField = screen.getByLabelText(/^Password$/)
+        // Ensure it's there
+        expect(passwordField).toBeInTheDocument()
+        await user.type(passwordField, "Passw0rd!")
+        // Ensure it's filled up
+        expect(passwordField).toHaveValue("Passw0rd!")
+
+        const confirmPasswordField = screen.getByLabelText(/confirm password/i)
+        // Ensure it's there
+        expect(confirmPasswordField).toBeInTheDocument()
+        await user.type(confirmPasswordField, "Passw0rd!")
+        // Ensure it's filled up
+        expect(confirmPasswordField).toHaveValue("Passw0rd!")
+
+        const dateOfBirthField = screen.getByLabelText(/your birth date/i)
+        // Ensure it's there
+        expect(dateOfBirthField).toBeInTheDocument()
+        await user.type(dateOfBirthField, "1990-04-12")
+        // Ensure it's filled up
+        expect(dateOfBirthField).toHaveValue("1990-04-12")
+
+        await user.click(screen.getByRole('button', {  name: /create an account/i}));
+        expect(toast.error).toHaveBeenCalledTimes(0);
     });
 
 });
