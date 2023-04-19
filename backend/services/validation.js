@@ -36,7 +36,7 @@ const rules = {
         // Ensure that the date of birth is valid, and that the user is at least 18 years old
         body('dateOfBirth', 'Date of birth is required').notEmpty(),
         body('dateOfBirth', 'Date of birth is invalid').if(body('dateOfBirth').notEmpty()).isDate(),
-        body('dateOfBirth', 'You must be at least 18 years old to register').if(body('dateOfBirth').notEmpty()).custom((value, { req }) => {
+        body('dateOfBirth', 'You must be at least 18 years old to register').if(body('dateOfBirth').notEmpty()).if(body('dateOfBirth').isDate()).custom((value, { req }) => {
             const today = new Date();
             const dateOfBirth = new Date(value);
             let age = today.getFullYear() - dateOfBirth.getFullYear();

@@ -4,7 +4,7 @@ import CTAButton from "../components/CTAButton";
 import CustomLink from "../components/CustomLink";
 import Header from "../components/Header";
 import LabeledInput from "../components/LabeledInput";
-import styles from './Components.module.css';
+import styles from './ComponentsTest.module.css';
 
 
 export default function ComponentsPage() {
