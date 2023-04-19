@@ -16,12 +16,14 @@
     color: #797C7B;
 }
 
-.CTAButton-white {
+.white {
+    composes: CTAButton;
     background-color: #FFFFFF;
     color: #000000;
 }
 
-.CTAButton-green {
+.green {
+    composes: CTAButton;
     background-color: #24786D;
     color: #FFFFFF;
 }

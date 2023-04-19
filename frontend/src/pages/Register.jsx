@@ -165,7 +165,7 @@ function Register(props) {
                             <LabeledInput label="Confirm Password" id="confirmPassword" name="confirmPassword" type="password" value={formState.confirmPassword} onChange={(e) => handleInputChange(e)} required />
                             <LabeledInput label="Your Birth Date" id="dateOfBirth" name="dateOfBirth" type="date" value={formState.dateOfBirth} onChange={(e) => handleInputChange(e)} required />
                         </div>
-                        <CTAButton type="submit">
+                        <CTAButton theme="green" type="submit">
                             Create an account
                         </CTAButton>
                     </form>

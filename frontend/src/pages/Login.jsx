@@ -178,12 +178,12 @@ export default function Login(props) {
                             <LabeledInput labelClassName="AuthLabel" inputClassName="AuthInput"
                                 label="Password" id="password" name="password" type="password" value={formState.password} onChange={handleInputChange} required />
                         </div>
-                        <CTAButton type="submit">
+                        <CTAButton theme="green" type="submit">
                             Log in
                         </CTAButton>
                     </form>
                     <div className={styles.forgotPassword}>
-                        <CustomLink type="green" to="/forgot-password">Forgot password?</CustomLink>
+                        <CustomLink theme="green" to="/forgot-password">Forgot password?</CustomLink>
                     </div>
                 </div>
             </main>
