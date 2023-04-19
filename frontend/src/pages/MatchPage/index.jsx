@@ -51,7 +51,6 @@ export function MatchPage() {
   };
 
   return (
-    <div style={styles.body}>
       <div style={styles.card}>
         <div style={styles.container}>
           <h1 style={styles.h1}>Begin Matching, {user.name}</h1>
@@ -62,10 +61,9 @@ export function MatchPage() {
           </p>
           <p style={{ marginBottom: '0px', }}>Interests:</p>
           <p style={styles.interestsText}>{user.interests.join(', ')}</p>
-          <CTAButton type="submit">Start Here</CTAButton>
-          {/* <button style={{ ...styles.button, margin: 5 }} onClick={handleMatch}>
-            Light 'em Matches
-          </button> */}
+          <button style={{ ...styles.button, margin: 5 }} onClick={handleMatch}>
+            Start Here
+          </button>
           {matches.length > 0 && showModal && (
             <div style={styles.modal}>
               <MatchesDisplay matches={matches} />
@@ -80,6 +78,5 @@ export function MatchPage() {
           )}
         </div>
       </div>
-    </div>
   );
 }

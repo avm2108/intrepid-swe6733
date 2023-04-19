@@ -54,11 +54,12 @@ export const MatchesDisplay = ({ matches }) => {
   }, [currentProspect.gender]);
 
   return (
-    <><Helmet>
+    <>
+    <Helmet>
       <title>Intrepid - Match Page</title>
       <script src="https://kit.fontawesome.com/37ce2b2559.js" crossorigin="anonymous"></script>
     </Helmet>
-    <div style={styles.container}>
+    <h4 style={styles.h4}>Home - Matching</h4>
         {isLoading ? (
           <div style={styles.column}>
             Summoning
@@ -70,17 +71,14 @@ export const MatchesDisplay = ({ matches }) => {
             Failed to load image...
           </div>
         ) : (
-          <div style={styles.column}>
+          <div className='card-container' style={styles.column}>
             <img
               style={styles.image}
               src={prospectImage}
               alt="Prospect"
             />
-          </div>
-        )}
-        <div style={styles.column}>
-          <div style={styles.card }>
-            <div style={styles.cardBody}>
+
+            <div style={styles.prospectInfo}>
               <p style={styles.name}>{currentProspect.name}</p>
               <p style={styles.text}>
                 {currentProspect.age}, {currentProspect.gender}
@@ -89,11 +87,14 @@ export const MatchesDisplay = ({ matches }) => {
                 {currentProspect.city}, {currentProspect.state}{' '}
                 {currentProspect.country}
               </p>
-              <p style={{ marginBottom: '0px' }}>Interests:</p>
+              <p style={{ color: 'white', fontSize: '16px', marginBottom: '0px' }}>Interests:</p>
               <p style={styles.interestsText}>
                 {currentProspect.interests.join(', ')}
               </p>
-
+              </div>
+          </div>
+        )}
+        <div className='recommend-container' style={styles.column}>
               <div style={styles.recommendContainer}>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <p style={{...styles.recommendText, margin:0}}>
@@ -134,10 +135,9 @@ export const MatchesDisplay = ({ matches }) => {
                   Next &gt;
                 </button>
               </div>
-            </div>
           </div>
-        </div>
-      </div></>
+          
+      </>
 
   );
 };

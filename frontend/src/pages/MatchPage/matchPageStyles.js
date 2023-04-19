@@ -1,25 +1,20 @@
 /*-- styles for match page--*/
 
 export const styles = {
-  body: {
-    textAlign: 'center',
-    justifyContent: 'center',
-  },
+  
   card: {
     height: '667px',
     width: '360px',
-
     display: 'flex',
+    flexGrow: '1',
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'absolute',
+    // position: 'absolute',
     top: '50%',
     left: '50%',
-    transform: 'translate(-50%, -50%)',
   },
   container: {
-    textAlign: 'center',
-    justifyContent: 'center',
+    textAlign: 'center'
   },
   h1: {
     fontSize: '36px',
@@ -54,15 +49,18 @@ export const styles = {
   },
 
   button: {
-    backgroundColor: '#d10000',
+    backgroundColor: '#20A090',
     color: '#fff',
-    border: 'none',
-    borderRadius: '5px',
-    padding: '10px 20px',
+    fontFamily: 'Roboto',
+    fontSize: '16px',
+    lineHeight: '16px',
+    fontWeight: 700,
+    borderRadius: '16px',
+    height: '48px',
+    width: '20.438em',
     cursor: 'pointer',
-    outline: 'none',
-    marginTop: '20px',
-    fontSize: '24px',
+    border: 0,
+    outline: 0,
   },
   modal: {
     position: 'absolute',
@@ -73,6 +71,10 @@ export const styles = {
     padding: 20,
     borderRadius: 5,
     zIndex: 1,
+    width: '400px',
+    border: '1px',
+    borderStyle: 'solid',
+    borderColor: 'rgb(121, 123, 124, .2)'
   },
   modalBackground :{
     position: 'absolute',
@@ -81,27 +83,37 @@ export const styles = {
     transform: 'translate(-50%, -50%)',
     width: '100vw',
     height: '100vh',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'white',
   }
 };
 
 /*-- styles for prospect cards--*/
 
 export const modalStyles = {
+  h4: {
+    fontFamily: 'Roboto',
+    fontStyle: 'normal',
+    fontWeight: 500,
+    fontSize: '18px',
+    lineHeight: '18px',
+  },
   container: {
     backgroundColor: '#fff',
-    display: 'flex',
+    display: 'block',
+    /* display: 'flex',
     justifyContent: 'center',
-    alignItems: 'start',
+    alignItems: 'start', */
     height: '325px',
     width: '100%',
   },
   column: {
-    width: '150px',
-    height: '250px',
-    display: 'flex',
+    width: '100%',
+    // height: '250px',
+    display: 'block',
+    position: 'relative',
+    /* display: 'flex',
     justifyContent: 'start',
-    alignItems: 'start',
+    alignItems: 'start', */
     fontSize: '14px',
   },
   image: {
@@ -109,58 +121,52 @@ export const modalStyles = {
     maxHeight: '100%',
     borderRadius: '5px',
   },
-  card: {
-    backgroundColor: '#fff',
-    height: '100%',
-    textAlign: 'start',
-    borderRadius: '5px',
-    padding: '10px',
-    paddingTop: '0px',
-  },
-  cardBody: {
-    textAlign: 'start',
+  prospectInfo: {
+    position: 'absolute',
+    zIndex: '1',
+    bottom: '20px',
+    textAlign: 'left',
+    paddingLeft: '16px',
   },
   name: {
     marginTop: '0px',
     marginBottom: '5px',
-    fontWeight: 'bold',
-    fontSize: '20px',
-    color: '#d10000',
+    fontWeight: '500',
+    fontSize: '30px',
+    color: 'white',
   },
   text: {
     marginTop: '0px',
     marginBottom: '0px',
     fontSize: '14px',
     fontWeight: 'bolder',
-    color: '#131313',
+    color: 'white',
   },
   interestsText: {
     marginTop: '0px',
     fontSize: '14px',
     fontWeight: 'bolder',
-    color: '#131313',
+    color: 'white',
+    backgroundColor: '#20A090',
+    border: 'none',
+    borderRadius:' 12px',
+    padding:' 12px',
   },
   recommendText: {
     textAlign: 'center',
-    fontSize: '14px',
+    fontSize: '18px',
     fontWeight: 'bolder',
     color: '#d10000',
   },
   recommendContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
     width: '100%',
-    paddingBottom: '55px',
+    paddingTop: '25px',
   },
   buttonContainer: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'flex-end',
-    position: 'absolute',
+    // position: 'absolute',
     bottom: 0,
     left: 0,
     width: '100%',
@@ -174,15 +180,19 @@ export const modalStyles = {
     padding: '10px 20px',
     cursor: 'pointer',
     outline: 'none',
+    width: '50%',
+    fontSize: '16px'
   },
   buttonNext: {
-    backgroundColor: '#d10000',
+    backgroundColor: '#20A090',
     color: '#fff',
     border: 'none',
     borderRadius: '5px',
     padding: '10px 20px',
     cursor: 'pointer',
+    width: '50%',
     outline: 'none',
+    fontSize: '16px'
   },
 
 };
