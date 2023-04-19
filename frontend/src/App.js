@@ -12,8 +12,13 @@ import Register from './pages/Register';
 import ErrorPage from './pages/ErrorPage';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+
+import {MatchPage}  from './pages/MatchPage';
+import ComponentsPage from './components';
+
 import ReduxSandbox from './pages/ReduxSandbox';
 import DemoProfile from './pages/DemoProfile';
+
 
 /**
  * <App /> is the root component of the app. It renders the root layout and child routes.
@@ -30,14 +35,19 @@ function App() {
           if the user's logged in and show that appropriate "homepage" */}
         <Route index element={<GuestHome />} />
         {/* The path specifies the URL that'll provide the component specified in the 'element' */}
+        <Route path="/components" element={<ComponentsPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/reset-password/:key" element={<ResetPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         {/*-- Example page consuming data from Redux store --*/}
         <Route path="/reduxsandbox" element={<ReduxSandbox />} />
+
+        <Route path="/match-page" element={<MatchPage />} />
+
         {/* Demo Route to display logged in user's info */}
         <Route path="/demoProfile" element={<DemoProfile />} />
+
         {/* The * wildcard path matches any URL that doesn't match any other <Route /> */}
         <Route path="*" element={<ErrorPage />} />
       </Routes>

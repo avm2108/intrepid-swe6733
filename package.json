@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/avm2108/intrepid-swe6733#readme",
   "dependencies": {
+    "@mui/icons-material": "^5.11.16",
     "concurrently": "^7.6.0"
   },
   "private": true
