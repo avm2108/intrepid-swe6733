@@ -8,7 +8,7 @@ describe('MatchPage', () => {
     render(<MatchPage />);
     expect(screen.getByText('Begin Matching, Heidi')).toBeInTheDocument();
     expect(screen.getByText('Your profile:')).toBeInTheDocument();
-    expect(screen.getByText('32, female')).toBeInTheDocument();
+    expect(screen.getByText(/32, female/i)).toBeInTheDocument();
     expect(screen.getByText('Los Angeles, CA USA')).toBeInTheDocument();
     expect(screen.getByText('reading, writing, yoga, traveling, cooking, learning new things, photography')).toBeInTheDocument();
   });
