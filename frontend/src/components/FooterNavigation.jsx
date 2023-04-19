@@ -25,16 +25,3 @@ export default function FooterNavigation() {
         </BottomNavigation>
     )
 }
-
-/*         <BottomNavigation
-        className={styles.bottomNav}
-        showLabels
-        value={value}
-        onChange={(event, newValue) => {setValue(newValue)}}
-        >
-            <BottomNavigationAction label="Home" icon={<HomeOutlinedIcon />} />
-            <BottomNavigationAction label="Messages" icon={<ChatBubbleOutlineOutlinedIcon/>} />
-            <BottomNavigationAction label="Profile" icon={<AccountCircleOutlinedIcon />} />
-            <BottomNavigationAction label="Settings" icon={<SettingsOutlinedIcon />} />
-
-        </BottomNavigation>  */
