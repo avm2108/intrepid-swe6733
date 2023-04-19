@@ -17,7 +17,7 @@ const rules = {
     email: [
         body('email', 'Email is required').notEmpty(),
         // Email should be a valid email address
-        body('email', 'Email is an invalid format').isEmail().if(body('email').notEmpty()),
+        body('email', 'Email is an invalid format').if(body('email').notEmpty()).isEmail(),
     ],
     password: [
         body('password', 'Password is required').notEmpty(),

@@ -25,6 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors({
     origin: [process.env.CLIENT_ORIGIN || "http://localhost:3000"],
     credentials: true
+    // TODO: On production, we should specify SameSite and Secure options
 }));
 
 // Disable the X-Powered-By header to prevent information leakage about the server
@@ -37,13 +38,15 @@ const profileRouter = require("./routes/profileRoutes");
 const publicRouter = require("./routes/publicRoutes");
 
 // For debugging, we can output any incoming requests as well as their bodies
-app.use((req, res, next) => {
-    console.log("Request received: " + req.method + " " + req.url);
-    console.log("Request body: " + JSON.stringify(req.body));
-    console.log("Request cookies: " + JSON.stringify(req.cookies));
+if (process.env.NODE_ENV === "development") {
+    app.use((req, res, next) => {
+        console.log("Request received: " + req.method + " " + req.url);
+        console.log("Request body: " + JSON.stringify(req.body));
+        console.log("Request cookies: " + JSON.stringify(req.cookies) + " " + JSON.stringify(req.signedCookies));
 
-    next();
-});
+        next();
+    });
+}
 
 // Activate our API endpoints
 // TODO: Might want to reorganize these to be more RESTful
