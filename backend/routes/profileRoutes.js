@@ -16,27 +16,48 @@ const { ProfileSchema } = require('../models/Profile');
  * @param  {String} id - The ID of the user whose profile we want to get
  * @returns {Object} - JSON object containing user's profile info
  */
-profileRouter.get('/:id', async (req, res, next) => {
+profileRouter.get('/:id', verifyCsrf, passport.authenticate("jwt-strategy", { session: false }), async (req, res, next) => {
+    // Ensure we're logged in
+    if (!req.user) {
+        return res.status(401).json({
+            errors: {
+                message: "You must be logged in to view a user's profile"
+            }
+        });
+    }
+    
     // Attempt to find the user with the given ID
     try {
         const user = await User.findById(req.params.id);
-        if (user) {
-            // If the user exists, return their profile
-            return res.status(200).json({
-                profile: user.profile
-            });
-        } else {
+        if (!user) {
             // If the user doesn't exist, return an error
-            return res.status(404).json({
+            return res.status(424).json({
                 errors: {
-                    message: "User profile not found"
+                    message: "No user account with that ID found"
                 }
             });
         }
+    
+        // If the user exists, ensure they have a profile
+        if (!user.profile) {
+            // If the user doesn't have a profile, return an error
+            return res.status(404).json({
+                errors: {
+                    message: "No profile exists for this user"
+                }
+            });
+        }
+
+        // Finally, return their profile
+        return res.status(200).json({
+            profile: user.profile
+        });
     } catch (err) {
         console.log("Error getting user profile: ", err);
         return res.status(500).json({
-            errors:"There was an error getting the user profile, please try again later"
+            errors: {
+                message: "There was an error getting the user profile, please try again later"
+            }
         });
     }
 });
@@ -50,15 +71,34 @@ profileRouter.get('/:id', async (req, res, next) => {
 profileRouter.get('/', verifyCsrf, passport.authenticate('jwt-strategy', { session: false }), async (req, res, next) => {
     // If the user is logged in, req.user will be populated with the user's data
     // If the user is not logged in, req.user will be undefined
-    if (req.user.profile) {
+    if (!req.user) {
+        return res.status(401).json({
+            errors: {
+                message: "You must be logged in to view your profile"
+            }
+        });
+    }
+
+    // Indicate the profile doesn't exist
+    // TODO: We'll need to redirect to the profile create page clientside
+    if (!req.user.profile) {
+        return res.status(404).json({
+            errors: {
+                message: "No profile exists for this user"
+            }
+        });
+    }
+
+    try {
         return res.status(200).json({
             profile: req.user.profile
         });
-    } else {
-        // Indicate the profile doesn't exist
-        // TODO: We'll need to redirect to the profile create page clientside
-        return res.status(404).json({
-            errors:"Profile not found",
+    } catch (err) {
+        console.log("Error getting user profile: ", err);
+        return res.status(500).json({
+            errors: {
+                message: "There was an error retrieving your profile, please try again later"
+            }
         });
     }
 });
@@ -93,54 +133,66 @@ profileRouter.get('/', verifyCsrf, passport.authenticate('jwt-strategy', { sessi
 profileRouter.post('/', verifyCsrf, passport.authenticate('jwt-strategy', { session: false }), async (req, res, next) => {
     // If the user is logged in, req.user will be populated with the user's data
     // If the user is not logged in, req.user will be undefined
-    if (req.user.profile) {
-        return res.status(400).json({
-            errors:"A profile already exists for this user"
-        });
-    } else {
-        // Create a new profile for the user
-        const profile = {
-            gender: req.body.gender,
-            bio: req.body.bio,
-            location: req.body.location,
-            profilePictures: req.body.profilePictures,
-            interests: req.body.interests,
-            preferences: req.body.preferences
-        };
-
-        // Save the profile to the database in the User document
-        try {
-            req.user.profile = profile;
-            // Validate the user's data with Mongoose validation
-            // TODO: Add our own rules to 'validateWithRules' to validate the profile data for full control over the validation
-            await req.user.validate();
-            await req.user.save();
-
-            // If the profile was successfully created, return the profile data
-            return res.status(200).json({
-                profile: profile
-            });
-        } catch (err) {
-            console.log("Error updating profile: ", err);
-            if (err.errors) {
-                const errorMessages = {};
-                // Loop through the errors object
-                for (const key in err.errors) {
-                    errorMessages[key] = err.errors[key].message;
-                }
-                // Return the err messages
-                if (Object.keys(errorMessages).length > 0) {
-                    if (process.env.NODE_ENV === "development")
-                        console.log("Error messages in /profile: " + JSON.stringify(errorMessages));
-                    return res.status(500).json({ errors: errorMessages });
-                }
+    if (!req.user) {
+        return res.status(401).json({
+            errors: {
+                message: "You must be logged in to create a profile"
             }
-            return res.status(500).json({
-                errors: {
-                    message: "There was an error creating your profile, please try again later"
-                }
-            });
+        });
+    }
+
+    if (req.user.profile) {
+        // Status code 409: Conflict, the profile already exists
+        return res.status(409).json({
+            errors: {
+                message: "A profile already exists for this user"
+            }
+        });
+    }
+
+    // Create a new profile for the user
+    const profile = {
+        gender: req.body.gender,
+        bio: req.body.bio,
+        location: req.body.location,
+        profilePictures: req.body.profilePictures,
+        interests: req.body.interests,
+        preferences: req.body.preferences
+    };
+
+    // Save the profile to the database in the User document
+    try {
+        req.user.profile = profile;
+        // Validate the user's data with Mongoose validation
+        // TODO: Add rules to 'validateWithRules' to validate the profile data for full control over the validation
+        await req.user.save();
+
+        // If the profile was successfully created, return the profile data
+        return res.status(201).json({
+            profile: profile
+        });
+    } catch (err) {
+        console.log("Error updating profile: ", err);
+
+        if (err.errors) {
+            const errorMessages = {};
+            // Loop through the errors object
+            for (const key in err.errors) {
+                errorMessages[key] = err.errors[key].message;
+            }
+            // Return the err messages
+            if (Object.keys(errorMessages).length > 0) {
+                if (process.env.NODE_ENV === "development")
+                    console.log("Error messages in /profile: " + JSON.stringify(errorMessages));
+                return res.status(400).json({ errors: errorMessages });
+            }
         }
+
+        return res.status(500).json({
+            errors: {
+                message: "There was an error creating your profile, please try again later"
+            }
+        });
     }
 });
 
@@ -149,7 +201,6 @@ profileRouter.post('/', verifyCsrf, passport.authenticate('jwt-strategy', { sess
  * @desc    Update the current user's profile
  * @access  Private
  * @returns {Object} - JSON object containing user's profile info
- 
  * @body    {String} gender - The user's gender
  * @body    {String?} bio - The user's bio
  * @body    {Object} location - The user's location
@@ -172,11 +223,22 @@ profileRouter.post('/', verifyCsrf, passport.authenticate('jwt-strategy', { sess
  * @body    ---- {Number} distance.max - The maximum distance the user is interested in
  */
 // TODO: Add validation for the profile data
+// TODO: Handle profile image uploads
 profileRouter.put('/', verifyCsrf, passport.authenticate('jwt-strategy', { session: false }), async (req, res, next) => {
+    if (!req.user) {
+        return res.status(401).json({
+            errors: {
+                message: "You must be logged in to update your profile"
+            }
+        });
+    }
+    
     // If the user does not have a profile, redirect to the profile creation page
     if (!req.user.profile) {
         return res.status(404).json({
-            errors:"No profile exists for this user yet"
+            errors: {
+                message: "No profile exists for this user."
+            }
         });
     }
 
@@ -217,7 +279,7 @@ profileRouter.put('/', verifyCsrf, passport.authenticate('jwt-strategy', { sessi
             if (Object.keys(errorMessages).length > 0) {
                 if (process.env.NODE_ENV === "development")
                     console.log("Error messages in PUT /profile: " + JSON.stringify(errorMessages));
-                return res.status(500).json({ errors: errorMessages });
+                return res.status(400).json({ errors: errorMessages });
             }
         }
         return res.status(500).json({
@@ -227,5 +289,5 @@ profileRouter.put('/', verifyCsrf, passport.authenticate('jwt-strategy', { sessi
         });
     }
 });
-
+    
 module.exports = profileRouter;

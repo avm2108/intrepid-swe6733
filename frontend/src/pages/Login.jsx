@@ -107,7 +107,7 @@ export default function Login(props) {
         axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
 
         // TODO: Update the global state with our info 
-        alert("User Info: " + JSON.stringify(res?.data?.user) + " and the CSRF token is: " + csrfToken);
+        // alert("User Info: " + JSON.stringify(res?.data?.user) + " and the CSRF token is: " + csrfToken);
 
         // TODO: Redirect to the user profile creation page
         navigate('/demoProfile', {

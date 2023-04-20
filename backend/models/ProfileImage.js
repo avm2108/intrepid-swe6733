@@ -4,18 +4,17 @@ const bcrypt = require("bcryptjs");
 const ProfileImageSchema = new mongoose.Schema({
     file: {
         type: String,
-        required: true,
+        required: [true, "Please provide an image file to use as your profile picture."],
         trim: true
     },
     position: {
         type: Number,
-        required: true,
+        required: [true, "Please specify the position of this profile picture."],
         trim: true,
-        default: 0
     },
     caption: {
         type: String,
-        required: false,
+        required: [true, "A caption for your profile picture is required."],
         trim: true
     }
 });

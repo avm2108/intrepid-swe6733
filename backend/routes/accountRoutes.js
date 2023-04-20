@@ -13,6 +13,15 @@ const User = require('../models/User');
  * @returns {object} user - The user's account details
  */
 accountRouter.get('/:id', verifyCsrf, passport.authenticate('jwt-strategy', { session: false }), async (req, res, next) => {
+    // If the user isn't logged in, return an error message
+    if (!req.user) {
+        return res.status(401).json({
+            errors: {
+                message: "You must be logged in to view account details"
+            }
+        });
+    }
+    
     // Attempt to find the user by their ID
     try {
         const user = await User.findById(req.params.id);
@@ -64,13 +73,13 @@ accountRouter.put("/password", verifyCsrf, passport.authenticate("jwt-strategy",
     if (await req.user.isValidPassword(req.body.oldPassword) || req.body.oldPassword === req.body.newPassword) {
         return res.status(400).json({
             errors: {
-                message: "The new password must be different from the old password"
+                newPassword: "The new password must be different from the old password"
             }
         });
     } else if (req.body.newPassword !== req.body.confirmPassword) {
         return res.status(400).json({
             errors: {
-                message: "The new password and confirmation password must match"
+                confirmPassword: "The new password and confirmation password must match"
             }
         });
     }
@@ -144,14 +153,26 @@ accountRouter.put('/', verifyCsrf, passport.authenticate("jwt-strategy", { sessi
     }
 
     // Save the new account data to the User document
+    // TODO: Need to selectively validate the incoming data, i.e. not a field if it hasn't changed or isn't provided
+    // This'd require modifications to validateWithRules 
     try {
         // We only want to update fields that are included in the request body, if they're different from the current values
         if (req.body.name && req.body.name !== req.user.name) {
             req.user.name = req.body.name;
         }
+
         if (req.body.email && req.body.email !== req.user.email) {
+            // Need to check if this email belongs to another account
+            if (await User.findOne({ email: req.body.email })) {
+                return res.status(400).json({
+                    errors: {
+                        email: "There is already an account with that email address"
+                    }
+                });
+            }
             req.user.email = req.body.email;
         }
+        
         if (req.body.dateOfBirth && req.body.dateOfBirth !== req.user.dateOfBirth) {
             req.user.dateOfBirth = req.body.dateOfBirth;
         }
@@ -187,7 +208,7 @@ accountRouter.put('/', verifyCsrf, passport.authenticate("jwt-strategy", { sessi
             // Return the err messages
             if (Object.keys(errorMessages).length > 0) {
                 console.log("Error messages: " + JSON.stringify(errorMessages));
-                return res.status(500).json({ errors: errorMessages });
+                return res.status(400).json({ errors: errorMessages });
             }
         }
         return res.status(500).json({
@@ -228,9 +249,9 @@ accountRouter.post('/delete', verifyCsrf, passport.authenticate("jwt-strategy", 
             });
         } else {
             // The password is incorrect, so we can't delete the user's account
-            return res.status(401).json({
+            return res.status(400).json({
                 errors: {
-                    message: "You entered an incorrect password"
+                    password: "You entered an incorrect password"
                 }
             });
         }
