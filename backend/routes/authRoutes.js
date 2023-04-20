@@ -26,7 +26,7 @@ authRouter.post('/login', validateWithRules, generateCsrf, async (req, res, next
         if (!user) {
             console.log("No user found with email: " + email);
             // If the user wasn't found, return an error message
-            return res.status(400).json({ errors: { email: 'No user found with that email' } });
+            return res.status(404).json({ errors: { email: 'No account with that email address found' } });
         }
 
         if (process.env.NODE_ENV === "development")
@@ -43,7 +43,7 @@ authRouter.post('/login', validateWithRules, generateCsrf, async (req, res, next
                 signed: true,
             });
 
-            // Return a useful response with user's data
+            // Return a useful response with the user's data as well as the csrf token
             // TODO: We could return the profile info or keep that to the specific endpoint
             return res.status(200).json({
                 message: "Login successful",
@@ -57,12 +57,11 @@ authRouter.post('/login', validateWithRules, generateCsrf, async (req, res, next
             });
         } else {
             // If the passwords don't match, return an error message
-            /*             // TODO: We could make this message more general to not give away that the email was correct
-                        return res.status(401).json({ errors:{ password: 'Incorrect password' } }); */
-            // TODO: We could make this message more general to not give away that the email was correct
             return res.status(401).json({ errors: { email: "The credentials you entered are incorrect or don't match an existing account." } });
         }
-    } catch(err) {
+    } catch (err) {
+        console.log("Error in /login: " + err);
+
         // If there was an error, most likely it's related to the database
         // Check if it's a validation error
         if (err.errors) {
@@ -73,8 +72,6 @@ authRouter.post('/login', validateWithRules, generateCsrf, async (req, res, next
             }
             // Return the err messages
             if (Object.keys(errorMessages).length > 0) {
-                if (process.env.NODE_ENV === "development")
-                    console.log("Error messages in /login: " + JSON.stringify(errorMessages));
                 return res.status(400).json({ errors: errorMessages });
             }
         } else if (err.code === 11000) {
@@ -82,7 +79,6 @@ authRouter.post('/login', validateWithRules, generateCsrf, async (req, res, next
             return res.status(400).json({ errors: { email: 'That email is already in use' } });
         }
 
-        console.log("Error in /login: " + err);
         // If it's not a validation error, return the error
         return res.status(500).json({
             errors: {
@@ -142,7 +138,11 @@ authRouter.post('/register', validateWithRules, async (req, res, next) => {
             return res.status(400).json({ errors: { email: 'A user with that email already exists' } });
         }
         // There was an error not related to validation, return it
-        return res.status(500).json({ errors:err });
+        return res.status(500).json({
+            errors: {
+                general: 'There was an error registering your account, please try again later' 
+            }
+        });
     }
 });
 

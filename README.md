@@ -2,7 +2,7 @@
 A web app that connects outdoor enthusiasts with each other based on their shared interests, preferences, and experience level, allowing them to communicate and plan activities together.
 
 # Viewing the Application
-The application is viewable in its current state at: http://intrepid.jgproductions.x10.bz/
+The application is viewable in its current state at: https://intrepid.herokuapp.com/
 
 ## SWE 6733 - Emerging Software Engineering Practices
 ## Group 1 Members & Roles
