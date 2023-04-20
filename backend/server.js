@@ -40,6 +40,7 @@ app.disable("x-powered-by");
 const authRouter = require("./routes/authRoutes");
 const accountRouter = require("./routes/accountRoutes");
 const profileRouter = require("./routes/profileRoutes");
+const messageRouter = require("./routes/messageRoutes");
 const publicRouter = require("./routes/publicRoutes");
 
 // For debugging, we can output any incoming requests as well as their bodies
@@ -58,6 +59,7 @@ if (process.env.NODE_ENV === "development") {
 app.use("/api/auth", authRouter);
 app.use("/api/account", accountRouter);
 app.use("/api/profile", profileRouter);
+app.use("/api/messages", messageRouter);
 app.use("/api", publicRouter);
 
 // Serve static assets if in production
