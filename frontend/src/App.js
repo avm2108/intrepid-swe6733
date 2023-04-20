@@ -16,6 +16,7 @@ import ReduxSandbox from './pages/ReduxSandbox';
 import { MatchPage }  from './pages/MatchPage';
 import ComponentsPage from './pages/ComponentsTest';
 import DemoProfile from './pages/DemoProfile';
+import UserProfile from './pages/UserProfile';
 
 
 /**
@@ -44,6 +45,8 @@ function App() {
         <Route path="/match-page" element={<MatchPage />} />
         {/* Demo Route to display logged in user's info */}
         <Route path="/demoProfile" element={<DemoProfile />} />
+        <Route path="/user-profile" element={<UserProfile />} />
+
         {/* <Route element={<PrivateRoute user={user} />}> */}
           {/* Any routes that require a user to be logged in go here; */}
         {/* </Route> */}

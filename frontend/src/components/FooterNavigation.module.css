@@ -10,3 +10,11 @@
     display: flex;
     width: 100%;
 }
+
+.navButton {
+    color: #797c7b;
+}
+
+button.MuiButtonBase-root.MuiBottomNavigationAction-root.Mui-selected {
+    color: #24786D
+}

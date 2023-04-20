@@ -18,10 +18,30 @@ export default function FooterNavigation() {
                 setValue(newValue);
             }}
         >
-            <BottomNavigationAction label="Home" icon={<HomeOutlinedIcon />} />
-            <BottomNavigationAction label="Messages" icon={<ChatBubbleOutlineOutlinedIcon />} />
-            <BottomNavigationAction label="Profile" icon={<AccountCircleOutlinedIcon />} />
-            <BottomNavigationAction label="Settings" icon={<SettingsOutlinedIcon />} />
+            <BottomNavigationAction 
+            className={styles.navButton}
+            value={0}
+            label="Home" 
+            icon={<HomeOutlinedIcon />} 
+            />
+            <BottomNavigationAction 
+            className={styles.navButton}
+            value={1}
+            label="Messages" 
+            icon={<ChatBubbleOutlineOutlinedIcon />} 
+            />
+            <BottomNavigationAction 
+            className={styles.navButton} 
+            value={2}
+            label="Profile" 
+            icon={<AccountCircleOutlinedIcon />} 
+            />
+            <BottomNavigationAction 
+            className={styles.navButton} 
+            value={3}
+            label="Settings" 
+            icon={<SettingsOutlinedIcon />} 
+            />
         </BottomNavigation>
     )
 }
