@@ -40,7 +40,7 @@ function App() {
         <Route path="/reset-password/:key" element={<ResetPassword />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         {/*-- Example page consuming data from Redux store --*/}
-        <Route path="/reduxsandbox" element={<ReduxSandbox />} />
+        {process.env.NODE_ENV === 'development' && <Route path="/reduxsandbox" element={<ReduxSandbox />} />}
         <Route path="/match-page" element={<MatchPage />} />
         {/* Demo Route to display logged in user's info */}
         <Route path="/demoProfile" element={<DemoProfile />} />

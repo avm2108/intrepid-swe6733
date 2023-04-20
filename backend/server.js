@@ -1,5 +1,10 @@
 // Allow our app access to environment variables defined in .env
-require('dotenv').config();
+console.log("Running in " + process.env.NODE_ENV + " mode.");
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config({ path: "./.env" });
+} else {
+    require("dotenv").config({ path: "./.env.production" });
+}
 
 // Import dependencies
 const path = require("path");
@@ -56,15 +61,15 @@ app.use("/api/profile", profileRouter);
 app.use("/api", publicRouter);
 
 // Serve static assets if in production
-/* if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === "production") {
     // Set the static folder, we'll have to 'npm run build' in the React folder and copy the build folder into the backend folder
-    app.use(express.static("public"));
+    app.use(express.static("build"));
 
     // Serve the index.html file for all requests that don't match an API endpoint
     app.get("*", (req, res) => {
-        res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+        res.sendFile(path.resolve(__dirname, "build", "index.html"));
     });
-} */
+}
 
 // Start the server
 dbConnect().then(() => {
