@@ -1,18 +1,17 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const { UserSchema } = require("./User");
 const { MatchSchema } = require("./Match");
 
 const ChatMessageSchema = new mongoose.Schema({
     sender: {
-        type: UserSchema,
-        required: true,
-        trim: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     },
     recipient: {
-        type: UserSchema,
-        required: true,
-        trim: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     },
     readDate: {
         type: String,

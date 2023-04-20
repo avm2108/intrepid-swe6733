@@ -1,16 +1,17 @@
 const mongoose = require("mongoose");
-const UserSchema = require("./User");
 const { chatMessageSchema } = require("./ChatMessage");
 
 // TODO: How are we planning to keep track of a match that one person has accepted while waiting on the other person to accept?
 const MatchSchema = new mongoose.Schema({
     user1: {
-        type: UserSchema,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true,
         trim: true
     },
     user2: {
-        type: UserSchema,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: false,
         trim: true
     },
