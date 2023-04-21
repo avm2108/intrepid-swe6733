@@ -23,8 +23,8 @@ const app = express();
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // Enable request bodies in either json or urlencoded format to be parsed
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // Enable CORS bypass for the frontend, and allow credentials (cookies, etc.) to be passed
 app.use(cors({

@@ -22,7 +22,7 @@ const generateCsrf = (req, res, next) => {
 const verifyCsrf = (req, res, next) => {
     // Extract the token from the cookie
     const token = req.cookies.csrfToken;
-    
+
     /*if (process.env.NODE_ENV === "development") {
         // Extract the token from the request body or headers
         const inboundToken = req.body.csrfToken ? req.body.csrfToken : (req.headers['x-csrf-token'] ? req.headers['x-csrf-token'] : undefined);
@@ -32,9 +32,11 @@ const verifyCsrf = (req, res, next) => {
     // Verify that the token passed in via a form field or via a header matches the one in the cookie
     if (req.body.csrfToken === token || req.headers['x-csrf-token'] === token) {
         // If the token is valid, pass the request to the next middleware
+        console.log("CSRF token verified")
         next();
     } else {
         // If the token is invalid, return an error
+        console.log("CSRF token invalid") 
         res.status(403).json({
             errors: {
                 message: 'Invalid CSRF token. Make sure you\'re taking it from cookie.csrfToken and passing it in headers as X-CSRF-Token or in a hidden form field with name=\'csrfToken\''
