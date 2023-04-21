@@ -191,10 +191,13 @@ describe('Register Page', () => {
         // Fill up the form
         const nameField = screen.getByLabelText(/your name/i)
         // Ensure it's there
-        await waitFor(() => { expect(nameField).toBeInTheDocument() });
-        await act(async () => { userEvent.type(nameField, "Horatia") });
-        // Ensure it's filled up
-        await waitFor(() => { expect(nameField).toHaveValue("Horatia") });
+        await waitFor(() => { expect(nameField).toBeInTheDocument() }).then(
+            async () => {
+                await act(async () => { userEvent.type(nameField, "Horatia", { delay: 100 }); });
+                // Ensure it's filled up
+                await waitFor(() => { expect(nameField).toHaveValue("Horatia") });
+            }
+        )
 
         const emailField = screen.getByLabelText(/email/i)
         // Ensure it's there
