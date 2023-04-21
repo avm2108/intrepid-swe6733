@@ -1,4 +1,5 @@
-import { render, screen } from '@testing-library/react';
+/* eslint-disable testing-library/no-unnecessary-act */ // This is a false positive
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { toast } from 'react-hot-toast';
 import { BrowserRouter } from 'react-router-dom';
 import Register from './Register';
@@ -116,7 +117,7 @@ describe('Register Page', () => {
         render(
             <MockRegister />
         );
-        await userEvent.click(screen.getByRole('button', {  name: /create an account/i}));
+        await act(async () => { await userEvent.click(screen.getByRole('button', { name: /create an account/i })); });
         expect(toast.error).toHaveBeenCalled();
     });
 
@@ -126,8 +127,8 @@ describe('Register Page', () => {
             <MockRegister />
         )
         const nameField = screen.getByRole('textbox', {  name: /your name/i})
-        await userEvent.type(nameField, "Horatia")
-        expect(nameField).toHaveValue("Horatia")
+        await act(async () => { userEvent.type(nameField, "Horatia") });
+        await waitFor(() => expect(nameField).toHaveValue("Horatia"));
     });
 
     it('renders typed in value after user input on email field', async () => {
@@ -136,8 +137,8 @@ describe('Register Page', () => {
             <MockRegister />
         )
         const emailField = screen.getByRole('textbox', { name: /email/i })
-        await userEvent.type(emailField, "test@email.add")
-        expect(emailField).toHaveValue("test@email.add")
+        await act(async () => { userEvent.type(emailField, "test@email.add") });
+        await waitFor(() => { expect(emailField).toHaveValue("test@email.add") });
     });
 
     it('renders typed in value after user input on password field', async () => {
@@ -146,8 +147,8 @@ describe('Register Page', () => {
             <MockRegister />
         )
         const passwordField = screen.getByLabelText(/^Password$/)
-        await userEvent.type(passwordField, "1234")
-        expect(passwordField).toHaveValue("1234")
+        await act(async () => { userEvent.type(passwordField, "1234") });
+        await waitFor(() => { expect(passwordField).toHaveValue("1234") });
     });
 
     it('renders typed in value after user input on confirm password field', async () => {
@@ -156,8 +157,8 @@ describe('Register Page', () => {
             <MockRegister />
         )
         const confirmPasswordField = screen.getByLabelText(/confirm password/i)
-        await userEvent.type(confirmPasswordField, "1234")
-        expect(confirmPasswordField).toHaveValue("1234")
+        await act(async () => { userEvent.type(confirmPasswordField, "1234") });
+        await waitFor(() => { expect(confirmPasswordField).toHaveValue("1234") });
     });
 
     it('renders typed in value after user input on dateOfBirth field', async () => {
@@ -166,8 +167,8 @@ describe('Register Page', () => {
             <MockRegister />
         )
         const dateOfBirthField = screen.getByLabelText(/your birth date/i)
-        await userEvent.type(dateOfBirthField, "2023-04-12")
-        expect(dateOfBirthField).toHaveValue("2023-04-12")
+        await act(async () => { userEvent.type(dateOfBirthField, "2023-04-12") });
+        await waitFor(() => { expect(dateOfBirthField).toHaveValue("2023-04-12") });
     });
 
     it('will display error toast when password and confirm password field values don\'t match', async () => {
@@ -176,11 +177,11 @@ describe('Register Page', () => {
             <MockRegister />
         );
         const passwordField = screen.getByLabelText(/^Password$/)
-        await userEvent.type(passwordField, "1234")
+        await act(async () => { userEvent.type(passwordField, "1234") });
         const confirmPasswordField = screen.getByLabelText(/confirm password/i)
-        await userEvent.type(confirmPasswordField, "1233544")
-        await userEvent.click(screen.getByRole('button', {  name: /create an account/i}));
-        expect(toast.error).toHaveBeenCalledTimes(1);
+        await act(async () => { userEvent.type(confirmPasswordField, "1233544") });
+        await act(async () => { userEvent.click(screen.getByRole('button', {  name: /create an account/i})); });
+        await waitFor(() => { expect(toast.error).toHaveBeenCalledTimes(1); });
     });
 
     it('displays toast when form is submitted', async () => {
@@ -190,42 +191,42 @@ describe('Register Page', () => {
         // Fill up the form
         const nameField = screen.getByLabelText(/your name/i)
         // Ensure it's there
-        expect(nameField).toBeInTheDocument()
-        await userEvent.type(nameField, "Horatia")
+        await waitFor(() => { expect(nameField).toBeInTheDocument() });
+        await act(async () => { userEvent.type(nameField, "Horatia") });
         // Ensure it's filled up
-        expect(nameField).toHaveValue("Horatia")
+        await waitFor(() => { expect(nameField).toHaveValue("Horatia") });
 
         const emailField = screen.getByLabelText(/email/i)
         // Ensure it's there
-        expect(emailField).toBeInTheDocument()
+        await waitFor(() => { expect(emailField).toBeInTheDocument() });
         const val = `test${Math.floor(Math.random() * 334)}@email.com`;
-        await userEvent.type(emailField, val);
+        await act(async () => { userEvent.type(emailField, val); });
         // Ensure it's filled up
-        expect(emailField).toHaveValue(val)
+        await waitFor(() => { expect(emailField).toHaveValue(val) });
 
         const passwordField = screen.getByLabelText(/^Password$/)
         // Ensure it's there
-        expect(passwordField).toBeInTheDocument()
-        await userEvent.type(passwordField, "Passw0rd!")
+        await waitFor(() => { expect(passwordField).toBeInTheDocument() });
+        await act(async () => { userEvent.type(passwordField, "Passw0rd!") });
         // Ensure it's filled up
-        expect(passwordField).toHaveValue("Passw0rd!")
+        await waitFor(() => { expect(passwordField).toHaveValue("Passw0rd!") });
 
         const confirmPasswordField = screen.getByLabelText(/confirm password/i)
         // Ensure it's there
-        expect(confirmPasswordField).toBeInTheDocument()
-        await userEvent.type(confirmPasswordField, "Passw0rd!")
+        await waitFor(() => { expect(confirmPasswordField).toBeInTheDocument() });
+        await act(async () => { userEvent.type(confirmPasswordField, "Passw0rd!") });
         // Ensure it's filled up
-        expect(confirmPasswordField).toHaveValue("Passw0rd!")
+        await waitFor(() => { expect(confirmPasswordField).toHaveValue("Passw0rd!") });
 
         const dateOfBirthField = screen.getByLabelText(/your birth date/i)
         // Ensure it's there
-        expect(dateOfBirthField).toBeInTheDocument()
-        await userEvent.type(dateOfBirthField, "1990-04-12")
+        await waitFor(() => { expect(dateOfBirthField).toBeInTheDocument() });
+        await act(async () => { userEvent.type(dateOfBirthField, "1990-04-12") });
         // Ensure it's filled up
-        expect(dateOfBirthField).toHaveValue("1990-04-12")
+        await waitFor(() => { expect(dateOfBirthField).toHaveValue("1990-04-12") });
 
-        await userEvent.click(screen.getByRole('button', {  name: /create an account/i}));
-        expect(toast.error).toHaveBeenCalledTimes(0);
+        await act(async () => { userEvent.click(screen.getByRole('button', {  name: /create an account/i})); });
+        await waitFor(() => { expect(toast.error).toHaveBeenCalledTimes(0); });
     });
 
 });

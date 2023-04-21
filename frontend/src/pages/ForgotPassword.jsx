@@ -14,7 +14,9 @@ import styles from "./ForgotPassword.module.css";
  * @returns {JSX.Element} <ForgotPassword />
  */
 export default function ForgotPassword(props) {
-    const [formState, setFormState] = useState({});
+    const [formState, setFormState] = useState({
+        email: '',
+    });
 
     // When the submit button is clicked, this function is called
     const handleSubmit = (e) => {

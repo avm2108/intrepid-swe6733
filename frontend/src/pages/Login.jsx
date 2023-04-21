@@ -5,8 +5,7 @@ import { toast } from 'react-hot-toast';
 import axios from 'axios';
 import { UserContext } from '../providers/UserProvider';
 // Might need to use this later
-// eslint-disable-next-line no-unused-vars
-import FacebookLogin, { FacebookLoginClient } from '@greatsumini/react-facebook-login';
+// import FacebookLogin, { FacebookLoginClient } from '@greatsumini/react-facebook-login';
 
 import CustomLink from '../components/CustomLink';
 import LabeledInput from '../components/LabeledInput';

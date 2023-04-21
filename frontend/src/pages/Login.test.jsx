@@ -1,4 +1,5 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+/* eslint-disable testing-library/no-unnecessary-act */ // This is a false positive
+import { act, waitFor, render, screen, fireEvent } from '@testing-library/react';
 import { toast } from 'react-hot-toast';
 import { BrowserRouter } from 'react-router-dom';
 import Login from './Login';
@@ -104,7 +105,7 @@ describe('Login Page', () => {
         render(
             <MockLogin />
         );
-        await userEvent.click(screen.getByRole('button', { name: /log in/i }));
+        await act(async () => { await userEvent.click(screen.getByRole('button', { name: /log in/i })); });
         expect(toast).not.toHaveBeenCalled();
     });
 
@@ -113,8 +114,10 @@ describe('Login Page', () => {
         render(
             <MockLogin />
         )
-        const emailField = screen.getByRole('textbox', { name: /email/i })
-        await userEvent.type(emailField, "test@email.add")
+        const emailField = screen.getByRole('textbox', { name: /email/i });
+        await act(async () => {
+            await userEvent.type(emailField, "test@email.add")
+        });
         expect(emailField).toHaveValue("test@email.add")
     });
 
@@ -123,16 +126,21 @@ describe('Login Page', () => {
         render(
             <MockLogin />
         )
-        const passwordField = screen.getByLabelText(/password/i)
-        await userEvent.type(passwordField, "1234")
+        const passwordField = screen.getByLabelText(/password/i);
+        await act(async () => {
+            await userEvent.type(passwordField, "1234")
+        });
         expect(passwordField).toHaveValue("1234")
     });
 
-    it('doesn\'t display toast when form is submitted', () => {
+    it('doesn\'t display toast when form is submitted', async () => {
         render(
             <MockLogin />
         );
-        fireEvent.click(screen.getByRole('button', { name: /log in/i }));
+
+        await act(async () => {
+            await userEvent.click(screen.getByRole('button', { name: /log in/i }));
+        })
         expect(toast.success).not.toHaveBeenCalled();
     });
 
