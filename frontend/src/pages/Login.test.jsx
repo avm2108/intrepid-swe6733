@@ -2,114 +2,135 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { toast } from 'react-hot-toast';
 import { BrowserRouter } from 'react-router-dom';
 import Login from './Login';
-import user from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
+import UserProvider from '../providers/UserProvider';
 
 jest.mock('react-hot-toast');
+
+const MockLogin = () => {
+    const mockUser = ({
+        _id: null,
+        loggedIn: false,
+        name: null,
+        email: null,
+        dateOfBirth: null,
+        csrfToken: null,
+        profile: {
+            gender: null,
+            location: {
+                city: null,
+                state: null,
+                country: null,
+            },
+            bio: null,
+            interests: [],
+            preferences: {
+                gender: [],
+                ageRange: {
+                    min: null,
+                    max: null,
+                },
+                distance: null,
+            },
+            profilePictures: [],
+        },
+        // Temporary representation of the user's social media accounts
+        facebookId: null,
+        instagramId: null,
+        matches: [],
+    });
+
+    return (
+        <BrowserRouter>
+            <UserProvider user={mockUser}>
+                <Login />
+            </UserProvider>
+        </BrowserRouter>
+    )
+};
 
 describe('Login Page', () => {
     it('renders login page title', () => {
         render(
-            <BrowserRouter>
-                <Login />
-            </BrowserRouter>
+            <MockLogin />
         )
         expect(screen.getByRole('heading', { name: /login/i })).toBeInTheDocument()
     });
 
     it('renders link to register if no account', () => {
         render(
-            <BrowserRouter>
-                <Login />
-            </BrowserRouter>
+            <MockLogin />
         )
-        expect(screen.getByRole('link', {  name: /register today/i})).toBeInTheDocument()
+        expect(screen.getByRole('link', { name: /register today/i })).toBeInTheDocument()
     });
 
     it('renders email field', () => {
         render(
-            <BrowserRouter>
-                <Login />
-            </BrowserRouter>
+            <MockLogin />
         )
         expect(screen.getByRole('textbox', { name: /email/i })).toBeInTheDocument()
     });
 
     it('renders password field', () => {
         render(
-            <BrowserRouter>
-                <Login />
-            </BrowserRouter>
+            <MockLogin />
         )
         expect(screen.getByLabelText(/password/i)).toBeInTheDocument()
     });
 
     it('renders login button', () => {
         render(
-            <BrowserRouter>
-                <Login />
-            </BrowserRouter>
+            <MockLogin />
         )
-        expect(screen.getByRole('button', {  name: /log in/i})).toBeInTheDocument()
+        expect(screen.getByRole('button', { name: /log in/i })).toBeInTheDocument()
     });
 
     it('renders blank value for email field before user input', () => {
         render(
-            <BrowserRouter>
-                <Login />
-            </BrowserRouter>
+            <MockLogin />
         )
         expect(screen.getByRole('textbox', { name: /email/i })).toHaveValue("")
     });
 
     it('renders blank value for password field before user input', () => {
         render(
-            <BrowserRouter>
-                <Login />
-            </BrowserRouter>
+            <MockLogin />
         )
         expect(screen.getByLabelText(/password/i)).toHaveValue("")
     });
 
     it('will not display toast when form fields are blank when submitted', async () => {
-        user.setup()
+        userEvent.setup()
         render(
-            <BrowserRouter>
-                <Login />
-            </BrowserRouter>
+            <MockLogin />
         );
-        await user.click(screen.getByRole('button', { name: /log in/i }));
+        await userEvent.click(screen.getByRole('button', { name: /log in/i }));
         expect(toast).not.toHaveBeenCalled();
     });
 
     it('renders typed in value after user input on email field', async () => {
-        user.setup()
+        userEvent.setup()
         render(
-            <BrowserRouter>
-                <Login />
-            </BrowserRouter>
+            <MockLogin />
         )
         const emailField = screen.getByRole('textbox', { name: /email/i })
-        await user.type(emailField, "test@email.add")
+        await userEvent.type(emailField, "test@email.add")
         expect(emailField).toHaveValue("test@email.add")
     });
 
     it('renders typed in value after user input on password field', async () => {
-        user.setup()
+        userEvent.setup()
         render(
-            <BrowserRouter>
-                <Login />
-            </BrowserRouter>
+            <MockLogin />
         )
         const passwordField = screen.getByLabelText(/password/i)
-        await user.type(passwordField, "1234")
+        await userEvent.type(passwordField, "1234")
         expect(passwordField).toHaveValue("1234")
     });
 
     it('doesn\'t display toast when form is submitted', () => {
         render(
-            <BrowserRouter>
-                <Login />
-            </BrowserRouter>
+            <MockLogin />
         );
         fireEvent.click(screen.getByRole('button', { name: /log in/i }));
         expect(toast.success).not.toHaveBeenCalled();
