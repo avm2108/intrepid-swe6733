@@ -5,7 +5,7 @@ const validateWithRules = require('../services/validation');
 const { generateCsrf, verifyCsrf } = require('../services/csrfProtection');
 const User = require('../models/User');
 const { ChatMessage, ChatMessageSchema } = require('../models/ChatMessage');
-
+const mongoose = require("mongoose");
 
 // get list of messages for logged in user for a single parter (conversation)
 messageRouter.get('/:recipient_id', verifyCsrf, passport.authenticate('jwt-strategy', { session: false }), async (req, res, next) => {
@@ -18,7 +18,12 @@ messageRouter.get('/:recipient_id', verifyCsrf, passport.authenticate('jwt-strat
     }
 
     try {
-        let messages = await ChatMessage.find({ sender: req.user.id, recipient: req.params.recipient_id });
+        let messages = await ChatMessage.find().or(
+	    [
+		{ sender: req.user.id, recipient: new mongoose.Types.ObjectId(req.params.recipient_id) },
+		{ sender: new mongoose.Types.ObjectId(req.params.recipient_id), recipient: req.user.id }
+	    ]).sort({ createdAt: 1 });
+
         return res.status(200).json({
             messages: messages
         });
@@ -44,7 +49,7 @@ messageRouter.post('/:recipient_id', verifyCsrf, passport.authenticate('jwt-stra
 
     let message = new ChatMessage({
         sender: req.user.id,
-        recipient: req.params.recipient_id,
+        recipient: new mongoose.Types.ObjectId(req.params.recipient_id),
         content: req.body.content,
         image: req.body.image,
         readDate: req.body.readDate
@@ -52,7 +57,8 @@ messageRouter.post('/:recipient_id', verifyCsrf, passport.authenticate('jwt-stra
     try {
           await message.save();
           return res.status(201).json({ message: "Success" });
-        } catch (err) {
+    } catch (err) {
+	console.log(err);
           return res.status(500).json({ message: "Sorry, unable to send message" });
         }
 });
