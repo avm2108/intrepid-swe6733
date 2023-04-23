@@ -147,6 +147,29 @@ authRouter.post('/register', validateWithRules, async (req, res, next) => {
 });
 
 /**
+ * @route GET /auth/checkLoggedIn
+ * @desc Checks if the user is logged in via looking for the CSRF and JWT cookies
+ * @access Private
+ * @returns {object} - The user's data if they're logged in or an error message if they're not
+ */
+authRouter.get("/checkLoggedIn", generateCsrf, passport.authenticate("jwt-strategy", { session: false }), (req, res, next) => {
+    if (req.user) {
+        return res.status(200).json({
+            loggedIn: true,
+            csrfToken: req.csrfToken,
+            ...req.user
+        });
+    } else {
+        return res.status(401).json({
+            loggedIn: false,
+            errors: {
+                message: "You must be logged in to view this page"
+            }
+        });
+    }
+});
+
+/**
  * @route POST /auth/logout
  * @desc Logs the user out by clearing the cookie
  * @access Public

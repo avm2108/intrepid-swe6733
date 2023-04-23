@@ -1,7 +1,9 @@
+import React, { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Helmet from "react-helmet";
 import CustomLink from "../components/CustomLink";
 import CTAButton from "../components/CTAButton";
-
+import { UserContext } from "../providers/UserProvider";
 import styles from "./GuestHome.module.css";
 
 /**
@@ -10,6 +12,19 @@ import styles from "./GuestHome.module.css";
  * @returns {JSX.Element} <GuestHome />
  */
 export default function GuestHome(props) {
+    const { user } = useContext(UserContext);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        // If the user is already logged in, redirect them to their profile page
+        if (user.loggedIn) {
+            navigate('/profile');
+        } else {
+            console.log('User not logged in at GuestHome');
+            return;
+        }
+    });
+
     return (
         <>
             {/* Helmet allows us to add custom meta tags without serverside rendering */}

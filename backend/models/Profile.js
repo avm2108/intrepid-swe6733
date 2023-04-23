@@ -8,6 +8,7 @@ const PreferencesSchema = require("./Preferences");
 const ProfileSchema = new mongoose.Schema({
     gender: {
         type: String,
+        enum: ["Male", "Female", "Non-binary", "Other/Prefer not to say"],
         trim: true,
         maxlength: 50,
         required: [true, "Please provide your gender"]
@@ -17,8 +18,13 @@ const ProfileSchema = new mongoose.Schema({
         required: [true, "Please provide your location"],
         _id: false // This prevents Mongoose from creating an _id field in the location object
     },
-    profilePictures: {
+/*     profilePictures: {
         type: [ProfileImageSchema],
+        required: false, // If the user doesn't upload any photos, we can use a default profile image
+        _id: false
+    }, */
+    profilePicture: {
+        type: ProfileImageSchema,
         required: false, // If the user doesn't upload any photos, we can use a default profile image
         _id: false
     },
@@ -35,41 +41,9 @@ const ProfileSchema = new mongoose.Schema({
         type: [String],
         enum: {
             values: [
-                "Archery",
-                "Backpacking",
-                "Biking",
-                "Boating",
-                "Camping",
-                "Climbing",
-                "Fishing",
-                "Golfing",
-                "Hiking",
-                "Hunting",
-                "Kayaking",
-                "Mountain Biking",
-                "Paddling",
-                "Paragliding",
-                "Photography",
-                "Rafting",
-                "Rock Climbing",
-                "Snowshoeing",
-                "Surfing",
-                "Sailing",
-                "Scuba Diving",
-                "Skiing",
-                "Snowboarding",
-                "Snowmobiling",
-                "Swimming",
-                "Tennis",
-                "Trail Running",
-                "Traveling",
-                "Wakeboarding",
-                "Water Skiing",
-                "Whitewater Rafting",
-                "Windsurfing",
-                "Volleyball",
-                "Yoga",
-                "Ziplining",
+                "Archery", "Backpacking", "Biking", "Boating", "Camping", "Climbing", "Fishing", "Golfing", "Hiking", "Hunting", "Kayaking", "Mountain Biking", "Paddling",
+                "Paragliding", "Photography", "Rafting", "Rock Climbing", "Snowshoeing", "Surfing", "Sailing", "Scuba Diving", "Skiing", "Snowboarding", "Snowmobiling",
+                "Swimming", "Tennis", "Trail Running", "Traveling", "Wakeboarding", "Water Skiing", "Whitewater Rafting", "Windsurfing", "Volleyball", "Yoga", "Ziplining",
             ],
             message: "This interest is invalid"
         },

@@ -20,7 +20,11 @@ const AgeRangeSchema = new Schema({
 
 const PreferencesSchema = new Schema({
     gender: {
-        type: [String], // TODO: Enum?
+        type: [String],
+        enum: {
+            values: ["Male", "Female", "Non-binary", "Other/Prefer not to say"],
+            message: "Please choose from the list"
+        },
         validate: {
             validator: function (v) {
                 return Array.isArray(v) && v.length > 0 && v.every(el => typeof el === 'string');
