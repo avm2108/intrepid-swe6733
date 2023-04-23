@@ -9,9 +9,11 @@ const INTERESTS = [
     "Swimming", "Tennis", "Trail Running", "Traveling", "Wakeboarding", "Water Skiing", "Whitewater Rafting", "Windsurfing", "Volleyball", "Yoga", "Ziplining",
 ];
 
-// This is only to for demonstration purposes to show 
+// This is only to for demonstration purposes to show
 // how the image upload works, and how data can be pulled
 // from the user context. it doesn't have all the proper fields or validation
+// TODO: We need to detect if a user has already "created" their profile and
+// if so don't show this page, instead redirect them to their view/edit profile page
 export default function DemoProfile(props) {
     const { user, updateUser, logout } = useContext(UserContext);
 

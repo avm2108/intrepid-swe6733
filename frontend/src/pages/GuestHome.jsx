@@ -23,7 +23,7 @@ export default function GuestHome(props) {
             console.log('User not logged in at GuestHome');
             return;
         }
-    });
+    }, [user.loggedIn, navigate]);
 
     return (
         <>

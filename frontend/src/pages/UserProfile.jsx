@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import { Helmet } from "react-helmet";
-import FooterNavigation from "../components/FooterNavigation";
 import image from '../img_avatar.png';
 import styles from './UserProfile.module.css';
 import CTAButton from "../components/CTAButton";
@@ -41,9 +40,9 @@ export default function UserProfile() {
     return (
         <>
             <Helmet>
-                    <title>Intrepid - Profile</title>
-                    <script src="https://kit.fontawesome.com/37ce2b2559.js" crossorigin="anonymous"></script>
-                </Helmet >
+                <title>Intrepid - Profile</title>
+                <script src="https://kit.fontawesome.com/37ce2b2559.js" crossorigin="anonymous"></script>
+            </Helmet>
             <main className={styles.profileContainer}>
                 <h1>Profile</h1>
 
@@ -99,12 +98,9 @@ export default function UserProfile() {
 
                 <hr className={styles.divider}></hr>
 
-               
                 <CTAButton theme="white-border">Logout</CTAButton>
                 <CTAButton theme="red">Delete Account</CTAButton>
                 </div>
-
-                <FooterNavigation value={2}/>
 
             </main>
         </>

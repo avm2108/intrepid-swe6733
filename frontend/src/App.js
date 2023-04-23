@@ -19,7 +19,7 @@ import { MatchPage }  from './pages/MatchPage';
 import ComponentsPage from './pages/ComponentsTest';
 import DemoProfile from './pages/DemoProfile';
 import UserProfile from './pages/UserProfile';
-
+import FooterNavigation from "./components/FooterNavigation";
 
 /**
  * <App /> is the root component of the app. It renders the root layout and child routes.
@@ -62,20 +62,18 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         {/*-- Example page consuming data from Redux store --*/}
         {/* {process.env.NODE_ENV === 'development' && <Route path="/reduxsandbox" element={<ReduxSandbox />} />} */}
-        <Route path="/match-page" element={<MatchPage />} />
         {/* Any routes that require a user to be logged in go here; */}
-        <Route element={<PrivateRoute user={user} />}/>
-        {/* Demo Route to display logged in user's info */}
-        <Route path="/profile" element={<DemoProfile />} />
-        <Route path="/user-profile" element={<UserProfile />} />
-
-        {/* <Route element={<PrivateRoute user={user} />}> */}
-          {/* Any routes that require a user to be logged in go here; */}
-        {/* </Route> */}
+        <Route element={<PrivateRoute user={user} />}>
+          <Route path="/user-profile" element={<UserProfile />} />
+          <Route path="/match-page" element={<MatchPage />} />
+          <Route path="/create-profile" element={<DemoProfile />} />
+          {/* <Route path="/messages" element={<Messages />} />
+          <Route path="/settings" element={<Settings />} /> */}
+        </Route>
         {/* The * wildcard path matches any URL that doesn't match any other <Route /> */}
         <Route path="*" element={<ErrorPage />} />
       </Routes>
-      {/* TODO: { user.loggedIn && <Footer /> } */}
+      {user.loggedIn && <FooterNavigation />}
     </div>
   );
 }

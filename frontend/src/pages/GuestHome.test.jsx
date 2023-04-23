@@ -59,7 +59,7 @@ describe('GuestHome Page', () => {
 
     it('renders guest home punch line', () => {
         render(
-            <MockGuestHome  />
+            <MockGuestHome />
         )
         expect(screen.getByRole('heading', { name: /where adventurers connect/i })).toBeInTheDocument()
     });
