@@ -5,6 +5,7 @@ import { matchAlgo } from './matchAlgo';
 import { prospectsArray } from './prospectsArray';
 import { styles } from './matchPageStyles';
 import CTAButton from '../../components/CTAButton';
+import FooterNavigation from '../../components/FooterNavigation';
 
 
 export function MatchPage() {
@@ -76,6 +77,7 @@ export function MatchPage() {
               onClick={handleClose}
             ></div>
           )}
+          <FooterNavigation value={0}/>
         </div>
       </div>
   );

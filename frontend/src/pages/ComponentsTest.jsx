@@ -14,6 +14,7 @@ export default function ComponentsPage() {
             <h2>Components</h2>
             <CustomLink style={{ display: "block", color: 'var(--color-black)' }} to="/register">Sign up with email</CustomLink>
             <CTAButton />
+            <CTAButton />
             <LabeledInput />
             {/* TODO: Ideally when a user logs in the top level App layout will change to render this so it doesn't
                 have to be included on every "page" */}

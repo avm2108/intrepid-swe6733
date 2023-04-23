@@ -22,8 +22,22 @@
     color: #000000;
 }
 
+.white-border {
+    composes: CTAButton;
+    background-color: #FFFFFF;
+    color: #000000;
+    border: 1px solid #C6C6C6;
+
+}
+
 .green {
     composes: CTAButton;
     background-color: #24786D;
+    color: #FFFFFF;
+}
+
+.red {
+    composes: CTAButton;
+    background-color: #EA4335;
     color: #FFFFFF;
 }

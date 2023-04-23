@@ -18,6 +18,7 @@ import PrivateRoute from './pages/PrivateRoute';
 import { MatchPage }  from './pages/MatchPage';
 import ComponentsPage from './pages/ComponentsTest';
 import DemoProfile from './pages/DemoProfile';
+import UserProfile from './pages/UserProfile';
 
 
 /**
@@ -40,7 +41,7 @@ function App() {
       navigate("/"); // Redirect to the guest homepage
     } else {
       // console.log('User logged in');
-      navigate("/profile"); // Redirect to the user's profile or match screen?
+      navigate("/user-profile"); // Redirect to the user's profile or match screen?
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -63,10 +64,14 @@ function App() {
         {/* {process.env.NODE_ENV === 'development' && <Route path="/reduxsandbox" element={<ReduxSandbox />} />} */}
         <Route path="/match-page" element={<MatchPage />} />
         {/* Any routes that require a user to be logged in go here; */}
-        <Route element={<PrivateRoute user={user} />}>
+        <Route element={<PrivateRoute user={user} />}/>
         {/* Demo Route to display logged in user's info */}
-          <Route path="/profile" element={<DemoProfile />} />
-        </Route>
+        <Route path="/profile" element={<DemoProfile />} />
+        <Route path="/user-profile" element={<UserProfile />} />
+
+        {/* <Route element={<PrivateRoute user={user} />}> */}
+          {/* Any routes that require a user to be logged in go here; */}
+        {/* </Route> */}
         {/* The * wildcard path matches any URL that doesn't match any other <Route /> */}
         <Route path="*" element={<ErrorPage />} />
       </Routes>
