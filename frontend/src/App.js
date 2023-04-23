@@ -41,7 +41,7 @@ function App() {
       navigate("/"); // Redirect to the guest homepage
     } else {
       // console.log('User logged in');
-      navigate("/profile"); // Redirect to the user's profile or match screen?
+      navigate("/user-profile"); // Redirect to the user's profile or match screen?
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

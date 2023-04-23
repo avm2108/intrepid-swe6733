@@ -12,7 +12,7 @@ const UserProvider = ({ children }) => {
 
     const getInitialState = () => ({
         _id: null,
-        loggedIn: false,
+        loggedIn: true, //true for dev purposes
         name: null,
         email: null,
         dateOfBirth: null,

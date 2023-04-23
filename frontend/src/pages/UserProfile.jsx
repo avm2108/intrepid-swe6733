@@ -94,7 +94,7 @@ export default function UserProfile() {
                     <div className={styles.maxDistance}>
                         <h3>Maximum Distance</h3>
                         
-                        <input className={styles.slider} type="range" min="1" max="100" value={maxDist} class="slider" id="myRange" onChange={(e) => { handleChange(e)}}></input> 
+                        <input className={styles.slider} type="range" min="1" max="100" value={maxDist} id="myRange" onChange={(e) => { handleChange(e)}}></input> 
                     </div>
 
                 <hr className={styles.divider}></hr>
