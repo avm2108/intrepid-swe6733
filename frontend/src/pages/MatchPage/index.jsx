@@ -6,7 +6,6 @@ import { prospectsArray } from './prospectsArray';
 import { styles } from './matchPageStyles';
 import CTAButton from '../../components/CTAButton';
 
-
 export function MatchPage() {
   // TODO: redux/saga api call to pull current user data
   const user = {

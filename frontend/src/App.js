@@ -18,6 +18,7 @@ import PrivateRoute from './pages/PrivateRoute';
 import { MatchPage }  from './pages/MatchPage';
 import ComponentsPage from './pages/ComponentsTest';
 import DemoProfile from './pages/DemoProfile';
+import UserProfile from './pages/UserProfile';
 import FooterNavigation from "./components/FooterNavigation";
 
 /**
@@ -40,8 +41,7 @@ function App() {
       navigate("/"); // Redirect to the guest homepage
     } else {
       // console.log('User logged in');
-      // TODO: Redirect to the user's profile or match screen?
-      // navigate("/profile");
+      navigate("/user-profile"); // Redirect to the user's profile or match screen?
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -64,8 +64,9 @@ function App() {
         {/* {process.env.NODE_ENV === 'development' && <Route path="/reduxsandbox" element={<ReduxSandbox />} />} */}
         {/* Any routes that require a user to be logged in go here; */}
         <Route element={<PrivateRoute user={user} />}>
+          <Route path="/user-profile" element={<UserProfile />} />
           <Route path="/match-page" element={<MatchPage />} />
-          <Route path="/profile" element={<DemoProfile />} />
+          <Route path="/create-profile" element={<DemoProfile />} />
           {/* <Route path="/messages" element={<Messages />} />
           <Route path="/settings" element={<Settings />} /> */}
         </Route>
