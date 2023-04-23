@@ -54,8 +54,10 @@ const UserProvider = ({ children }) => {
         try {
             const res = await axios.get('/api/auth/checkLoggedIn');
             if (res.status === 200 && res.data.loggedIn) {
+                // Update the user state with the user info returned from the server
+                // Which will contain the user's profile and account info, as well as the csrf token
                 setUser((prev) => ({ ...prev, ...res.data }));
-                // Also apply the csrf token to axios headers
+                // Apply the csrf token to axios headers
                 axios.defaults.headers.common['X-CSRF-Token'] = res.data.csrfToken;
                 return true;
             } 

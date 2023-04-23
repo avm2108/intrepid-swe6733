@@ -191,6 +191,13 @@ authRouter.post('/logout', (req, res, next) => {
         signed: false
     });
 
+    // Clean any 'loggedIn' cookies
+    res.clearCookie('loggedIn', {
+        httpOnly: false,
+        secure: (process.env.NODE_ENV === "production"),
+        signed: false
+    });
+
     // Send a success message
     res.status(200).json({ message: 'User logged out successfully' });
 });

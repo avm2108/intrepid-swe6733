@@ -18,7 +18,7 @@ import PrivateRoute from './pages/PrivateRoute';
 import { MatchPage }  from './pages/MatchPage';
 import ComponentsPage from './pages/ComponentsTest';
 import DemoProfile from './pages/DemoProfile';
-
+import FooterNavigation from "./components/FooterNavigation";
 
 /**
  * <App /> is the root component of the app. It renders the root layout and child routes.
@@ -40,7 +40,8 @@ function App() {
       navigate("/"); // Redirect to the guest homepage
     } else {
       // console.log('User logged in');
-      navigate("/profile"); // Redirect to the user's profile or match screen?
+      // TODO: Redirect to the user's profile or match screen?
+      // navigate("/profile");
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -61,16 +62,17 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         {/*-- Example page consuming data from Redux store --*/}
         {/* {process.env.NODE_ENV === 'development' && <Route path="/reduxsandbox" element={<ReduxSandbox />} />} */}
-        <Route path="/match-page" element={<MatchPage />} />
         {/* Any routes that require a user to be logged in go here; */}
         <Route element={<PrivateRoute user={user} />}>
-        {/* Demo Route to display logged in user's info */}
+          <Route path="/match-page" element={<MatchPage />} />
           <Route path="/profile" element={<DemoProfile />} />
+          {/* <Route path="/messages" element={<Messages />} />
+          <Route path="/settings" element={<Settings />} /> */}
         </Route>
         {/* The * wildcard path matches any URL that doesn't match any other <Route /> */}
         <Route path="*" element={<ErrorPage />} />
       </Routes>
-      {/* TODO: { user.loggedIn && <Footer /> } */}
+      {user.loggedIn && <FooterNavigation />}
     </div>
   );
 }
