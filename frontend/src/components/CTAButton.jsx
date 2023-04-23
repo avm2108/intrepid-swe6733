@@ -7,9 +7,10 @@ import styles from './CTAButton.module.css';
  * @returns {JSX.Element} <BigButton /> 
  */
 export default function CTAButton(props) {
+    const { ...rest } = props;
     return (
         // TODO: Add a way to pass in a custom className while still using the module styles
-        <button className={styles[props?.theme] || styles.CTAButton} {...props.rest}>
+        <button className={styles[props?.theme] || styles.CTAButton} {...rest}>
             {props.children}
         </button>
     );
