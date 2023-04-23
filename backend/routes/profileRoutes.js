@@ -1,13 +1,50 @@
 const profileRouter = require('express').Router();
 const passport = require('../services/passportConfig');
-const jwt = require('jsonwebtoken');
 const validateWithRules = require('../services/validation');
 const { generateCsrf, verifyCsrf } = require('../services/csrfProtection');
 const User = require('../models/User');
 const { ProfileSchema } = require('../models/Profile');
+const path = require("path");
+const crypto = require('crypto');
+const multer = require('multer');
+
+// Configure image upload storage to store locally
+// TODO: Error handling for file upload
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/')
+    },
+    // Modify the filename of the stored file to be unique
+    filename: function (req, file, cb) {
+        const extension = path.extname(file?.originalname).toLowerCase();
+        // Create a unique filename
+        const random = crypto.randomBytes(8).toString('hex');
+        cb(null, file.fieldname + '-' + (random) + extension);
+    }
+});
+
+// Configure image upload middleware
+const upload = multer({
+    extended: true, // Allow for nested data in the request body (e.g. req.body.user.name)
+    storage: storage,
+    limits: {
+        // Limit file size to 5MB (?)
+        fileSize: 5 * 1024 * 1024
+    },
+    fileFilter: function (req, file, cb) {
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+        if (allowedTypes.includes(file.mimetype)) {
+            console.log("File allowed")
+            cb(null, true);
+        } else {
+            console.log("File rejected")
+            // TODO: Add error handling
+            cb(null, false);
+        }
+    }
+});
 
 // TODO: Add validation for the profile create and update routes
-// TODO: Handle image uploads
 
 /** 
  * @route   GET /api/profile/:id
@@ -115,11 +152,9 @@ profileRouter.get('/', verifyCsrf, passport.authenticate('jwt-strategy', { sessi
  * @body    -- {String} location.state - The user's state
  * @body    -- {String} location.country - The user's country
  * @body    -- {String} location.coordinates - The user's coordinates
- * @body    {Object?} profilePictures[] - The user's images
- * @body    -- {String} image[i].file - The image's URL/path
- * @body    -- {String} image[i].caption - The image's caption/desc.
- * @body    -- {Number} image[i].position - The index of the image in the array
- * @body    {String[]} interests - The user's interests
+ * @file    {File} image - The user's profile image
+ * @body    {String} profilePictureCaption - The user's profile picture caption
+ * @body     {String[]} interests - The user's interests
  * @body    {Object} preferences - The user's preferences
  * @body    -- {String[]} gender - The genders the user is interested in
  * @body    -- {Object} ageRange - The age range the user is interested in
@@ -130,7 +165,7 @@ profileRouter.get('/', verifyCsrf, passport.authenticate('jwt-strategy', { sessi
  * @body    ---- {Number} distance.max - The maximum distance the user is interested in
  */
 // TODO: Add validation for the profile data
-profileRouter.post('/', verifyCsrf, passport.authenticate('jwt-strategy', { session: false }), async (req, res, next) => {
+profileRouter.post('/', verifyCsrf, passport.authenticate('jwt-strategy', { session: false }), upload.single("profilePicture"), async (req, res, next) => {
     // If the user is logged in, req.user will be populated with the user's data
     // If the user is not logged in, req.user will be undefined
     if (!req.user) {
@@ -149,23 +184,38 @@ profileRouter.post('/', verifyCsrf, passport.authenticate('jwt-strategy', { sess
             }
         });
     }
+    
+    // Convert the profile data from JSON string passed from the frontend to an object
+    const bodyData = JSON.parse(req.body.profile);
 
     // Create a new profile for the user
     const profile = {
-        gender: req.body.gender,
-        bio: req.body.bio,
-        location: req.body.location,
-        profilePictures: req.body.profilePictures,
-        interests: req.body.interests,
-        preferences: req.body.preferences
+        gender: bodyData?.gender,
+        bio: bodyData?.bio,
+        location: bodyData?.location,
+        profilePicture: {
+            file: req.file?.filename || "",
+            caption: bodyData?.profilePictureCaption || "",
+            // position: bodyData?.profilePicture?.position || 0
+        },
+        interests: bodyData?.interests,
+        preferences: {
+            ...bodyData?.preferences
+        }
     };
+
+    console.log("Transformed profile data: ", profile);
 
     // Save the profile to the database in the User document
     try {
         req.user.profile = profile;
         // Validate the user's data with Mongoose validation
         // TODO: Add rules to 'validateWithRules' to validate the profile data for full control over the validation
-        await req.user.save();
+        
+        // Save the user's profile to the database
+        // Test validation before saving
+        await req.user.validate();
+        // await req.user.save();
 
         // If the profile was successfully created, return the profile data
         return res.status(201).json({

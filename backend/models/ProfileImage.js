@@ -7,14 +7,21 @@ const ProfileImageSchema = new mongoose.Schema({
         required: [true, "Please provide an image file to use as your profile picture."],
         trim: true
     },
+    href: { // For external links
+        type: String,
+        default: "",
+        // required: [true, "Please provide a link to your profile picture."],
+        trim: true
+    },
     position: {
         type: Number,
-        required: [true, "Please specify the position of this profile picture."],
+        default: 0,
+        // required: [true, "Please specify the position of this profile picture."],
         trim: true,
     },
     caption: {
         type: String,
-        required: [true, "A caption for your profile picture is required."],
+        // required: [true, "A caption for your profile picture is required."],
         trim: true
     }
 });

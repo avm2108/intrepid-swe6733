@@ -38,7 +38,7 @@ export function MatchPage() {
 
     // TODO: matchAlgo may include more args per user prefs for age/gender/proximity
     const newMatches = matchAlgo(user, prospectsArray);
-    console.log("*** newMatches: ", newMatches)
+    // console.log("*** newMatches: ", newMatches)
     setMatches(newMatches);
     handleOpenModal();
   };

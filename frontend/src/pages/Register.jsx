@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import Helmet from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../providers/UserProvider';
 import axios from 'axios';
 
 import CustomLink from '../components/CustomLink';
@@ -24,7 +25,17 @@ const friendlyFieldNames = {
  * @returns {JSX.Element} <Register />
  */
 function Register(props) {
+    const { user } = useContext(UserContext);
     const navigate = useNavigate();
+    
+    // If the user is already logged in, redirect them to their profile page
+    useEffect(() => {
+        // If the user is already logged in, redirect them to their profile page
+        if (user.loggedIn) {
+            navigate('/profile');
+        }
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
     const [formState, setFormState] = useState({
         name: '',
         email: '',
@@ -115,6 +126,98 @@ function Register(props) {
             [id]: value,
         }));
     }
+
+    // Handle the Facebook login
+    // const handleFacebookLogin = async (response) => {
+    //     // Disable form while waiting for submit
+    //     setFormState((prevState) => ({
+    //         ...prevState,
+    //         disabled: true,
+    //     }));
+
+    //     if (!response.accessToken) {
+    //         setFormState((prevState) => ({
+    //             ...prevState,
+    //             disabled: false,
+    //             errors: {
+    //                 ...prevState.errors,
+    //                 general: {
+    //                     friendlyName: "Facebook Login Error",
+    //                     message: "Something went wrong, please try again.",
+    //                 }
+    //             }
+    //         }));
+
+    //         return handleFacebookLoginFailure(response);
+    //     }
+
+    //     // Send the form data to the backend
+    //     const res = await axios.post('/api/auth/facebook/login', response)
+    //         .then((response) => {
+    //             return response;
+    //         }).catch((error) => {
+    //             return error.response || error;
+    //         });
+
+    //     if (res.status === 404) {
+    //         // User not found, they need to register
+    //         setFormState((prevState) => ({
+    //             ...prevState,
+    //             disabled: false,
+    //             errors: {
+    //                 ...prevState.errors,
+    //                 general: {
+    //                     friendlyName: "Facebook Login Error",
+    //                     message: "You must register with Intrepid before logging in with Facebook.",
+    //                 }
+    //             }
+    //         }));
+    //     } else if (res.status !== 200) {
+    //         // Some other error
+    //         setFormState((prevState) => ({
+    //             ...prevState,
+    //             disabled: false,
+    //             errors: {
+    //                 ...prevState.errors,
+    //                 general: {
+    //                     friendlyName: "Facebook Login Error",
+    //                     message: res?.data?.errors?.message || "Something went wrong, please try again.",
+    //                 }
+    //             }
+    //         }));
+    //     } else {
+    //         // If the login is successful, get the CSRF token and user data from the response body
+    //         const userData = res.data.user;
+    //         const csrfToken = res.data.csrfToken;
+
+    //         // Ensure our CSRF token is set in the headers for future requests
+    //         axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
+
+    //         // Update the global state with our info
+    //         const newUser = {
+    //             loggedIn: true,
+    //             csrfToken: csrfToken,
+    //             ...userData
+    //         };
+    //         setUser(newUser);
+    //     }
+
+    //     /*         setFormState((prevState) => ({
+    //                 ...prevState,
+    //                 disabled: false,
+    //             })); */
+    // };
+
+    // const handleFacebookLoginFailure = (response) => {
+    //     console.log(response);
+    //     if (response.status === 'unknown') {
+    //         toast.error('Something went wrong, please try again.');
+    //     } else if (response.status === 'not_authorized') {
+    //         toast.error('You must authorize Intrepid to use your Facebook account.');
+    //     } else {
+    //         toast.error('You must log in to Facebook to use this feature.');
+    //     }
+    // };
 
     return (
         <>

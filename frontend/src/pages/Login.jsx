@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
+import { UserContext } from '../providers/UserProvider';
+// Might need to use this later
+// import FacebookLogin, { FacebookLoginClient } from '@greatsumini/react-facebook-login';
 
 import CustomLink from '../components/CustomLink';
 import LabeledInput from '../components/LabeledInput';
@@ -25,6 +28,16 @@ const friendlyFieldNames = {
  */
 export default function Login(props) {
     const navigate = useNavigate();
+    const { user, updateUser } = useContext(UserContext);
+
+    // On first load of this page, check if the user is already logged in
+    useEffect(() => {
+        // If the user is already logged in, redirect them to their profile page
+        if (user.loggedIn) {
+            navigate('/profile');
+        }
+    }, []);
+
     const [formState, setFormState] = useState({
         email: '',
         password: '',
@@ -75,9 +88,9 @@ export default function Login(props) {
                 return;
             }
 
-            // TODO: Extract this into a helper function
             // Otherwise, we'll transform the errors object into a more friendly format
             // "Username": "Username is already taken"
+            // TODO: Extract this into a helper function
             const transformedErrors = {};
             Object.keys(data.errors).forEach((key) => {
                 // The error value might be an array ex. "dateOfBirth": ["You must be at least 18 to register", "Date of Birth must be a valid date"]
@@ -101,20 +114,26 @@ export default function Login(props) {
 
         // If the login is successful, get the CSRF token from the response body
         // and add it to the all our future requests' headers
-        // TODO: ideally also store that token in state somehow so we can submit it in our forms like
-        // <input type="hidden" name="csrfToken" value={csrfToken} />
         const csrfToken = res.data.csrfToken;
         axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
 
-        // TODO: Update the global state with our info 
-        // alert("User Info: " + JSON.stringify(res?.data?.user) + " and the CSRF token is: " + csrfToken);
+        // Set another clientside cookie to represent that we're logged in
+        // So that if we refresh the page, we'll know that we did login 
+        // previously and to check the serverside login status to ensure its valid
+        // before redirecting away from the GuestHome page that it'll put us on if
+        // we refresh the page
+        document.cookie = `loggedIn=true; path=/`;
+
+        // Update the global state with our info 
+        const newUser = {
+            loggedIn: true,
+            csrfToken: csrfToken,
+            ...res.data.user
+        };
+        updateUser(newUser);
 
         // TODO: Redirect to the user profile creation page
-        navigate('/demoProfile', {
-            state: {
-                user: res?.data?.user,
-            },
-        });
+        navigate('/profile');
     };
 
     // Whenever a form input changes, this function is called
@@ -128,13 +147,105 @@ export default function Login(props) {
         }));
     };
 
+//     // Handle the Facebook login
+//     const handleFacebookLogin = async (response) => {
+//         // Disable form while waiting for submit
+//         setFormState((prevState) => ({
+//             ...prevState,
+//             disabled: true,
+//         }));
+        
+//         if (!response.accessToken) {
+//             setFormState((prevState) => ({
+//                 ...prevState,
+//                 disabled: false,
+//                 errors: {
+//                     ...prevState.errors,
+//                     general: {
+//                         friendlyName: "Facebook Login Error",
+//                         message: "Something went wrong, please try again.",
+//                     }
+//                 }
+//             }));
+
+//             return handleFacebookLoginFailure(response);
+//         }
+
+//         // Send the form data to the backend
+//         const res = await axios.post('/api/auth/facebook/login', response)
+//             .then((response) => {
+//                     return response;
+//             }).catch((error) => {
+//                     return error.response || error;
+//             });
+                
+//         if (res.status === 404) {
+//             // User not found, they need to register
+//             setFormState((prevState) => ({
+//                 ...prevState,
+//                 disabled: false,
+//                 errors: {
+//                     ...prevState.errors,
+//                     general: {
+//                         friendlyName: "Facebook Login Error",
+//                         message: "You must register with Intrepid before logging in with Facebook.",
+//                     }
+//                 }
+//             }));
+//         } else if (res.status !== 200) {
+//             // Some other error
+//             setFormState((prevState) => ({
+//                 ...prevState,
+//                 disabled: false,
+//                 errors: {
+//                     ...prevState.errors,
+//                     general: {
+//                         friendlyName: "Facebook Login Error",
+//                         message: res?.data?.errors?.message || "Something went wrong, please try again.",
+//                     }
+//                 }
+//             }));
+//         } else {
+//             // If the login is successful, get the CSRF token and user data from the response body
+//             const userData = res.data.user;
+//             const csrfToken = res.data.csrfToken;
+
+//             // Ensure our CSRF token is set in the headers for future requests
+//             axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
+
+//             // Update the global state with our info
+//             const newUser = {
+//                 loggedIn: true,
+//                 csrfToken: csrfToken,
+//                 ...userData
+//             };
+//             setUser(newUser);
+//         }
+        
+// /*         setFormState((prevState) => ({
+//             ...prevState,
+//             disabled: false,
+//         })); */
+//     };
+
+//     const handleFacebookLoginFailure = (response) => {
+//         console.log(response);
+//         if (response.status === 'unknown') {
+//             toast.error('Something went wrong, please try again.');
+//         } else if (response.status === 'not_authorized') {
+//             toast.error('You must authorize Intrepid to use your Facebook account.');
+//         } else {
+//             toast.error('You must log in to Facebook to use this feature.');
+//         }
+//     };
+
     return (
         <>
             {/* This allows us to change the page title, meta tags, etc. */}
             <Helmet>
                 <title>Intrepid - Login</title>
                 <script src="https://kit.fontawesome.com/37ce2b2559.js" crossorigin="anonymous"></script>
-            </Helmet >
+            </Helmet>
 
             <main className={styles.loginMain}>
                 <div className={styles.loginContainer}>
@@ -147,8 +258,28 @@ export default function Login(props) {
                     <form className={styles.loginForm} onSubmit={handleSubmit}>
                         <div className={styles.socials}>
                             <div className={styles.socialsButtons}>
-                                <button onClick={e => e.preventDefault()}>
-                                    <i className="fab fa-facebook-f" title="Sign up with Facebook"></i>
+                               {/*  <FacebookLogin
+                                    initParams={{
+                                        version: 'v16.0',
+                                        xfbml: true,
+                                    }}
+                                    className="fab fa-facebook-f"
+                                    appId=`${process.env.REACT_APP_FACEBOOK_APP_ID}`
+                                    fields="public_profile"
+                                    onSuccess={(response) => {
+                                        handleFacebookLogin(response);
+                                    }}
+                                    onFail={(error) => {
+                                        handleFacebookLoginFailure(error);
+                                    }}
+                                    render={({ onClick, logout }) => (
+                                        <button disabled={formState.disabled} onClick={(e) => { e.preventDefault(); onClick(e); }}>
+                                            <i className="fab fa-facebook-f" title="Sign ui with Facebook"></i>
+                                        </button>
+                                    )}
+                                /> */}
+                                <button disabled={formState.disabled} onClick={(e) => { e.preventDefault(); }}>
+                                    <i className="fab fa-facebook-f" title="Sign ui with Facebook"></i>
                                 </button>
                                 <button onClick={e => e.preventDefault()}>
                                     <i className="fab fa-google" title="Sign up with Google"></i>

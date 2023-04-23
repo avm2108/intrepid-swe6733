@@ -5,23 +5,24 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import axios from 'axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import UserProvider from './providers/UserProvider';
 
 /*-- Redux imports --*/
-import { Provider } from 'react-redux';
+/* import { Provider } from 'react-redux';
 import createSagaMiddleware from 'redux-saga'
 import { configureStore } from '@reduxjs/toolkit';
 import intrepidSaga from './pages/slice/saga';
-import intrepidSlice from './pages/slice/index';
+import intrepidSlice from './pages/slice/index'; */
 
 /*-- Redux declarations --*/
-const sagaMiddleware = createSagaMiddleware()
+/* const sagaMiddleware = createSagaMiddleware()
 const store = configureStore({
   reducer: {
     intrepid: intrepidSlice.reducer
   },
   middleware: [sagaMiddleware] 
 })
-sagaMiddleware.run(intrepidSaga)
+sagaMiddleware.run(intrepidSaga) */
 
 /*-- Axios configuration --*/
 // Add a baseURL to every request so rather than typing
@@ -40,14 +41,16 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 // We can wrap <App  /> with providers that provide context/features to all child components
 root.render(
   /*-- make the Redux store available to all components  --*/
-  <Provider store={store}>
-    {/* Make MUI theme available to all components */}
-    <ThemeProvider theme={theme}>
-      <BrowserRouter>
+  // <Provider store={store}>
+  <BrowserRouter>
+    <UserProvider>
+      {/* Make MUI theme available to all components */}
+      <ThemeProvider theme={theme}>
         <App />
-      </BrowserRouter>
-    </ThemeProvider>
-  </Provider>
+      </ThemeProvider>
+    </UserProvider>
+  </BrowserRouter>
+  // </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function
