@@ -17,9 +17,9 @@ import PrivateRoute from './pages/PrivateRoute';
 // import ReduxSandbox from './pages/ReduxSandbox';
 import { MatchPage }  from './pages/MatchPage';
 import ComponentsPage from './pages/ComponentsTest';
-import DemoProfile from './pages/DemoProfile';
 import UserProfile from './pages/UserProfile';
 import FooterNavigation from "./components/FooterNavigation";
+import CreateProfile from './pages/CreateProfile';
 
 /**
  * <App /> is the root component of the app. It renders the root layout and child routes.
@@ -33,7 +33,7 @@ function App() {
   // which will check if the user still has a unexpired JWT in their httponly cookies
   // If the user is logged in, the backend will return the user's info and we'll update the user context
   // Since we'll then be logged in we can also redirect the user to the profile or previous page
-  useEffect(() => {
+  /* useEffect(() => {
     // Check for the loggedIn cookie to see if we need to check the serverside login status
     // This is to prevent unnecessary requests to the backend
     if (document.cookie.indexOf('loggedIn') === -1 || !checkLoggedIn()) {
@@ -43,7 +43,7 @@ function App() {
       // console.log('User logged in');
       navigate("/user-profile"); // Redirect to the user's profile or match screen?
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps */
 
   return (
     <div className="App">
@@ -64,9 +64,9 @@ function App() {
         {/* {process.env.NODE_ENV === 'development' && <Route path="/reduxsandbox" element={<ReduxSandbox />} />} */}
         {/* Any routes that require a user to be logged in go here; */}
         <Route element={<PrivateRoute user={user} />}>
-          <Route path="/user-profile" element={<UserProfile />} />
-          <Route path="/match-page" element={<MatchPage />} />
-          <Route path="/create-profile" element={<DemoProfile />} />
+          <Route path="/profile" element={<UserProfile />} />
+          <Route path="/matching" element={<MatchPage />} />
+          <Route path="/create" element={<CreateProfile />} />
           {/* <Route path="/messages" element={<Messages />} />
           <Route path="/settings" element={<Settings />} /> */}
         </Route>

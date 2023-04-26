@@ -24,8 +24,8 @@ export default function FooterNavigation() {
         >
             <BottomNavigationAction
             component={RouterLink}
-            to="/match-page"
-            value="/match-page"
+            to="/matching"
+            value="/matching"
             label="Home"
             icon={<HomeOutlinedIcon />}
             className={styles.navButton} />
@@ -38,8 +38,8 @@ export default function FooterNavigation() {
             className={styles.navButton} />
             <BottomNavigationAction
             component={RouterLink}
-            to="/user-profile"
-            value="/user-profile"
+            to="/profile"
+            value="/profile"
             label="Profile"
             icon={<AccountCircleOutlinedIcon />}
             className={styles.navButton} />
