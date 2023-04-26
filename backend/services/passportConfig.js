@@ -1,6 +1,7 @@
 // Create configuration for Passport to use JWT, Google, etc.
 const passport = require("passport");
 const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
+const InstagramStrategy = require('passport-instagram').Strategy;
 
 // Import the User model
 const User = require("../models/User");
@@ -47,6 +48,22 @@ const jwtStrategy = new JwtStrategy(jwtOptions, async (req, payload, done) => {
 });
 
 passport.use("jwt-strategy", jwtStrategy);
+
+passport.use(new InstagramStrategy({
+    clientID: INSTAGRAM_CLIENT_ID, // TODO: set me in env
+    clientSecret: INSTAGRAM_CLIENT_SECRET, // TODO: set me in env
+    callbackURL: "https://intrepid.herokuapp.com/api/auth/instagram/callback" // TODO: set me in env
+  },
+  function(accessToken, refreshToken, profile, done) {
+      console.log("made it here");
+      console.log(profile);
+    // TODO: if we want to associate to an existing user- perhaps we can check for logged in user or cookies here for the JWT and if so just associate
+    // otherwise, create a user associated to the profile, but then you will want to data collect for registration
+    User.find({ instagramId: profile.id }, function (err, user) {
+      return done(err, user);
+    });
+  }
+));
 
 // Export the passport configuration
 module.exports = passport;

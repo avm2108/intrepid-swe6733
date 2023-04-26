@@ -5,6 +5,14 @@ const validateWithRules = require('../services/validation');
 const { generateCsrf, verifyCsrf } = require('../services/csrfProtection');
 const User = require('../models/User');
 
+authRouter.get('/instagram', passport.authenticate('instagram'));
+
+authRouter.get('/instagram/callback', 
+  passport.authenticate('instagram', { failureRedirect: '/login' }),
+  async (req, res) => {
+    res.redirect('/');
+  });
+
 /**
  * @route POST /auth/login
  * @desc Login a user
