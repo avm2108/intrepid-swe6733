@@ -1,0 +1,67 @@
+.createContainer {
+    margin: 12px;
+}
+
+.createHeader {
+    color: black;
+}
+
+.interestsContainer, .locationForm {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 14px;
+}
+
+.interestsForm {
+    margin-left: 8px;
+}
+
+select {
+    height: 200px;
+    width: 50%;
+    padding-left: 8px;
+}
+
+option {
+    font-family: 'Roboto';
+    font-size: 18px;
+    padding: 4px;
+}
+
+select[multiple]:focus option:checked {
+    background-color: #24786D;
+    color: white;
+}
+
+label {
+    display: flex;
+    align-items: center;
+}
+
+.genderInput {
+    width: 50px;
+}
+
+.formHeader {
+    font-size: 18px;
+    font-weight: 700;
+    margin-left: 8px;
+}
+
+.genderContainer {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 14px;
+}
+
+.userGender, .prefGender {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.locationList {
+    height: 50px;
+    font-size: 18px;
+    margin-left: 8px;
+}
