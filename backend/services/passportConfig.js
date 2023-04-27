@@ -1,9 +1,8 @@
 // Create configuration for Passport to use JWT, Google, etc.
 const passport = require("passport");
 const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
-const InstagramStrategy = require('passport-instagram').Strategy;
-
-// Import the User model
+const InstagramStrategy = require('passport-instagram-basic-api').Strategy;
+const SocialAccount = require('../models/SocialAccount');
 const User = require("../models/User");
 
 const signedCookieExtractor = (req) => {
@@ -50,20 +49,39 @@ const jwtStrategy = new JwtStrategy(jwtOptions, async (req, payload, done) => {
 passport.use("jwt-strategy", jwtStrategy);
 
 passport.use(new InstagramStrategy({
-    clientID: INSTAGRAM_CLIENT_ID, // TODO: set me in env
-    clientSecret: INSTAGRAM_CLIENT_SECRET, // TODO: set me in env
-    callbackURL: "https://intrepid.herokuapp.com/api/auth/instagram/callback" // TODO: set me in env
+    clientID: process.env.INSTAGRAM_CLIENT_ID,
+    clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,
+    callbackURL: process.env.INSTAGRAM_CALLBACK_URL
   },
-  function(accessToken, refreshToken, profile, done) {
-      console.log("made it here");
-      console.log(profile);
-    // TODO: if we want to associate to an existing user- perhaps we can check for logged in user or cookies here for the JWT and if so just associate
-    // otherwise, create a user associated to the profile, but then you will want to data collect for registration
-    User.find({ instagramId: profile.id }, function (err, user) {
-      return done(err, user);
-    });
+  async function(accessToken, _refreshToken, profile, done) {
+      console.log("recieved profile", profile);
+      console.log("recieved access token", accessToken);
+      
+      try {
+       const account = await SocialAccount.findOneAndUpdate({ service: 'instagram', accountId: profile.id }, { accessToken: accessToken }, { new: true, upsert: true });
+       if (account) {
+           console.log("creating social account");
+           done(null, { profile: profile, accessToken: accessToken });
+       } else {
+           console.log("unable to create social account");
+           done(err, false);
+       }
+      } catch (err) {
+          console.log("unable to create social account");
+          console.log(err);
+      }
   }
 ));
+
+passport.serializeUser(function(user, done) {
+  console.log("serializing (ig) profile", user);
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+    console.log("deserializing (ig) profile", user)
+    done(null, user);
+});
 
 // Export the passport configuration
 module.exports = passport;

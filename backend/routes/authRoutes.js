@@ -4,13 +4,41 @@ const jwt = require('jsonwebtoken');
 const validateWithRules = require('../services/validation');
 const { generateCsrf, verifyCsrf } = require('../services/csrfProtection');
 const User = require('../models/User');
+const SocialAccount = require('../models/SocialAccount');
 
-authRouter.get('/instagram', passport.authenticate('instagram'));
+authRouter.get('/instagram', passport.authenticate('instagram', { scope: ['basic', 'public_content', 'user_profile'] }));
 
 authRouter.get('/instagram/callback', 
   passport.authenticate('instagram', { failureRedirect: '/login' }),
   async (req, res) => {
+    console.log("adding cookie", req.user);
+    res.cookie('instagram', req.user, { maxAge: 900000, httpOnly: true });
     res.redirect('/');
+    // NOTE: now make a POST to /instagram/associate endpoint which will read the cookie
+  });
+
+authRouter.post("/instagram/associate", verifyCsrf, passport.authenticate("jwt-strategy", { session: false }), async (req, res, next) => {
+      console.log(req.user);
+      console.log(req.cookies);
+      if (req.user) {
+          console.log("my cookie is", req.cookies.instagram.profile.id);
+          try {
+             const account = await SocialAccount.findOneAndUpdate({ service: 'instagram', accountId: req.cookies.instagram.profile.id }, { userId: req.user.id });
+             if (account) {
+                 console.log("associating social account");
+                 res.status(201).json({ message: 'Instagram associated successfully' });
+             } else {
+                 console.log("unable to associate social account");
+                 res.status(401).json({ message: 'You are not an IG influencer' });
+             }
+            } catch (err) {
+                console.log("unable to associate social account");
+                console.log(err);
+                res.status(401).json({ message: 'You are not an IG influencer' });
+            }
+      } else {
+          res.status(401).json({ message: 'You are not an IG influencer' });
+      }
   });
 
 /**

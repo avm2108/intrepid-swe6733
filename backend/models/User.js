@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const ProfileSchema = require("./Profile");
-const SocialAccountSchema = require("./SocialAccount");
 
 const UserSchema = new mongoose.Schema({
     email: {
@@ -32,10 +31,6 @@ const UserSchema = new mongoose.Schema({
     },
     profile: {
         type: ProfileSchema,
-        _id: false,
-    },
-    socialAccounts: {
-        type: [SocialAccountSchema],
         _id: false,
     },
     // TODO: Is this necessary for the MVP?

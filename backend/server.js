@@ -11,6 +11,7 @@ const path = require("path");
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const session = require("express-session");
 
 // Import our database connection function
 const dbConnect = require("./services/dbConnect");
@@ -20,6 +21,12 @@ const app = express();
 
 // Define any middleware, each request will go through these/have their functionality or processing applied
 // Enable cookies to be parsed, and use the secret defined in our environment variables to sign/decrypt them
+app.use(session({
+  secret: process.env.COOKIE_SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}))
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // Enable request bodies in either json or urlencoded format to be parsed
