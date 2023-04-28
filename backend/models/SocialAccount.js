@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { SocialMediaServiceSchema } = require("./SocialMediaService");
 
 const SocialAccountSchema = new mongoose.Schema({
     accessToken: {
@@ -23,10 +22,20 @@ const SocialAccountSchema = new mongoose.Schema({
         trim: true
     },
     service: {
-        type: SocialMediaServiceSchema,
+        type: String,
         required: true,
         trim: true
+    },
+    accountId: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: false
     }
 });
 
-module.exports = SocialAccountSchema;
+module.exports = SocialAccount = mongoose.model("socialaccounts", SocialAccountSchema);

@@ -11,7 +11,7 @@ const INTERESTS = [
     "Swimming", "Tennis", "Trail Running", "Traveling", "Wakeboarding", "Water Skiing", "Whitewater Rafting", "Windsurfing", "Volleyball", "Yoga", "Ziplining",
 ];
 
-const states = [
+const states = [ 
     { value: '', label: 'Select a state' },
     { value: 'AL', label: 'Alabama' },
     { value: 'AK', label: 'Alaska' },
