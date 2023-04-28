@@ -2,6 +2,8 @@ import { useContext, useState } from "react";
 import { UserContext } from "../providers/UserProvider";
 import axios from "axios";
 import toast from "react-hot-toast";
+import styles from './CreateProfile.module.css';
+import CTAButton from "../components/CTAButton";
 
 const INTERESTS = [
     "Archery", "Backpacking", "Biking", "Boating", "Camping", "Climbing", "Fishing", "Golfing", "Hiking", "Hunting", "Kayaking", "Mountain Biking", "Paddling",
@@ -9,15 +11,74 @@ const INTERESTS = [
     "Swimming", "Tennis", "Trail Running", "Traveling", "Wakeboarding", "Water Skiing", "Whitewater Rafting", "Windsurfing", "Volleyball", "Yoga", "Ziplining",
 ];
 
+const states = [ 
+    { value: '', label: 'Select a state' },
+    { value: 'AL', label: 'Alabama' },
+    { value: 'AK', label: 'Alaska' },
+    { value: 'AZ', label: 'Arizona' },
+    { value: 'AR', label: 'Arkansas' },
+    { value: 'CA', label: 'California' },
+    { value: 'CO', label: 'Colorado' },
+    { value: 'CT', label: 'Connecticut' },
+    { value: 'DE', label: 'Delaware' },
+    { value: 'DC', label: 'District Of Columbia' },
+    { value: 'FL', label: 'Florida' },
+    { value: 'GA', label: 'Georgia' },
+    { value: 'HI', label: 'Hawaii' },
+    { value: 'ID', label: 'Idaho' },
+    { value: 'IL', label: 'Illinois' },
+    { value: 'IN', label: 'Indiana' },
+    { value: 'IA', label: 'Iowa' },
+    { value: 'KS', label: 'Kansas' },
+    { value: 'KY', label: 'Kentucky' },
+    { value: 'LA', label: 'Louisiana' },
+    { value: 'ME', label: 'Maine' },
+    { value: 'MD', label: 'Maryland' },
+    { value: 'MA', label: 'Massachusetts' },
+    { value: 'MI', label: 'Michigan' },
+    { value: 'MN', label: 'Minnesota' },
+    { value: 'MS', label: 'Mississippi' },
+    { value: 'MO', label: 'Missouri' },
+    { value: 'MT', label: 'Montana' },
+    { value: 'NE', label: 'Nebraska' },
+    { value: 'NV', label: 'Nevada' },
+    { value: 'NH', label: 'New Hampshire' },
+    { value: 'NJ', label: 'New Jersey' },
+    { value: 'NM', label: 'New Mexico' },
+    { value: 'NY', label: 'New York' },
+    { value: 'NC', label: 'North Carolina' },
+    { value: 'ND', label: 'North Dakota' },
+    { value: 'OH', label: 'Ohio' },
+    { value: 'OK', label: 'Oklahoma' },
+    { value: 'OR', label: 'Oregon' },
+    { value: 'PA', label: 'Pennsylvania' },
+    { value: 'RI', label: 'Rhode Island' },
+    { value: 'SC', label: 'South Carolina' },
+    { value: 'SD', label: 'South Dakota' },
+    { value: 'TN', label: 'Tennessee' },
+    { value: 'TX', label: 'Texas' },
+    { value: 'UT', label: 'Utah' },
+    { value: 'VT', label: 'Vermont' },
+    { value: 'VA', label: 'Virginia' },
+    { value: 'WA', label: 'Washington' },
+    { value: 'WV', label: 'West Virginia' },
+    { value: 'WI', label: 'Wisconsin' },
+    { value: 'WY', label: 'Wyoming' }
+  ];
+
 // This is only to for demonstration purposes to show
 // how the image upload works, and how data can be pulled
 // from the user context. it doesn't have all the proper fields or validation
 // TODO: We need to detect if a user has already "created" their profile and
 // if so don't show this page, instead redirect them to their view/edit profile page
-export default function DemoProfile(props) {
+export default function CreateProfile(props) {
     const { user, updateUser, logout } = useContext(UserContext);
 
     const [errors, setErrors] = useState({});
+    const [ selectedState, setSelectedState ] = useState('')
+    const [ selectedInterests, setSelectedInterests ] = useState([]);
+    const [ userGender, setUserGender ] = useState('');
+    const [ preferredGender, setPreferredGender ] = useState('');
 
     const [formState, setFormState] = useState({
         bio: "",
@@ -57,6 +118,26 @@ export default function DemoProfile(props) {
 
     const handleRemoveImage = () => {
         setFormState({ ...formState, profilePicture: null, profilePictureName: "", profilePictureCaption: "" });
+    }
+
+    const handleInterestChange = (ev) => {
+        const value = ev.target.value;
+
+        setSelectedInterests((selectedInterests) => {
+            if (selectedInterests.includes(value)) {
+              return selectedInterests.filter((interest) => interest !== value);
+            } else {
+              return [...selectedInterests, value];
+            }
+          });
+    }
+
+   const handleUserGenderChange = (event) => {
+        setUserGender(event.target.value);
+    }
+
+    const handlePrefGenderChange = (event) => {
+        setPreferredGender(event.target.value);
     }
 
 /*     const handleImageChange = (e) => {
@@ -116,13 +197,120 @@ export default function DemoProfile(props) {
     };
 
     return (
-        <div>
-            <h1>Demo Create Profile</h1>
-            <h2>Welcome to Intrepid, {user.name ?? ""}</h2>
+        <div className={styles.createContainer}>
+            <h2 className={styles.createHeader}>Welcome to Intrepid, {user.name ?? ""}</h2>
             <p>
-                Your email is: {user.email} <br />
-                and your date of birth is: {user.dateOfBirth}
+                Please enter the following information to create your user profile and begin your matching experience
+                {/* Your email is: {user.email} <br />
+                and your date of birth is: {user.dateOfBirth} */}
             </p>
+
+            <div className={styles.interestsContainer}>
+                <h3 className={styles.formHeader}>Select Your Adventure Interests</h3>
+                <form className={styles.interestsForm}>
+                        <select multiple value={selectedInterests} onChange={handleInterestChange}>
+                            {INTERESTS.map((interest) => (
+                                <option key={interest} value={interest}>
+                                {interest}
+                                </option>
+                            ))}
+                        </select>
+                </form>
+            </div>
+
+            <div className={styles.genderContainer}>
+                <form className={styles.userGender}>
+                    <h3 className={styles.formHeader}>Your Gender </h3>
+                        <div>
+                        <label>
+                            <input
+                            className={styles.genderInput}
+                            type="radio"
+                            value="male"
+                            checked={userGender === "male"}
+                            onChange={handleUserGenderChange}
+                            />
+                            Male
+                        </label>
+
+                        <label>
+                            <input
+                            className={styles.genderInput}
+                            type="radio"
+                            value="female"
+                            checked={userGender === "female"}
+                            onChange={handleUserGenderChange}
+                            />
+                            Female
+                        </label>
+
+                        <label>
+                            <input
+                            className={styles.genderInput}
+                            type="radio"
+                            value="other"
+                            checked={userGender === "other"}
+                            onChange={handleUserGenderChange}
+                            />
+                            Other/Non-binary
+                        </label>
+                        </div>
+                </form>
+
+                <form className={styles.prefGender}>
+                <h3 className={styles.formHeader}>Preferred Dating Gender </h3>
+                        <div>
+                        <label>
+                            <input
+                            className={styles.genderInput}
+                            type="radio"
+                            value="male"
+                            checked={preferredGender === "male"}
+                            onChange={handlePrefGenderChange}
+                            />
+                            Male
+                        </label>
+
+                        <label>
+                            <input
+                            className={styles.genderInput}
+                            type="radio"
+                            value="female"
+                            checked={preferredGender === "female"}
+                            onChange={handlePrefGenderChange}
+                            />
+                            Female
+                        </label>
+
+                        <label>
+                            <input
+                            className={styles.genderInput}
+                            type="radio"
+                            value="other"
+                            checked={preferredGender === "other"}
+                            onChange={handlePrefGenderChange}
+                            />
+                            Other/Non-binary
+                        </label>
+                        </div>
+                </form>
+            </div>
+
+            <div className={styles.locationForm}>
+            <h3 className={styles.formHeader}>Where are you located?</h3>
+                <select 
+                    className={styles.locationList}
+                    id="state" 
+                    value={selectedState} 
+                    onChange={(ev) => setSelectedState(ev.target.value)}
+                >
+                    {states.map(state => (
+                        <option key={state.value} value={state.value}>{state.label}</option>
+                    ))}
+                </select>
+            </div>
+
+            {/* Breakpoint for new and old styles */}
             <button onClick={(e) => logout(e)}>
                 Logout
             </button>
@@ -196,7 +384,9 @@ export default function DemoProfile(props) {
                         {/* )} */}
                     {/* </div> **/} 
                 </div>
-                <button type="submit" onClick={handleSubmit}>Submit</button>
+                <CTAButton type="submit" theme="green" onClick={handleSubmit}> Submit </CTAButton>
+                <CTAButton theme="white-border" onClick={(e) => logout(e)}> Logout </CTAButton>
+                {/* <button type="submit" onClick={handleSubmit}>Submit</button> */}
             </form>
         </div>
     );

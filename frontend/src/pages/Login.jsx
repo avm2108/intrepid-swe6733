@@ -34,7 +34,7 @@ export default function Login(props) {
     useEffect(() => {
         // If the user is already logged in, redirect them to their profile page
         if (user.loggedIn) {
-            navigate('/user-profile');
+            navigate('/profile');
         }
     }, []);
 
@@ -133,7 +133,7 @@ export default function Login(props) {
         updateUser(newUser);
 
         // TODO: Redirect to the user profile creation page
-        navigate('/user-profile');
+        navigate('/profile');
     };
 
     // Whenever a form input changes, this function is called
