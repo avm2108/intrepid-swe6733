@@ -6,40 +6,57 @@ const { generateCsrf, verifyCsrf } = require('../services/csrfProtection');
 const User = require('../models/User');
 const SocialAccount = require('../models/SocialAccount');
 
-authRouter.get('/instagram', passport.authenticate('instagram', { scope: ['basic', 'public_content', 'user_profile'] }));
+authRouter.get('/instagram', passport.authenticate('instagram', { scope: ['basic', 'public_content', 'user_profile'] }), (req, res) => {
+    console.log("redirecting to instagram");
+});
 
-authRouter.get('/instagram/callback', 
-  passport.authenticate('instagram', { failureRedirect: '/login' }),
-  async (req, res) => {
-    console.log("adding cookie", req.user);
-    res.cookie('instagram', req.user, { maxAge: 900000, httpOnly: true });
-    res.redirect('/');
-    // NOTE: now make a POST to /instagram/associate endpoint which will read the cookie
-  });
+// If the user authorizes the app, Instagram redirects them back to this endpoint
+authRouter.get('/instagram/callback',
+    passport.authenticate('instagram', { failureRedirect: '/login' }),
+    async (req, res) => {
+        console.log("adding cookie", req.user);
+        res.cookie('instagram', req.user, { maxAge: 900000, httpOnly: true });
+        // Need to redirect back to the frontend
+        return res.redirect(process.env.CLIENT_ORIGIN + '/instagram/');
+        // NOTE: now make a POST to /instagram/associate endpoint which will read the cookie
+    });
 
 authRouter.post("/instagram/associate", verifyCsrf, passport.authenticate("jwt-strategy", { session: false }), async (req, res, next) => {
-      console.log(req.user);
-      console.log(req.cookies);
-      if (req.user) {
-          console.log("my cookie is", req.cookies.instagram.profile.id);
-          try {
-             const account = await SocialAccount.findOneAndUpdate({ service: 'instagram', accountId: req.cookies.instagram.profile.id }, { userId: req.user.id });
-             if (account) {
-                 console.log("associating social account");
-                 res.status(201).json({ message: 'Instagram associated successfully' });
-             } else {
-                 console.log("unable to associate social account");
-                 res.status(401).json({ message: 'You are not an IG influencer' });
-             }
-            } catch (err) {
+    console.log(req.user);
+    console.log(req.cookies);
+    if (req.user) {
+        console.log("my cookie is", req.cookies.instagram.profile.id);
+        try {
+            const account = await SocialAccount.findOneAndUpdate({ service: 'instagram', accountId: req.cookies.instagram.profile.id }, { userId: req.user.id });
+            if (account) {
+                console.log("associating social account");
+                return res.status(201).json({ message: 'Instagram associated successfully' });
+            } else {
                 console.log("unable to associate social account");
-                console.log(err);
-                res.status(401).json({ message: 'You are not an IG influencer' });
+                return res.status(401).json({ 
+                    errors: {
+                        // They didn't go through the Instagram OAuth flow
+                        general: "You must login to Intrepid before associating your Instagram account."
+                    }
+                });
             }
-      } else {
-          res.status(401).json({ message: 'You are not an IG influencer' });
-      }
-  });
+        } catch (err) {
+            console.log("unable to associate social account");
+            console.log(err);
+            return res.status(401).json({
+                errors: {
+                    general: "You must login to Intrepid before associating your Instagram account."
+                }
+            });
+        }
+    } else {
+        return res.status(401).json({
+            errors: {
+                general: "You must login to Intrepid before associating your Instagram account."
+            }
+        });
+    }
+});
 
 /**
  * @route POST /auth/login
@@ -58,7 +75,7 @@ authRouter.post('/login', validateWithRules, generateCsrf, async (req, res, next
     // Attempt to locate the user in MongoDB by their email
     try {
         const user = await User.findOne({ email: email });
-        
+
         if (!user) {
             console.log("No user found with email: " + email);
             // If the user wasn't found, return an error message
@@ -87,7 +104,7 @@ authRouter.post('/login', validateWithRules, generateCsrf, async (req, res, next
                     id: user._id,
                     name: user.name,
                     email: user.email,
-                    dateOfBirth: user.dateOfBirth 
+                    dateOfBirth: user.dateOfBirth
                 },
                 csrfToken: req.csrfToken
             });
@@ -176,7 +193,7 @@ authRouter.post('/register', validateWithRules, async (req, res, next) => {
         // There was an error not related to validation, return it
         return res.status(500).json({
             errors: {
-                general: 'There was an error registering your account, please try again later' 
+                general: 'There was an error registering your account, please try again later'
             }
         });
     }
