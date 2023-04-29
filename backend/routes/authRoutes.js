@@ -6,7 +6,7 @@ const { generateCsrf, verifyCsrf } = require('../services/csrfProtection');
 const User = require('../models/User');
 const SocialAccount = require('../models/SocialAccount');
 
-authRouter.get('/instagram', passport.authenticate('instagram', { scope: ['basic', 'public_content', 'user_profile'] }), (req, res) => {
+authRouter.get('/instagram', passport.authenticate('instagram', { scope: ['basic', 'user_media', 'public_content', 'user_profile'] }), (req, res) => {
     console.log("redirecting to instagram");
 });
 
@@ -15,46 +15,55 @@ authRouter.get('/instagram/callback',
     passport.authenticate('instagram', { failureRedirect: '/login' }),
     async (req, res) => {
         console.log("adding cookie", req.user);
-        res.cookie('instagram', req.user, { maxAge: 900000, httpOnly: true });
+        res.cookie('instagram', req.user,
+            {
+                maxAge: 900000,
+                httpOnly: true,
+                secure: (process.env.NODE_ENV === "production"),
+                // signed: true,
+            });
         // Need to redirect back to the frontend
         return res.redirect(process.env.CLIENT_ORIGIN + '/instagram/');
         // NOTE: now make a POST to /instagram/associate endpoint which will read the cookie
     });
 
-authRouter.post("/instagram/associate", verifyCsrf, passport.authenticate("jwt-strategy", { session: false }), async (req, res, next) => {
+authRouter.get("/instagram/test", verifyCsrf, passport.authenticate(["jwt-strategy", "instagram"], { session: false }), async (req, res, next) => {
     console.log(req.user);
-    console.log(req.cookies);
-    if (req.user) {
-        console.log("my cookie is", req.cookies.instagram.profile.id);
-        try {
-            const account = await SocialAccount.findOneAndUpdate({ service: 'instagram', accountId: req.cookies.instagram.profile.id }, { userId: req.user.id });
-            if (account) {
-                console.log("associating social account");
-                return res.status(201).json({ message: 'Instagram associated successfully' });
-            } else {
-                console.log("unable to associate social account");
-                return res.status(401).json({ 
-                    errors: {
-                        // They didn't go through the Instagram OAuth flow
-                        general: "You must login to Intrepid before associating your Instagram account."
-                    }
-                });
-            }
-        } catch (err) {
-            console.log("unable to associate social account");
-            console.log(err);
-            return res.status(401).json({
-                errors: {
-                    general: "You must login to Intrepid before associating your Instagram account."
-                }
-            });
-        }
-    } else {
+    // Get their images from the Instagram API media endpoint
+    try {
+        const images = await req.user?.getMedia?.();
+        console.log(images);
+        return res.status(200).json({ images });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({ errors: { general: "Unable to retrieve Instagram images" } });
+    }
+});
+
+authRouter.post("/instagram/associate", verifyCsrf, passport.authenticate("jwt-strategy", { session: false }), async (req, res, next) => {
+    // console.log(req.user);
+    // console.log(req.cookies);
+    if (!req.user) {
         return res.status(401).json({
             errors: {
                 general: "You must login to Intrepid before associating your Instagram account."
             }
         });
+    }
+
+    console.log("my cookie is", req.cookies?.instagram?.profile?.id);
+    try {
+        const account = await SocialAccount.findOneAndUpdate({ service: 'instagram', accountId: req.cookies?.instagram?.profile?.id }, { userId: req.user?.id });
+        if (account) {
+            console.log("Associating social account");
+            return res.status(201).json({ message: 'Instagram associated successfully' });
+        } else {
+            console.log("Can't associate IG Acct because the account doesn't exist: " + JSON.stringify(req.cookies?.instagram?.profile?.id));
+            return res.status(404).json({ errors: { general: "You must link your account first in your profile page." } });
+        }
+    } catch (err) {
+        console.log("Can't associate IG Acct: " + JSON.stringify(err));
+        return res.status(500).json({ errors: { general: "Unable to associate Instagram account" } });
     }
 });
 
@@ -104,7 +113,8 @@ authRouter.post('/login', validateWithRules, generateCsrf, async (req, res, next
                     id: user._id,
                     name: user.name,
                     email: user.email,
-                    dateOfBirth: user.dateOfBirth
+                    dateOfBirth: user.dateOfBirth,
+                    profile: user?.profile,
                 },
                 csrfToken: req.csrfToken
             });
@@ -210,7 +220,14 @@ authRouter.get("/checkLoggedIn", generateCsrf, passport.authenticate("jwt-strate
         return res.status(200).json({
             loggedIn: true,
             csrfToken: req.csrfToken,
-            ...req.user
+            // Send back the user info without the password
+             // TODO move _doc extraction to the passport strategy?
+            ...Object.entries(req.user._doc).reduce((acc, [key, value]) => {
+                if (key !== "password") {
+                    acc[key] = value;
+                }
+                return acc;
+            }, {})
         });
     } else {
         return res.status(401).json({
@@ -238,12 +255,20 @@ authRouter.post('/logout', (req, res, next) => {
         signed: true
     });
 
+    // Expire the CSRF token
     res.clearCookie('csrfToken', {
-        httpOnly: true,
+        httpOnly: false,
         secure: (process.env.NODE_ENV === "production"),
         signed: false
     });
 
+    // Clear connect.sid from express-session
+    res.clearCookie('connect.sid', {
+        httpOnly: true,
+        secure: (process.env.NODE_ENV === "production"),
+        signed: true
+    });
+    
     // Clean any 'loggedIn' cookies
     res.clearCookie('loggedIn', {
         httpOnly: false,

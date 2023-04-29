@@ -11,6 +11,7 @@ body {
     --color-light-green: #2BEF83;
     --color-dark-green: #24786D;
     --color-red: #FF2D1B;
+    --color-pastel-red: #FF6B6B;
     --color-gray: #797C7B;
     --color-light-gray: #F2F7FB;
     --color-black: #000e08;
@@ -25,7 +26,13 @@ body {
     align-items: center;
     justify-content: flex-start;
     font-family: 'Roboto', sans-serif;
+}
+
+/* .App-UserLoggedIn {
     margin-bottom: 40px;
+}*/
+.FooterMargin {
+    margin-bottom: 40px; /* 40px is the height of the footer */
 }
 
 .App-header {
@@ -91,6 +98,9 @@ body {
 
 .alignItemsBaseline {
     align-items: baseline;
+}
+.flexGrow-1 {
+    flex-grow: 1;
 }
 /* End flexbox utility classes */
 

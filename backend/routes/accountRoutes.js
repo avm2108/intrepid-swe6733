@@ -80,14 +80,22 @@ accountRouter.post('/delete', verifyCsrf, passport.authenticate("jwt-strategy", 
         const user = await User.findById(req.user._id);
         if (await user.isValidPassword(req.body.password)) {
             // The password is correct, so we can delete the user's account
-            await user.remove();
+            const val = await User.findByIdAndDelete(req.user._id).exec();
+            if (!val) {
+                return res.status(404).json({
+                    errors: {
+                        message: "No user with that ID found"
+                    }
+                });
+            }
+
             // Delete the user's account
             return res.status(200).json({
                 message: "Your account has been deleted"
             });
         } else {
             // The password is incorrect, so we can't delete the user's account
-            return res.status(400).json({
+            return res.status(401).json({
                 errors: {
                     password: "You entered an incorrect password"
                 }

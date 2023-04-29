@@ -8,7 +8,7 @@ const PreferencesSchema = require("./Preferences");
 const ProfileSchema = new mongoose.Schema({
     gender: {
         type: String,
-        enum: ["Male", "Female", "Non-binary", "Other/Prefer not to say"],
+        enum: ["Male", "Female", "Non-binary", "Other"],
         trim: true,
         maxlength: 50,
         required: [true, "Please provide your gender"]
@@ -31,6 +31,7 @@ const ProfileSchema = new mongoose.Schema({
     bio: {
         type: String,
         trim: true,
+        default: "",
         maxlength: [500, "Bio cannot be more than 500 characters"],
         required: false
     },

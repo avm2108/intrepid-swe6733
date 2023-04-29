@@ -33,6 +33,10 @@ const UserSchema = new mongoose.Schema({
         type: ProfileSchema,
         _id: false,
     },
+    profileComplete: {
+        type: Boolean,
+        default: false,
+    },
     // TODO: Is this necessary for the MVP?
     // verifiedAccount: {
     //     type: Boolean,

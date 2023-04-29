@@ -128,7 +128,7 @@ profileRouter.get('/', verifyCsrf, passport.authenticate('jwt-strategy', { sessi
 
     try {
         return res.status(200).json({
-            profile: req.user.profile
+            profile: req.user?.profile
         });
     } catch (err) {
         console.log("Error getting user profile: ", err);
@@ -176,7 +176,7 @@ profileRouter.post('/', verifyCsrf, passport.authenticate('jwt-strategy', { sess
         });
     }
 
-    if (req.user.profile) {
+    if (req.user?.profile) {
         // Status code 409: Conflict, the profile already exists
         return res.status(409).json({
             errors: {
@@ -195,6 +195,9 @@ profileRouter.post('/', verifyCsrf, passport.authenticate('jwt-strategy', { sess
         location: bodyData?.location,
         profilePicture: {
             file: req.file?.filename || "",
+            // TODO: How to handle href if there is no file for Instagram?
+            // Replace backslashes with forward slashes for href
+            href: (req.file?.path) ? req.file?.path?.replace?.(/\\/g, "/") : "",
             caption: bodyData?.profilePictureCaption || "",
             // position: bodyData?.profilePicture?.position || 0
         },
@@ -209,17 +212,17 @@ profileRouter.post('/', verifyCsrf, passport.authenticate('jwt-strategy', { sess
     // Save the profile to the database in the User document
     try {
         req.user.profile = profile;
+        req.user.profileComplete = true;
         // Validate the user's data with Mongoose validation
         // TODO: Add rules to 'validateWithRules' to validate the profile data for full control over the validation
         
         // Save the user's profile to the database
-        // Test validation before saving
-        await req.user.validate();
-        // await req.user.save();
+        await req.user.save();
 
         // If the profile was successfully created, return the profile data
         return res.status(201).json({
-            profile: profile
+            profile: profile,
+            profileComplete: req.user.profileComplete
         });
     } catch (err) {
         console.log("Error updating profile: ", err);

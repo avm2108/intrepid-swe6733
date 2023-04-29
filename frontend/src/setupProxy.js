@@ -13,5 +13,12 @@ if (process.env.NODE_ENV === 'development') {
                 changeOrigin: true,
             })
         );
+        app.use(
+            '/uploads',
+            createProxyMiddleware({
+                target: process.env.REACT_APP_API_URL,
+                changeOrigin: true,
+            })
+        );
     };
 }

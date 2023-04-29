@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import UserProvider from '../providers/UserProvider';
-import GuestHome from './GuestHome';
+import GuestHome from '../pages/GuestHome';
 import userEvent from '@testing-library/user-event';
 
 jest.mock('react-hot-toast');

@@ -7,23 +7,6 @@ import axios from 'axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import UserProvider from './providers/UserProvider';
 
-/*-- Redux imports --*/
-/* import { Provider } from 'react-redux';
-import createSagaMiddleware from 'redux-saga'
-import { configureStore } from '@reduxjs/toolkit';
-import intrepidSaga from './pages/slice/saga';
-import intrepidSlice from './pages/slice/index'; */
-
-/*-- Redux declarations --*/
-/* const sagaMiddleware = createSagaMiddleware()
-const store = configureStore({
-  reducer: {
-    intrepid: intrepidSlice.reducer
-  },
-  middleware: [sagaMiddleware] 
-})
-sagaMiddleware.run(intrepidSaga) */
-
 /*-- Axios configuration --*/
 // Add a baseURL to every request so rather than typing
 // http://localhost:5000/api/auth/login,
@@ -40,8 +23,6 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 // Render the App component inside the root element, representing the entire app
 // We can wrap <App  /> with providers that provide context/features to all child components
 root.render(
-  /*-- make the Redux store available to all components  --*/
-  // <Provider store={store}>
   <BrowserRouter>
     <UserProvider>
       {/* Make MUI theme available to all components */}
@@ -50,7 +31,6 @@ root.render(
       </ThemeProvider>
     </UserProvider>
   </BrowserRouter>
-  // </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function
