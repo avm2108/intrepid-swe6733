@@ -20,6 +20,8 @@ import ComponentsPage from './pages/ComponentsTest';
 import UserProfile from './pages/UserProfile';
 import FooterNavigation from "./components/FooterNavigation";
 import CreateProfile from './pages/CreateProfile';
+import MessagingPage from './pages/Messages';
+import MessagingList from './pages/MessagesList';
 
 /**
  * <App /> is the root component of the app. It renders the root layout and child routes.
@@ -89,8 +91,10 @@ function App() {
           <Route path="/instagram" element={<UserProfile />} /> {/* This is where the backend will navigate after the user authorizes IG access  */}
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/matching" element={<MatchPage />} />
-          {/* <Route path="/messages" element={<Messages />} />
-          <Route path="/settings" element={<Settings />} /> */}
+          <Route path="/create" element={<CreateProfile />} />
+          <Route path="/messages" element={<MessagingList />} />
+          <Route path="/messages/:chatId" element={<MessagingPage />} />
+          {/* <Route path="/settings" element={<Settings />} /> */}
         </Route>
         <Route path="/logout" element={<Logout />} />
         {/* The * wildcard path matches any URL that doesn't match any other <Route /> */}
