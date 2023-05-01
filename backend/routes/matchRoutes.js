@@ -126,7 +126,9 @@ matchesRouter.get('/', verifyCsrf, passport.authenticate('jwt-strategy', { sessi
             // Return the user object with the match date
             return {
                 targetUser: {
-                    ...otherUser._doc
+                    // Exclude the password field from the user object
+                    ...otherUser._doc,
+                    password: undefined
                 },
                 matchDate: match.mutualAcceptedDate
             };
