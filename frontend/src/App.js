@@ -101,7 +101,7 @@ function App() {
         <Route path="*" element={<ErrorPage />} />
       </Routes>
       {/* Only show this once they've completed onboarding */}
-      {user?.loggedIn && user?.profileComplete && (
+      {user?.profileComplete && (
         <>
           <FooterMargin />
           <FooterNavigation />

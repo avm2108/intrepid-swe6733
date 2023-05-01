@@ -145,7 +145,7 @@ export default function CreateProfile(props) {
                 toast.success("Profile created successfully!");
                 updateUser({
                     profile: res.data.profile,
-                    // profileComplete: true
+                    profileComplete: true
                 });
                 // navigate to match page
                 navigate("/matching");
@@ -174,13 +174,8 @@ export default function CreateProfile(props) {
         });
     };
 
-    const tap = () => {
-        navigate("/matching");
-    }
-
     return (
         <div className={styles.createContainer}>
-            <button onClick={tap}>Tap</button>
             <h2 className={styles.createHeader}>Welcome to Intrepid{user.name ? ", " + user.name : ""}</h2>
             <p>
                 Please enter the following information to create your user profile and begin your matching experience

@@ -201,7 +201,7 @@ profileRouter.post('/', verifyCsrf, passport.authenticate('jwt-strategy', { sess
             file: req.file?.filename || "",
             // TODO: How to handle href if there is no file for Instagram?
             // Replace backslashes with forward slashes for href
-            href: (req.file?.path) ? req.file?.path?.replace?.(/\\/g, "/") : "",
+            href: (req.file?.filename) ? process.env.CLIENT_ORIGIN + "/uploads/" + req.file?.filename.replace(/\\/g, "/") : "",
             caption: bodyData?.profilePictureCaption || "",
             // position: bodyData?.profilePicture?.position || 0
         },
