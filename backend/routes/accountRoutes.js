@@ -3,8 +3,6 @@ const passport = require('passport');
 const { verifyCsrf } = require('../services/csrfProtection');
 const User = require('../models/User');
 
-// TODO: Social media provider acct binding
-
 /**
  * @route   PUT /api/account/password
  * @desc    Update the current user's password
