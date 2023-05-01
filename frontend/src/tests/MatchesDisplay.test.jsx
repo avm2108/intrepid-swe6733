@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, cleanup  } from '@testing-library/react';
-import { MatchesDisplay } from './MatchesDisplay';
+import { MatchesDisplay } from '../pages/MatchPage/MatchesDisplay';
 
 const matches = [
   {

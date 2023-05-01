@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { toast } from 'react-hot-toast';
 import { BrowserRouter } from 'react-router-dom';
-import ForgotPassword from './ForgotPassword';
+import ForgotPassword from '../pages/ForgotPassword';
 import user from '@testing-library/user-event';
 
 jest.mock('react-hot-toast');

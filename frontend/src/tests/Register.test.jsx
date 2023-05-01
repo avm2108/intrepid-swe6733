@@ -2,7 +2,7 @@
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { toast } from 'react-hot-toast';
 import { BrowserRouter } from 'react-router-dom';
-import Register from './Register';
+import Register from '../pages/Register';
 import userEvent from '@testing-library/user-event';
 import UserProvider from '../providers/UserProvider';
 
@@ -193,7 +193,7 @@ describe('Register Page', () => {
         // Ensure it's there
         await waitFor(() => { expect(nameField).toBeInTheDocument() }).then(
             async () => {
-                await act(async () => { userEvent.type(nameField, "Horatia", { delay: 100 }); });
+                await act(async () => { await userEvent.type(nameField, "Horatia", { delay: 100 }); });
                 // Ensure it's filled up
                 await waitFor(() => { expect(nameField).toHaveValue("Horatia") });
             }

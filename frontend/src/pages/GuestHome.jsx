@@ -18,12 +18,9 @@ export default function GuestHome(props) {
     useEffect(() => {
         // If the user is already logged in, redirect them to their profile page
         if (user.loggedIn) {
-            navigate('/profile');
-        } else {
-            console.log('User not logged in at GuestHome');
-            return;
+            navigate('/matching');
         }
-    }, [user.loggedIn, navigate]);
+    }, []);
 
     return (
         <>

@@ -6,7 +6,16 @@
     color: black;
 }
 
-.interestsContainer, .locationForm {
+.createForm {
+    display: flex;
+    flex-direction: column;
+    margin-top: 12px;
+    max-width: 500px;
+    justify-content: center;
+}
+
+.interestsContainer,
+.locationForm {
     display: flex;
     flex-direction: column;
     margin-bottom: 14px;
@@ -54,7 +63,8 @@ label {
     margin-bottom: 14px;
 }
 
-.userGender, .prefGender {
+.userGender,
+.prefGender {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -64,4 +74,77 @@ label {
     height: 50px;
     font-size: 18px;
     margin-left: 8px;
+}
+
+.bioInput {
+    height: 100px;
+    width: 100%;
+    display: flex;
+    align-self: stretch;
+    font-size: 18px;
+    font-family: 'Roboto';
+    padding: 0.5em;
+}
+
+.required {
+    color: red;
+}
+
+/* Style age and distance number fields */
+.numberInput {
+    width: 100px;
+    height: 30px;
+    font-size: 18px;
+    font-family: 'Roboto';
+    padding: 1em;
+    background-color: white;
+}
+
+.profilePictureContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.profilePictureAddBtn {
+    display: flex;
+    border: 1px solid black;
+    cursor: pointer;
+    padding: 0.75em;
+    width: 200px;
+    background-color: var(--color-dark-green);
+    color: white;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    margin: 15px auto;
+}
+
+.profilePictureControls {
+    margin-left: 0.5em;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.profilePictureControls .profilePictureName {
+    font-size: 18px;
+    font-family: 'Roboto';
+    background-color: white;
+}
+
+.profilePictureControls button {
+    margin: 0;
+    width: 100px;
+    height: 50px;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: var(--color-pastel-red);
+    color: white;
+}
+
+.profilePictureCaption {
+    background-color: white;
 }

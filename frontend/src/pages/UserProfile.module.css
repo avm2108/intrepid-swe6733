@@ -85,18 +85,20 @@ h3 {
     flex-direction: column;
     align-items: flex-start;
     padding: 20px;
+    max-width: 500px;
 }
 
 .userDetails {
     color: black;
     font-weight: 700;
     font-size: 20px;
+    display: flex;
 }
 
 .divider {
-        margin-top: 40px;
-        border-top: 1px solid #C6C6C6;
-        width: 70%;
+    margin-top: 40px;
+    border-top: 1px solid #C6C6C6;
+    width: 70%;
 }
 
 button {
@@ -111,7 +113,7 @@ button {
     border-radius: 6px;
     width: 100%;
     padding: 0 8px 0 8px;
-    margin: 6px;
+    margin: 6px 0;
     align-items: center;
 }
 

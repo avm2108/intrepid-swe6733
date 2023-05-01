@@ -22,8 +22,8 @@ const PreferencesSchema = new Schema({
     gender: {
         type: [String],
         enum: {
-            values: ["Male", "Female", "Non-binary", "Other/Prefer not to say"],
-            message: "Please choose from the list"
+            values: ["Male", "Female", "Non-binary", "Other"],
+            message: "Please choose gender options from the list"
         },
         validate: {
             validator: function (v) {

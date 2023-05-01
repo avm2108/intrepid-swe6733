@@ -7,7 +7,8 @@ const mongoose = require("mongoose");
 const LocationSchema = new mongoose.Schema({
     city: {
         type: String,
-        required: [true, "Your current city is required."],
+        // required: [true, "Your current city is required."],
+        required: false,
         maxLength: [50, "Your city cannot be more than 50 characters."],
         trim: true
     },
@@ -20,7 +21,8 @@ const LocationSchema = new mongoose.Schema({
     },
     country: {
         type: String,
-        required: [true, "Your current country is required."],
+        required: false,
+        default: "USA",
         maxLength: [50, "Your country cannot be more than 50 characters."],
         trim: true
     },

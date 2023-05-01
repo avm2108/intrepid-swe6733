@@ -2,7 +2,7 @@
 import { act, waitFor, render, screen, fireEvent } from '@testing-library/react';
 import { toast } from 'react-hot-toast';
 import { BrowserRouter } from 'react-router-dom';
-import Login from './Login';
+import Login from '../pages/Login';
 import userEvent from '@testing-library/user-event';
 import UserProvider from '../providers/UserProvider';
 

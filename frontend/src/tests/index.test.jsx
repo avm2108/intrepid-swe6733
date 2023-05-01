@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 
-import { MatchPage } from './index';
+import { MatchPage } from '../pages/MatchPage/index';
 
 describe('MatchPage', () => {
   it('renders user profile', () => {
