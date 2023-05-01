@@ -47,12 +47,12 @@ const UserSchema = new mongoose.Schema({
         type: Number,
         select: false
     },
-    likedUsers: {
+/*     likedUsers: {
         type: [objectId],
         ref: "users",
         default: [],
         _id: false,
-    },
+    }, */
 });
 
 UserSchema.methods.isValidPassword = async function (password) {

@@ -1,6 +1,6 @@
 const matchesRouter = require('express').Router();
-const Match = require('../models/matchModel');
-const User = require('../models/userModel');
+const { Match } = require('../models/Match');
+const User = require('../models/User');
 const passport = require('../services/passportConfig');
 const jwt = require('jsonwebtoken');
 const { generateCsrf, verifyCsrf } = require('../services/csrfProtection');
@@ -12,7 +12,7 @@ const { generateCsrf, verifyCsrf } = require('../services/csrfProtection');
  * @returns {Array} Array of user objects
  * @returns {String} Error message
  */
-/* matchesRouter.get('/prospects', passport.authenticate('jwt', { session: false }), async (req, res) => {
+matchesRouter.get('/prospects', passport.authenticate('jwt-strategy', { session: false }), async (req, res) => {
     if (!req.user) {
         return res.status(401).json({
             errors: {
@@ -21,21 +21,77 @@ const { generateCsrf, verifyCsrf } = require('../services/csrfProtection');
         });
     }
 
+    // First we need to find the users that our user has already matched with or blocked, and exclude them from the prospects
     try {
-        // Query the database for all users that match the logged in user's preferences
+        // Query the database for all matches for the logged in user, where the match is accepted
+        // We need to exclude the other user in these matches from the being returned as prospects
+        const matches = await Match.find({
+            // Find matches where the logged in user is either user1 or user2
+            $or: [
+                { user1: req.user._id },
+                { user2: req.user._id }
+            ],
+            // Get those that have the other user set
+            $and: [
+                { user1: { $ne: null } },
+                { user2: { $ne: null } }
+            ],
+            // Make sure the match is accepted (mutualAcceptedDate is not null) (?)
+            mutualAcceptedDate: { $ne: null }
+            // Fill the user1 and user2 fields with the actual user objects
+        }).populate('user1').populate('user2');
+
+        // Create an array of user ids that the logged in user has already matched with or blocked
+        const blockedOrMatchedUserIds = matches.map(match => {
+            if (match.user1._id.equals(req.user._id)) {
+                return match.user2._id;
+            } else {
+                return match.user1._id;
+            }
+        });
+
+        // Now we can query the database for all users that are not the logged in user,
+        // and are not in the blockedOrMatchedUserIds array
         const prospects = await User.find({
-            // Exclude the logged in user from the results
             _id: { $ne: req.user._id },
-            // Exclude users that the logged in user has already liked or disliked*/
+            _id: { $nin: blockedOrMatchedUserIds },
+            // TODO: Add logic to filter prospects based on user preferences and other users' attributes
+            // For now we'll apply the algorithm clientside
+            // Make sure the target user has completed their profile
+            profileComplete: true,
+            // Strip the password field from the returned user objects
+        }).select('-password -_v');
+
+        console.log("Returning prospects: " + JSON.stringify(prospects));
+
+        if (prospects.length === 0) {
+            return res.status(404).json({
+                errors: {
+                    general: 'No prospects for this user found'
+                }
+            });
+        }
+
+        // Return the prospects
+        return res.status(200).json(prospects);
+    } catch (err) {
+        console.log("Prospect retrieval error: " + err);
+        return res.status(500).json({
+            errors: {
+                general: 'An error occurred while retrieving your prospects'
+            }
+        });
+    }
+});
 
 /**
  * @route GET /api/matches
- * @desc Get matches for a logged in user
+ * @desc Get accepted matches for a logged in user
  * @access Private
  * @returns {Array} Array of user objects
  * @returns {String} Error message
 */
-matchesRouter.get('/', verifyCsrf, passport.authenticate('jwt', { session: false }), async (req, res) => {
+matchesRouter.get('/', verifyCsrf, passport.authenticate('jwt-strategy', { session: false }), async (req, res) => {
     if (!req.user) {
         return res.status(401).json({
             errors: {
@@ -63,8 +119,21 @@ matchesRouter.get('/', verifyCsrf, passport.authenticate('jwt', { session: false
             mutualAcceptedDate: { $ne: null }
         }).populate('user1').populate('user2'); // Fill the user1 and user2 fields with the actual user objects
 
+        // Transform the matches array to only include the other user and the match date
+        const transformedMatches = matches.map(match => {
+            // Get the user object for the other user in the match
+            const otherUser = match.user1._id.toString() === req.user._id.toString() ? match.user2 : match.user1;
+            // Return the user object with the match date
+            return {
+                targetUser: {
+                    ...otherUser._doc
+                },
+                matchDate: match.mutualAcceptedDate
+            };
+        });
+
         // Return the matches
-        return res.status(200).json(matches);
+        return res.status(200).json(transformedMatches);
     } catch (err) {
         console.log(err);
         return res.status(500).json({
@@ -83,7 +152,7 @@ matchesRouter.get('/', verifyCsrf, passport.authenticate('jwt', { session: false
  * @returns {Object} Match object
  * @returns {String} Error message
 */
-matchesRouter.post('/', verifyCsrf, passport.authenticate('jwt', { session: false }), async (req, res) => {
+matchesRouter.post('/', verifyCsrf, passport.authenticate('jwt-strategy', { session: false }), async (req, res) => {
     if (!req.user) {
         return res.status(401).json({
             errors: {
@@ -181,7 +250,7 @@ matchesRouter.post('/', verifyCsrf, passport.authenticate('jwt', { session: fals
  * @returns {Object} Match object
  * @returns {String} Error message
  */
-matchesRouter.post('/block', verifyCsrf, passport.authenticate('jwt', { session: false }), async (req, res) => {
+matchesRouter.post('/block', verifyCsrf, passport.authenticate('jwt-strategy', { session: false }), async (req, res) => {
     if (!req.user) {
         return res.status(401).json({
             errors: {
@@ -263,3 +332,5 @@ matchesRouter.post('/block', verifyCsrf, passport.authenticate('jwt', { session:
         });
     }
 });
+
+module.exports = matchesRouter;
