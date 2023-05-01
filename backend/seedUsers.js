@@ -1,4 +1,5 @@
 require('dotenv').config();
+const bcrypt = require('bcryptjs');
 const dbConnect = require('./services/dbConnect');
 const User = require('./models/User');
 
@@ -15,14 +16,14 @@ const seedUsers = async () => {
 
     const sampleNames = ["Emma Johnson", "Noah Smith", "Olivia Davis", "Liam Rodriguez", "Ava Garcia", "William Hernandez", "Sophia Martinez", "Mason Brown", "Isabella Gonzalez", "James Perez", "Mia Taylor", "Benjamin Anderson", "Charlotte Thomas", "Jacob Jackson", "Amelia White", "Michael Harris", "Harper Martin", "Ethan Thompson", "Evelyn Moore", "Daniel Clark"];
 
-
     // Create an array of dummy users
     const dummyUsers = [];
     for (let i = 0; i < NUM_USERS_TO_SEED; i++) {
+        const pw = `${sampleNames[i].split(' ')[0].toLowerCase()}Passw0rd!`;
         const user = new User({
             // Get their first name
             email: `${sampleNames[i].split(' ')[0].toLowerCase()}@example.com`,
-            password: `${sampleNames[i].split(' ')[0].toLowerCase()}Passw0rd!`,
+            password: await bcrypt.hash(pw, await bcrypt.genSalt(10)),
             name: sampleNames[i],
             // Random date of birth between 1/1/1990 and 1/1/2000
             dateOfBirth: new Date(1990 + Math.floor(Math.random() * 10), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28)),

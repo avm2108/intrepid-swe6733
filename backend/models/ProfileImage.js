@@ -12,7 +12,8 @@ const ProfileImageSchema = new mongoose.Schema({
     href: { // For external links
         type: String,
         default: "",
-        required: [true, "Please provide a link to your profile picture."],
+        // required: [true, "Please provide a link to your profile picture."],
+        required: false,
         trim: true
     },
     position: {
