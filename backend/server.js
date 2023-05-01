@@ -48,6 +48,7 @@ const authRouter = require("./routes/authRoutes");
 const accountRouter = require("./routes/accountRoutes");
 const profileRouter = require("./routes/profileRoutes");
 const messageRouter = require("./routes/messageRoutes");
+const matchesRouter = require("./routes/matchRoutes");
 const publicRouter = require("./routes/publicRoutes");
 
 // For debugging, we can output any incoming requests as well as their bodies
@@ -67,6 +68,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/account", accountRouter);
 app.use("/api/profile", profileRouter);
 app.use("/api/messages", messageRouter);
+app.use("/api/matches", matchesRouter);
 app.use("/api", publicRouter);
 
 // Serve static assets if in production

@@ -17,6 +17,10 @@ const storage = multer.diskStorage({
     // Modify the filename of the stored file to be unique
     filename: function (req, file, cb) {
         const extension = path.extname(file?.originalname).toLowerCase();
+        // Ensure extension is an image
+        if (extension !== '.png' && extension !== '.jpg' && extension !== '.jpeg') {
+            return cb(new Error('Only JPEG and PNG images are allowed'));
+        }
         // Create a unique filename
         const random = crypto.randomBytes(8).toString('hex');
         cb(null, file.fieldname + '-' + (random) + extension);
