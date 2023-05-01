@@ -2,10 +2,12 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { MatchesDisplay } from './MatchesDisplay';
 import { matchAlgo } from './matchAlgo';
-import { prospectsArray } from './prospectsArray';
+// import { prospectsArray } from './prospectsArray';
 import { styles } from './matchPageStyles';
 import CTAButton from '../../components/CTAButton';
 import { UserContext } from '../../providers/UserProvider';
+import axios from "axios";
+
 
 
 export function MatchPage() {
@@ -21,6 +23,8 @@ export function MatchPage() {
     const age = Math.abs(ageDate.getUTCFullYear() - 1970);
     return age
   }
+
+  
 
   // const user = {
   //   id: 0,
@@ -44,13 +48,35 @@ export function MatchPage() {
   const [matches, setMatches] = useState([]);
   const [showModal, setShowModal] = useState(false);
 
-  const handleMatch = () => {
+  const handleMatch = async () => {
     // TODO: redux/saga api call to pull prospectsArray
     // TODO: redux/saga api call to pull user pref data for matchAlgo args
-
     // TODO: matchAlgo may include more args per user prefs for age/gender/proximity
-    const newMatches = matchAlgo(profile, prospectsArray);
-    // console.log("*** newMatches: ", newMatches)
+
+    var newMatches 
+
+    await axios.get("/api/matches/prospects").then(res => {
+  
+      if (res.data) {
+
+        const prospectsArray = res.data
+        
+        const userEmail = user.email;
+        const userDateOfBirth = user.dateOfBirth;
+
+        const index = prospectsArray.findIndex(obj => obj.email === userEmail && obj.dateOfBirth === userDateOfBirth);
+        if (index !== -1) {
+          prospectsArray.splice(index, 1);
+        }
+
+        newMatches = matchAlgo(user, prospectsArray);
+      }
+      
+  
+  }).catch(err => {
+      console.log(err.response?.data);
+  });
+
     setMatches(newMatches);
     handleOpenModal();
   };

@@ -10,8 +10,17 @@ export const MatchesDisplay = ({ matches }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isImageError, setIsImageError] = useState(false);
   
+  const calcAge = (dateOfBirth) => {
+    const dob = new Date(dateOfBirth);
+    const ageDiff = Date.now() - dob.getTime();
+    const ageDate = new Date(ageDiff);
+    const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+    return age
+  }
+
   // TODO: redux/saga api call to pull prospect profile based on id passed via matches prop 
   const currentProspect = matches[currentProspectIndex].prospect;
+  
 
   // TODO: this is temporary for image area; redux/saga api call to pull prospect image
   const getProspectImage = async gender => {
@@ -43,7 +52,7 @@ export const MatchesDisplay = ({ matches }) => {
     const fetchImage = async () => {
       try {
         // TODO: later update getProspectImage by currentProspect.id 
-        const image = await getProspectImage(currentProspect.gender);
+        const image = await getProspectImage(currentProspect.profile?.gender);
         setProspectImage(image);
       } catch (error) {
         setIsImageError(true);
@@ -51,7 +60,7 @@ export const MatchesDisplay = ({ matches }) => {
       setIsLoading(false);
     };
     fetchImage();
-  }, [currentProspect.gender]);
+  }, [currentProspectIndex]);
 
   return (
     <>
@@ -81,15 +90,18 @@ export const MatchesDisplay = ({ matches }) => {
             <div style={styles.prospectInfo}>
               <p style={styles.name}>{currentProspect.name}</p>
               <p style={styles.text}>
-                {currentProspect.age}, {currentProspect.gender}
+                {calcAge(currentProspect.dateOfBirth)}, {currentProspect.profile?.gender}
               </p>
               <p style={styles.text}>
-                {currentProspect.city}, {currentProspect.state}{' '}
-                {currentProspect.country}
+                {currentProspect.profile?.location.state}{', '}
+                {currentProspect.profile?.location.country}
               </p>
               <p style={{ color: 'white', fontSize: '16px', marginBottom: '0px' }}>Interests:</p>
               <p style={styles.interestsText}>
-                {currentProspect.interests.join(', ')}
+                {/* {currentProspect.interests.join(', ')} */}
+
+
+                {currentProspect.profile?.interests.length > 1 ? currentProspect.profile?.interests.join(', ') : currentProspect.profile?.interests}
               </p>
               </div>
           </div>
