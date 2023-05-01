@@ -92,7 +92,7 @@ export default function UserProfile() {
                 <h1>My Profile</h1>
 
                 <div className={styles.userInfo}>
-                    <img src={process.env.REACT_APP_API_URL + "/" + profile?.profilePicture?.href}
+                    <img src={profile?.profilePicture?.href}
                         alt='User Avatar' className={styles.avatar}></img>
                     <h2>{user?.name}{user?.dateOfBirth && ", " + user?.dateOfBirth}</h2>
                     <div className={styles.socials}>

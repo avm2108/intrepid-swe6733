@@ -29,9 +29,9 @@ authRouter.get('/instagram/callback',
 
 authRouter.get("/instagram/test", verifyCsrf, passport.authenticate(["jwt-strategy", "instagram"], { session: false }), async (req, res, next) => {
     console.log(req.user);
-    // Get their images from the Instagram API media endpoint
     try {
-        const images = await req.user?.getMedia?.();
+        // TODO: Get their images from the Instagram API media endpoint
+        const images = [];
         console.log(images);
         return res.status(200).json({ images });
     } catch (err) {

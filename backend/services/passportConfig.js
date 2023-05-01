@@ -24,22 +24,19 @@ const jwtOptions = {
 
 const jwtStrategy = new JwtStrategy(jwtOptions, async (req, payload, done) => {
     try {
-        // Find the user specified in token
-        // Find the user in the database, but we have to do it Promise style
-        User.findById(payload.id)  // Find the user by the ID in the JWT payload
-            .then((user) => {
-                if (user) {
-                    // If the user was found, return it for access via req.user in further middleware
-                    done(null, user);
-                } else {
-                    // If the user wasn't found, return false
-                    done(null, false);
-                }
+        // Find the user by the ID in the JWT payload
+        User.findById(payload.id).then((user) => {
+            if (user) {
+                // If the user was found, return it for access via req.user in further middleware
+                done(null, user);
+            } else {
+                // If the user wasn't found, return false
+                done(null, false);
             }
-            ).catch((err) => {
-                // If there was an error, return the error
-                done(err, false);
-            }); 
+        }).catch((err) => {
+            // If there was an error, return the error
+            done(err, false);
+        });
     } catch (err) {
         // If there was an error, return the error
         done(err, false);
@@ -48,37 +45,37 @@ const jwtStrategy = new JwtStrategy(jwtOptions, async (req, payload, done) => {
 
 passport.use("jwt-strategy", jwtStrategy);
 
-passport.use(new InstagramStrategy({
+passport.use("instagram", new InstagramStrategy({
     clientID: process.env.INSTAGRAM_CLIENT_ID,
     clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,
     callbackURL: process.env.INSTAGRAM_CALLBACK_URL
-  },
-  async function(accessToken, _refreshToken, profile, done) {
-      console.log("recieved profile", profile);
-      console.log("recieved access token", accessToken);
-      
-      try {
-       const account = await SocialAccount.findOneAndUpdate({ service: 'instagram', accountId: profile.id }, { accessToken: accessToken }, { new: true, upsert: true });
-       if (account) {
-           console.log("creating social account");
-           done(null, { profile: profile, accessToken: accessToken });
-       } else {
-           console.log("unable to create social account");
-           done(err, false);
-       }
-      } catch (err) {
-          console.log("unable to create social account");
-          console.log(err);
-      }
-  }
+},
+    async function (accessToken, _refreshToken, profile, done) {
+        console.log("recieved profile", profile);
+        console.log("recieved access token", accessToken);
+
+        try {
+            const account = await SocialAccount.findOneAndUpdate({ service: 'instagram', accountId: profile.id }, { accessToken: accessToken }, { new: true, upsert: true });
+            if (account) {
+                console.log("creating social account");
+                done(null, { profile: profile, accessToken: accessToken });
+            } else {
+                console.log("unable to create social account");
+                done(err, false);
+            }
+        } catch (err) {
+            console.log("unable to create social account");
+            console.log(err);
+        }
+    }
 ));
 
-passport.serializeUser(function(user, done) {
-  console.log("serializing (ig) profile", user);
-  done(null, user);
+passport.serializeUser(function (user, done) {
+    console.log("serializing (ig) profile", user);
+    done(null, user);
 });
 
-passport.deserializeUser(function(user, done) {
+passport.deserializeUser(function (user, done) {
     console.log("deserializing (ig) profile", user)
     done(null, user);
 });
