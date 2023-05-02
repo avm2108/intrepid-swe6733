@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { modalStyles as styles } from './matchPageStyles';
 import { Helmet } from 'react-helmet';
+import axios from 'axios';
+import toast from "react-hot-toast";
+
 
 
 export const MatchesDisplay = ({ matches }) => {
+
+  console.log("** matches:", matches)
 
   const [currentProspectIndex, setCurrentProspectIndex] = useState(0);
   const [prospectImage, setProspectImage] = useState('');
@@ -43,6 +48,22 @@ export const MatchesDisplay = ({ matches }) => {
     if (currentProspectIndex > 0) {
       setCurrentProspectIndex(currentProspectIndex - 1);
     }
+  };
+
+
+  const handleLike = async () => {
+
+    let data = {
+      user2: currentProspect._id
+    }
+
+    try {
+    const res = await axios.post("/api/matches", data)
+    console.log(res.data)
+    toast.success("Added to Favorites!");
+  } catch(err) {
+      console.log(err.response?.data);
+  };
   };
 
   const isFirstProspect = currentProspectIndex === 0;
@@ -134,6 +155,7 @@ export const MatchesDisplay = ({ matches }) => {
                   title="Click to add to favorites"
                   className="fas fa-fire fa-3x"
                   style={{ cursor: 'pointer', color: '#FFA500' }}
+                  onClick={handleLike}
                 ></i>
                 &nbsp;&nbsp;&nbsp;
                 <button

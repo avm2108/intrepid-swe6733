@@ -13,8 +13,12 @@ import axios from "axios";
 export function MatchPage() {
   
 
+  
+
   const { user } = useContext(UserContext);
   const { profile } = user;
+
+  console.log("peek user", user)
 
   const calcAge = (dateOfBirth) => {
     const dob = new Date(dateOfBirth);
@@ -99,7 +103,9 @@ export function MatchPage() {
             {profile?.location.state} 
           </p>
           <p style={{ marginBottom: '0px', }}>Interests:</p>
-          <p style={styles.interestsText}>{profile?.interests.length > 1 ? profile?.interests.join(', ') : profile?.interests}</p>
+          {/* <p style={styles.interestsText}>{profile?.interests?.length >= 1 ? profile?.interests.join(', ') : profile?.interests}</p> */}
+          <p style={styles.interestsText}>{profile?.interests.length >= 1 ? profile.interests.join(', ') : profile?.interests}</p>
+
           <button style={{ ...styles.button, margin: 5 }} onClick={handleMatch}>
             Start Here
           </button>
