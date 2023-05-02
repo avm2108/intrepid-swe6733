@@ -61,14 +61,16 @@ messageRouter.get('/:recipient_id', verifyCsrf, passport.authenticate('jwt-strat
     }
 
     try {
-        let messages = await ChatMessage.find().or(
+        const messages = await ChatMessage.find().or(
             [
                 { sender: req.user.id, recipient: new mongoose.Types.ObjectId(req.params.recipient_id) },
                 { sender: new mongoose.Types.ObjectId(req.params.recipient_id), recipient: req.user.id }
-            ]).sort({ createdAt: 1 });
+            ]).populate('sender').populate('recipient').sort({ createdAt: 1 });
 
         return res.status(200).json({
-            messages: messages
+            messages: messages.map(message => {
+                return { sender: message.sender.name, recipient: message.recipient.name, content: message.content, image: message.image, readDate: message.readDate };
+            })
         });
     } catch (err) {
         console.log("Error getting user messages: ", err);
