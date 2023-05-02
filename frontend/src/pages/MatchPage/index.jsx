@@ -18,7 +18,7 @@ export function MatchPage() {
   const { user } = useContext(UserContext);
   const { profile } = user;
 
-  console.log("peek user", user)
+  // console.log("peek user", user)
 
   const calcAge = (dateOfBirth) => {
     const dob = new Date(dateOfBirth);

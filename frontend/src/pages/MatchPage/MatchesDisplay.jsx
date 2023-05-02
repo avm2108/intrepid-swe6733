@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 
 export const MatchesDisplay = ({ matches }) => {
 
-  console.log("** matches:", matches)
+  // console.log("** matches:", matches)
 
   const [currentProspectIndex, setCurrentProspectIndex] = useState(0);
   const [prospectImage, setProspectImage] = useState('');
