@@ -20,7 +20,7 @@ const PrivateRoute = ({ user, checkLoggedIn, redirectPath = '/login', children }
             // If the user is logged in and has a complete profile, render the protected route
             // Otherwise, redirect to the specified redirect path
             /* await checkLoggedIn().then((res) => { */
-                console.log("PrivateRoute: Checking if user is logged in " + JSON.stringify(user));
+                // console.log("PrivateRoute: Checking if user is logged in " + JSON.stringify(user));
                 if (user?.loggedIn) {
                     if (user?.profileComplete) {
                         console.log("PrivateRoute: User has a complete profile, allowing them to access the protected route")
