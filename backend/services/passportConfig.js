@@ -46,8 +46,10 @@ const jwtStrategy = new JwtStrategy(jwtOptions, async (req, payload, done) => {
 passport.use("jwt-strategy", jwtStrategy);
 
 passport.use("instagram", new InstagramStrategy({
-    clientID: process.env.INSTAGRAM_CLIENT_ID,
-    clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,
+    // clientID: process.env.INSTAGRAM_CLIENT_ID,
+    // clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,
+    clientID: '551355607054367', // TODO: set me in env
+    clientSecret: 'dacbe222f348b06cb33df556069bcef3', // TODO: set me in env
     callbackURL: process.env.INSTAGRAM_CALLBACK_URL
 },
     async function (accessToken, _refreshToken, profile, done) {

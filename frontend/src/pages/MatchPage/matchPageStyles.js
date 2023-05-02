@@ -151,6 +151,8 @@ export const modalStyles = {
     border: 'none',
     borderRadius:' 12px',
     padding:' 12px',
+    marginRight: '12px'
+    
   },
   recommendText: {
     textAlign: 'center',
