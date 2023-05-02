@@ -226,7 +226,7 @@ profileRouter.post('/', verifyCsrf, passport.authenticate('jwt-strategy', { sess
         // If the profile was successfully created, return the profile data
         return res.status(201).json({
             profile: profile,
-            profileComplete: req.user.profileComplete
+            profileComplete: true
         });
     } catch (err) {
         console.log("Error updating profile: ", err);

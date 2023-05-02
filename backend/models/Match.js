@@ -1,16 +1,17 @@
 const mongoose = require("mongoose");
+const User = require("./User");
 const { ChatMessageSchema } = require("./ChatMessage");
 
 const MatchSchema = new mongoose.Schema({
     user1: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: User,
         required: true,
         trim: true
     },
     user2: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: User,
         required: false,
         trim: true
     },
