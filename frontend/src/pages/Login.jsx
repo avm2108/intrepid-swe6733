@@ -114,7 +114,7 @@ export default function Login(props) {
 
         // If the login is successful, get the CSRF token from the response body
         // and add it to the all our future requests' headers
-        const csrfToken = res.data.csrfToken;
+        const csrfToken = res.data?.csrfToken;
         axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
 
         // Set another clientside cookie to represent that we're logged in
@@ -129,6 +129,7 @@ export default function Login(props) {
             loggedIn: true,
             csrfToken: csrfToken,
             ...res.data.user,
+            profileComplete: res.data.user?.profileComplete,
         };
 
         console.log("newUser: ", newUser);

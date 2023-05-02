@@ -19,10 +19,10 @@ const PrivateRoute = ({ user, checkLoggedIn, redirectPath = '/login', children }
         const determineAction = async (children) => {
             // If the user is logged in and has a complete profile, render the protected route
             // Otherwise, redirect to the specified redirect path
-            await checkLoggedIn().then((res) => {
-                console.log("PrivateRoute: Checking if user is logged in " + JSON.stringify(res));
-                if (res?.loggedIn) {
-                    if (res?.profileComplete) {
+            /* await checkLoggedIn().then((res) => { */
+                console.log("PrivateRoute: Checking if user is logged in " + JSON.stringify(user));
+                if (user?.loggedIn) {
+                    if (user?.profileComplete) {
                         console.log("PrivateRoute: User has a complete profile, allowing them to access the protected route")
                         itemToRender.current = children || <Outlet />;
                     } else {
@@ -34,7 +34,7 @@ const PrivateRoute = ({ user, checkLoggedIn, redirectPath = '/login', children }
                     itemToRender.current = <Navigate to={redirectPath} replace />;
                 }
                 setState({ loading: false, redirect: false, element: itemToRender.current });
-            });
+           // });
         };
 
         determineAction();

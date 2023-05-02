@@ -115,6 +115,7 @@ authRouter.post('/login', validateWithRules, generateCsrf, async (req, res, next
                     email: user.email,
                     dateOfBirth: user.dateOfBirth,
                     profile: user?.profile,
+                    profileComplete: user?.profileComplete,
                 },
                 csrfToken: req.csrfToken
             });
