@@ -4,6 +4,7 @@ const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
 const InstagramStrategy = require('passport-instagram-basic-api').Strategy;
 const SocialAccount = require('../models/SocialAccount');
 const User = require("../models/User");
+const axios = require('axios');
 
 const signedCookieExtractor = (req) => {
     let token = null;
@@ -48,15 +49,18 @@ const jwtStrategy = new JwtStrategy(jwtOptions, async (req, payload, done) => {
 passport.use("jwt-strategy", jwtStrategy);
 
 passport.use("instagram", new InstagramStrategy({
-    // clientID: process.env.INSTAGRAM_CLIENT_ID,
-    // clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,
-    clientID: '551355607054367', // TODO: set me in env
-    clientSecret: 'dacbe222f348b06cb33df556069bcef3', // TODO: set me in env
+    clientID: process.env.INSTAGRAM_CLIENT_ID,
+    clientSecret: process.env.INSTAGRAM_CLIENT_SECRET,
     callbackURL: process.env.INSTAGRAM_CALLBACK_URL
 },
     async function (accessToken, _refreshToken, profile, done) {
         console.log("recieved profile", profile);
         console.log("recieved access token", accessToken);
+
+        if (!profile || !profile.id || !accessToken) {
+            console.log("Cannot authenticate with IG, something is missing");
+            done(err, false);
+        }
 
         try {
             const account = await SocialAccount.findOneAndUpdate({ service: 'instagram', accountId: profile.id }, { accessToken: accessToken }, { new: true, upsert: true });

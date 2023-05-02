@@ -16,9 +16,7 @@ export default function UserProfile() {
     const { profile } = user;
 
     useEffect(() => {
-        // If we're coming here via /instagram/nextStep, we need to make the
-        // POST instagram/associate request to associate the user's Instagram
-        // account with their profile
+        // POST instagram/associate request to associate the user's Instagram account with their profile
         if (location.pathname.startsWith("/instagram")) {
             axios.post("/api/auth/instagram/associate").then(res => {
                 if (res.status === 200) {

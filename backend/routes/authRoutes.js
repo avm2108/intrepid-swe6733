@@ -27,11 +27,44 @@ authRouter.get('/instagram/callback',
         // NOTE: now make a POST to /instagram/associate endpoint which will read the cookie
     });
 
-authRouter.get("/instagram/test", verifyCsrf, passport.authenticate(["jwt-strategy", "instagram"], { session: false }), async (req, res, next) => {
+authRouter.get("/instagram/test", verifyCsrf, passport.authenticate("jwt-strategy", { session: false }), async (req, res, next) => {
     console.log(req.user);
     try {
+        // Get the instagram account ID and access token from the database for this user ID
+        const acct = await SocialAccount.findOne({ userId: req.user?.id, service: 'instagram' });
+        if (!acct) {
+            return res.status(404).json({ errors: { general: "Instagram account not found" } });
+        } else if (!acct.accessToken) {
+            return res.status(401).json({ errors: { general: "Instagram account not authorized, please re-link your account" } });
+        }
+        
+        // Call the instagram API to get the user's profilePicture
+        const profilePicture = await fetch(`https://graph.instagram.com/me?fields=id,username,media&access_token=${acct.accessToken}`);
+        const profilePictureJson = await profilePicture.json();
+        console.log("JSON " + profilePictureJson);
+        if (!profilePictureJson || !profilePictureJson.id) {
+            return res.status(500).json({ errors: { general: "Unable to retrieve Instagram profile picture" } });
+        }
+
+
+        
         // TODO: Get their images from the Instagram API media endpoint
-        const images = [];
+        const images = await fetch(`https://graph.instagram.com/${profilePictureJson.id}/media?fields=id,media_type,media_url,username,timestamp&access_token=${acct.accessToken}`);
+        const imagesJson = await images.json();
+        console.log("IMAGES " + imagesJson);
+        if (!imagesJson || !imagesJson.data) {
+            return res.status(500).json({ errors: { general: "Unable to retrieve Instagram images" } });
+        }
+            console.log("1" + imagesJson.data);
+            console.log("2" + imagesJson.data[0]);
+            console.log("3" + imagesJson.data[0].media_url);
+            console.log("4" + imagesJson.data[0].media_type);
+            console.log("5" + imagesJson.data[0].timestamp);
+            console.log("6" + imagesJson.data[0].username);
+            console.log("7" + imagesJson.data[0].id);
+            console.log("8" + imagesJson.data[0].permalink);
+            console.log("9" + imagesJson.data[0].caption);
+        
         console.log(images);
         return res.status(200).json({ images });
     } catch (err) {
@@ -56,6 +89,13 @@ authRouter.post("/instagram/associate", verifyCsrf, passport.authenticate("jwt-s
         const account = await SocialAccount.findOneAndUpdate({ service: 'instagram', accountId: req.cookies?.instagram?.profile?.id }, { userId: req.user?.id });
         if (account) {
             console.log("Associating social account");
+            // Get long-lived access token
+            const longLivedToken = await fetch(`https://graph.instagram.com/access_token?grant_type=ig_exchange_token&client_secret=${process.env.INSTAGRAM_CLIENT_SECRET}&access_token=${req.cookies?.instagram?.accessToken}`);
+            const longLivedTokenJson = await longLivedToken.json();
+            console.log(longLivedTokenJson);
+            // Update the access token in the database
+            account.accessToken = longLivedTokenJson.access_token;
+            await account.save();
             return res.status(201).json({ message: 'Instagram associated successfully' });
         } else {
             console.log("Can't associate IG Acct because the account doesn't exist: " + JSON.stringify(req.cookies?.instagram?.profile?.id));
