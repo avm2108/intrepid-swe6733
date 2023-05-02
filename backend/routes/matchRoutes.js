@@ -1,9 +1,9 @@
-const matchesRouter = require('express').Router();
 const { Match } = require('../models/Match');
 const User = require('../models/User');
 const passport = require('../services/passportConfig');
 const jwt = require('jsonwebtoken');
 const { generateCsrf, verifyCsrf } = require('../services/csrfProtection');
+const matchesRouter = require('express').Router();
 
 /**
  * @route GET /api/prospects
@@ -39,7 +39,7 @@ matchesRouter.get('/prospects', passport.authenticate('jwt-strategy', { session:
             // Make sure the match is accepted (mutualAcceptedDate is not null) (?)
             mutualAcceptedDate: { $ne: null }
             // Fill the user1 and user2 fields with the actual user objects
-        }).populate('user1').populate('user2');
+        }).populate('User').exec();
 
         // Create an array of user ids that the logged in user has already matched with or blocked
         const blockedOrMatchedUserIds = matches.map(match => {
@@ -113,11 +113,22 @@ matchesRouter.get('/', verifyCsrf, passport.authenticate('jwt-strategy', { sessi
                 { user1: { $ne: null } },
                 { user2: { $ne: null } }
             ],
-            // Make sure the match isn't blocked 
-            matchBlocked: false,
+            // Make sure the match isn't blocked (false or null) 
+            matchBlocked: { $ne: true },
             // Make sure the match is accepted (mutualAcceptedDate is not null)
             mutualAcceptedDate: { $ne: null }
-        }).populate('user1').populate('user2'); // Fill the user1 and user2 fields with the actual user objects
+            // Remove passwords from the returned user objects // Fill the user1 and user2 fields with the actual user objects
+        }).populate('user2').populate('user1').exec();
+
+        if (matches.length === 0) {
+            return res.status(404).json({
+                errors: {
+                    general: 'No matches for this user found'
+                }
+            });
+        }
+
+        console.log("Returning matches: " + JSON.stringify(matches));
 
         // Transform the matches array to only include the other user and the match date
         const transformedMatches = matches.map(match => {
@@ -180,7 +191,7 @@ matchesRouter.post('/', verifyCsrf, passport.authenticate('jwt-strategy', { sess
 
     try {
         // Make sure the user2 exists
-        const user2 = await User.findOneById(req.body.user2);
+        const user2 = await User.findById(req.body.user2);
         if (!user2) {
             return res.status(400).json({
                 errors: {
@@ -272,7 +283,7 @@ matchesRouter.post('/block', verifyCsrf, passport.authenticate('jwt-strategy', {
 
     // Ensure the targetUserID is a valid user
     try {
-        const targetUser = await User.findOneById(req.body.targetUserID);
+        const targetUser = await User.findById(req.body.targetUserID);
         if (!targetUser) {
             return res.status(400).json({
                 errors: {

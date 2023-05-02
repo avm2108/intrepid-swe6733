@@ -34,10 +34,12 @@ const jwtStrategy = new JwtStrategy(jwtOptions, async (req, payload, done) => {
                 done(null, false);
             }
         }).catch((err) => {
+            console.log(err);
             // If there was an error, return the error
             done(err, false);
         });
     } catch (err) {
+        console.log(err);
         // If there was an error, return the error
         done(err, false);
     }

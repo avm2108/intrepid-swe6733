@@ -42,7 +42,7 @@ authRouter.get("/instagram/test", verifyCsrf, passport.authenticate(["jwt-strate
 
 authRouter.post("/instagram/associate", verifyCsrf, passport.authenticate("jwt-strategy", { session: false }), async (req, res, next) => {
     // console.log(req.user);
-    // console.log(req.cookies);
+    console.log(req.cookies);
     if (!req.user) {
         return res.status(401).json({
             errors: {
@@ -115,6 +115,7 @@ authRouter.post('/login', validateWithRules, generateCsrf, async (req, res, next
                     email: user.email,
                     dateOfBirth: user.dateOfBirth,
                     profile: user?.profile,
+                    profileComplete: user?.profileComplete,
                 },
                 csrfToken: req.csrfToken
             });
