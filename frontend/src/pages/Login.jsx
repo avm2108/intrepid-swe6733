@@ -31,12 +31,12 @@ export default function Login(props) {
     const { user, updateUser } = useContext(UserContext);
 
     // On first load of this page, check if the user is already logged in
-/*     useEffect(() => {
+    useEffect(() => {
         // If the user is already logged in, redirect them to their profile page
-        if (user.loggedIn) {
-            navigate('/profile');
+        if (user?.loggedIn) {
+            navigate('/matching');
         }
-    }, []); */
+    }, []);
 
     const [formState, setFormState] = useState({
         email: '',
