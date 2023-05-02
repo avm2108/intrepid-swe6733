@@ -69,11 +69,10 @@ export default function Login(props) {
         });
 
         // If the response is not 200, it's an error
-        if (res.status !== 200) {
-            const { data } = res;
-
+        if (!res || res?.status !== 200) {
             // If the response doesn't have an errors object, it's a server error
-            if (!res.data || !res.data.errors) {
+            if (!res?.data || !res?.data?.errors) {
+                toast.error('Something went wrong, please try again.');
                 setFormState((prevState) => ({
                     ...prevState,
                     disabled: false,
@@ -88,6 +87,8 @@ export default function Login(props) {
                 return;
             }
 
+            const { data } = res;
+            
             // Otherwise, we'll transform the errors object into a more friendly format
             // "Username": "Username is already taken"
             // TODO: Extract this into a helper function
