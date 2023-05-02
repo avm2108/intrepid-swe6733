@@ -65,7 +65,9 @@ messageRouter.get('/:recipient_id', verifyCsrf, passport.authenticate('jwt-strat
             [
                 { sender: req.user.id, recipient: new mongoose.Types.ObjectId(req.params.recipient_id) },
                 { sender: new mongoose.Types.ObjectId(req.params.recipient_id), recipient: req.user.id }
-            ]).sort({ createdAt: 1 });
+            ]).populate('sender').populate('recipient').sort({ createdAt: 1 }).map(message => {
+                return { sender: message.sender.name, recipient: message.recipient.name, content: message.content, image: message.image, readDate: message.readDate };
+            });
 
         return res.status(200).json({
             messages: messages
