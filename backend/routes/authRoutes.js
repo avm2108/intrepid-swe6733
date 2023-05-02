@@ -23,7 +23,13 @@ authRouter.get('/instagram/callback',
                 // signed: true,
             });
         // Need to redirect back to the frontend
-        return res.redirect(process.env.CLIENT_ORIGIN + '/instagram/');
+        if (res.cookie && res.cookie.instagram) {   
+            console.log("IG Cookie is good, redirecting to frontend");
+            return res.status(201).redirect(process.env.CLIENT_ORIGIN + '/instagram/');
+        } else {
+            console.log("Problem with IG Cookie...");
+            // return res.status(401).redirect(process.env.CLIENT_ORIGIN + '/login');
+        }
         // NOTE: now make a POST to /instagram/associate endpoint which will read the cookie
     });
 
@@ -55,15 +61,6 @@ authRouter.get("/instagram/test", verifyCsrf, passport.authenticate("jwt-strateg
         if (!imagesJson || !imagesJson.data) {
             return res.status(500).json({ errors: { general: "Unable to retrieve Instagram images" } });
         }
-            console.log("1" + imagesJson.data);
-            console.log("2" + imagesJson.data[0]);
-            console.log("3" + imagesJson.data[0].media_url);
-            console.log("4" + imagesJson.data[0].media_type);
-            console.log("5" + imagesJson.data[0].timestamp);
-            console.log("6" + imagesJson.data[0].username);
-            console.log("7" + imagesJson.data[0].id);
-            console.log("8" + imagesJson.data[0].permalink);
-            console.log("9" + imagesJson.data[0].caption);
         
         console.log(images);
         return res.status(200).json({ images });
