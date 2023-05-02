@@ -57,7 +57,7 @@ export function MatchPage() {
     // TODO: redux/saga api call to pull user pref data for matchAlgo args
     // TODO: matchAlgo may include more args per user prefs for age/gender/proximity
 
-    var newMatches 
+    let newMatches 
 
     await axios.get("/api/matches/prospects").then(res => {
   
