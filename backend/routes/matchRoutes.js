@@ -192,6 +192,7 @@ matchesRouter.post('/', verifyCsrf, passport.authenticate('jwt-strategy', { sess
     try {
         // Make sure the user2 exists
         const user2 = await User.findById(req.body.user2);
+
         if (!user2) {
             return res.status(400).json({
                 errors: {
@@ -235,6 +236,9 @@ matchesRouter.post('/', verifyCsrf, passport.authenticate('jwt-strategy', { sess
 
         // If we get here, then a match does not already exist,
         // so we need to create a new match
+
+        console.log("*** checkpoint")
+
         const newMatch = new Match({
             user1: req.user._id,
             user2: req.body.user2
@@ -330,7 +334,7 @@ matchesRouter.post('/block', verifyCsrf, passport.authenticate('jwt-strategy', {
 
         // Otherwise update the match to be blocked
         match.matchBlocked = true;
-        
+
         // Save the updated match to the database
         const updatedMatch = await match.save();
 

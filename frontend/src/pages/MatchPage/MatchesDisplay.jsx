@@ -1,17 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { modalStyles as styles } from './matchPageStyles';
 import { Helmet } from 'react-helmet';
+import axios from 'axios';
+import toast from "react-hot-toast";
+
 
 
 export const MatchesDisplay = ({ matches }) => {
+
+  // console.log("** matches:", matches)
 
   const [currentProspectIndex, setCurrentProspectIndex] = useState(0);
   const [prospectImage, setProspectImage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isImageError, setIsImageError] = useState(false);
   
+  const calcAge = (dateOfBirth) => {
+    const dob = new Date(dateOfBirth);
+    const ageDiff = Date.now() - dob.getTime();
+    const ageDate = new Date(ageDiff);
+    const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+    return age
+  }
+
   // TODO: redux/saga api call to pull prospect profile based on id passed via matches prop 
   const currentProspect = matches[currentProspectIndex].prospect;
+  
 
   // TODO: this is temporary for image area; redux/saga api call to pull prospect image
   const getProspectImage = async gender => {
@@ -36,6 +50,22 @@ export const MatchesDisplay = ({ matches }) => {
     }
   };
 
+
+  const handleLike = async () => {
+
+    let data = {
+      user2: currentProspect._id
+    }
+
+    try {
+    const res = await axios.post("/api/matches", data)
+    console.log(res.data)
+    toast.success("Added to Favorites!");
+  } catch(err) {
+      console.log(err.response?.data);
+  };
+  };
+
   const isFirstProspect = currentProspectIndex === 0;
   const isLastProspect = currentProspectIndex === matches.length - 1;
 
@@ -43,7 +73,7 @@ export const MatchesDisplay = ({ matches }) => {
     const fetchImage = async () => {
       try {
         // TODO: later update getProspectImage by currentProspect.id 
-        const image = await getProspectImage(currentProspect.gender);
+        const image = await getProspectImage(currentProspect.profile?.gender);
         setProspectImage(image);
       } catch (error) {
         setIsImageError(true);
@@ -51,7 +81,7 @@ export const MatchesDisplay = ({ matches }) => {
       setIsLoading(false);
     };
     fetchImage();
-  }, [currentProspect.gender]);
+  }, [currentProspectIndex]);
 
   return (
     <>
@@ -81,15 +111,18 @@ export const MatchesDisplay = ({ matches }) => {
             <div style={styles.prospectInfo}>
               <p style={styles.name}>{currentProspect.name}</p>
               <p style={styles.text}>
-                {currentProspect.age}, {currentProspect.gender}
+                {calcAge(currentProspect.dateOfBirth)}, {currentProspect.profile?.gender}
               </p>
               <p style={styles.text}>
-                {currentProspect.city}, {currentProspect.state}{' '}
-                {currentProspect.country}
+                {currentProspect.profile?.location.state}{', '}
+                {currentProspect.profile?.location.country}
               </p>
               <p style={{ color: 'white', fontSize: '16px', marginBottom: '0px' }}>Interests:</p>
               <p style={styles.interestsText}>
-                {currentProspect.interests.join(', ')}
+                {/* {currentProspect.interests.join(', ')} */}
+
+
+                {currentProspect.profile?.interests.length > 1 ? currentProspect.profile?.interests.join(', ') : currentProspect.profile?.interests}
               </p>
               </div>
           </div>
@@ -122,6 +155,7 @@ export const MatchesDisplay = ({ matches }) => {
                   title="Click to add to favorites"
                   className="fas fa-fire fa-3x"
                   style={{ cursor: 'pointer', color: '#FFA500' }}
+                  onClick={handleLike}
                 ></i>
                 &nbsp;&nbsp;&nbsp;
                 <button
