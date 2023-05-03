@@ -38,7 +38,7 @@ const PrivateRoute = ({ user, checkLoggedIn, redirectPath = '/login', children }
         };
 
         determineAction();
-    }, [user, children]);
+    }, [location.pathname, user]);
 
     return state.element && !state.loading ? state.element : null;
 };

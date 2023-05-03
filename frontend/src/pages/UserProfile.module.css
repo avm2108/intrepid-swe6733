@@ -10,7 +10,6 @@
 h1 {
     padding-top: 16px;
     color: white;
-    
 }
 
 .userInfo {
@@ -42,7 +41,7 @@ h3 {
     width: 150px;
     height: 200px;
     border-radius: 50%;
-  }
+}
 
 .socials {
     display: flex;
@@ -105,14 +104,17 @@ button {
     margin: 8px;
 }
 
-.location, .showMe, .ageRange, .maxDistance {
+.location,
+.showMe,
+.ageRange,
+.maxDistance {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     border: 1px solid #C6C6C6;
     border-radius: 6px;
     width: 100%;
-    padding: 0 8px 0 8px;
+    padding: 0 8px;
     margin: 6px 0;
     align-items: center;
 }
@@ -122,7 +124,8 @@ p {
     font-size: 14px;
 }
 
-.ageRange, .maxDistance {
+.ageRange,
+.maxDistance {
     flex-direction: column;
     align-items: flex-start;
 
@@ -135,15 +138,31 @@ input {
     background: #d3d3d3;
     outline: none;
     opacity: 0.7;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
+    -webkit-transition: 0.2s;
+    transition: opacity 0.2s;
     margin-bottom: 8px;
-  }
-  
-  input:hover {
+}
+
+input:hover {
     opacity: 1;
-  }
-  
-  input::-ms-fill-lower {
+}
+
+input::-ms-fill-lower {
     background: red !important;
-  }
+}
+
+.userIGPhotos {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.userIGPhotos img {
+    width: 100px;
+    height: 100px;
+    margin: 8px;
+    border-radius: 12px;
+}

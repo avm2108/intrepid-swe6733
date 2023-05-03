@@ -34,7 +34,7 @@ function Register(props) {
         if (user?.loggedIn) {
             navigate('/matching');
         }
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }); // eslint-disable-line react-hooks/exhaustive-deps
 
     const [formState, setFormState] = useState({
         name: '',

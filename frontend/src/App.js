@@ -31,7 +31,6 @@ function App() {
   const { user, updateUser, checkLoggedIn } = useContext(UserContext);
   const location = useLocation();
   const navigate = useNavigate();
-  const firstRender = useRef(true);
 
   /* On page load check if the user is logged in via a call to the backend
   which will check if the user still has a unexpired JWT in their httponly cookies
@@ -39,6 +38,7 @@ function App() {
   Since we'll then be logged in we can also redirect the user to the matching page. If they aren't logged
   in allow only access to public routes */
   useEffect(() => {
+    console.log(location.pathname);
     // console.log("App: Checking if user is logged in");
     const determineLogin = async () => {
       await checkLoggedIn().then((res) => {
@@ -48,7 +48,7 @@ function App() {
           // updateUser(res);
           console.log("App: User is logged in, redirecting to matching page")
           if (location.pathname === "/" || location.pathname === "/login" || location.pathname === "/register" || location.pathname === "/forgot-password" || location.pathname === "/reset-password") navigate("/matching", { replace: true });
-          // else navigate(location.pathname, { replace: true });
+          else navigate(location.pathname, { replace: true });
           if (user?.profileComplete && location.pathname === '/create') {
             navigate('/matching', { replace: true });
           }

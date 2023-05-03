@@ -10,7 +10,7 @@ const multer = require('multer');
 
 // Configure image upload storage to store locally
 // TODO: Error handling for file upload
-const storage = multer.diskStorage({
+/* const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'uploads/')
     },
@@ -25,12 +25,12 @@ const storage = multer.diskStorage({
         const random = crypto.randomBytes(8).toString('hex');
         cb(null, file.fieldname + '-' + (random) + extension);
     }
-});
+}); */
 
 // Configure image upload middleware
 const upload = multer({
     extended: true, // Allow for nested data in the request body (e.g. req.body.user.name)
-    storage: storage,
+    storage: multer.memoryStorage(),
     limits: {
         // Limit file size to 5MB (?)
         fileSize: 5 * 1024 * 1024
@@ -192,16 +192,27 @@ profileRouter.post('/', verifyCsrf, passport.authenticate('jwt-strategy', { sess
     // Convert the profile data from JSON string passed from the frontend to an object
     const bodyData = JSON.parse(req.body.profile);
 
+    // If the file's good we need to convert it to basae64 for Heroku to store it in the database
+    // Convert the image to base64; The image will be in the req.file.buffer
+    let base64Image = req?.file?.buffer;
+    if (base64Image) {
+        // If we have a file, convert it to base64
+        base64Image = base64Image.toString("base64");
+        // Add the image type to the base64 string
+        base64Image = `data:${req.file?.mimetype};base64,${base64Image}`;
+    }
+
     // Create a new profile for the user
     const profile = {
         gender: bodyData?.gender,
         bio: bodyData?.bio,
         location: bodyData?.location,
         profilePicture: {
-            file: req.file?.filename || "",
-            // TODO: How to handle href if there is no file for Instagram?
+            file: "", // req.file?.filename || "",
+            // If we passed a base64 string, use that, otherwise use the href (binary uploads)
             // Replace backslashes with forward slashes for href
-            href: (req.file?.filename) ? process.env.CLIENT_ORIGIN + "/uploads/" + req.file?.filename.replace(/\\/g, "/") : "",
+            href: base64Image ? base64Image : "",
+                // (req.file?.filename) ? process.env.CLIENT_ORIGIN + "/uploads/" + req.file?.filename.replace(/\\/g, "/") : "",
             caption: bodyData?.profilePictureCaption || "",
             // position: bodyData?.profilePicture?.position || 0
         },
@@ -211,7 +222,7 @@ profileRouter.post('/', verifyCsrf, passport.authenticate('jwt-strategy', { sess
         }
     };
 
-    console.log("Transformed profile data: ", profile);
+    // console.log("Transformed profile data: ", profile);
 
     // Save the profile to the database in the User document
     try {

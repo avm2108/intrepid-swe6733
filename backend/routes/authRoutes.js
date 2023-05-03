@@ -5,6 +5,7 @@ const validateWithRules = require('../services/validation');
 const { generateCsrf, verifyCsrf } = require('../services/csrfProtection');
 const User = require('../models/User');
 const SocialAccount = require('../models/SocialAccount');
+const axios = require('axios');
 
 authRouter.get('/instagram', passport.authenticate('instagram', { scope: ['basic', 'user_media', 'public_content', 'user_profile'] }), (req, res) => {
     console.log("redirecting to instagram");
@@ -23,17 +24,41 @@ authRouter.get('/instagram/callback',
                 // signed: true,
             });
         // Need to redirect back to the frontend
-        return res.redirect(process.env.CLIENT_ORIGIN + '/instagram/');
+        // if (res.cookie && res.cookie.instagram) {   
+        //     console.log("IG Cookie is good, redirecting to frontend");
+            return res.status(201).redirect(process.env.CLIENT_ORIGIN + '/instagram/');
+        // } else {
+            // console.log("Problem with IG Cookie...");
+            // return res.status(401).redirect(process.env.CLIENT_ORIGIN + '/login');
+        // }
         // NOTE: now make a POST to /instagram/associate endpoint which will read the cookie
     });
 
-authRouter.get("/instagram/test", verifyCsrf, passport.authenticate(["jwt-strategy", "instagram"], { session: false }), async (req, res, next) => {
+authRouter.get("/instagram/test", verifyCsrf, passport.authenticate("jwt-strategy", { session: false }), async (req, res, next) => {
     console.log(req.user);
     try {
-        // TODO: Get their images from the Instagram API media endpoint
-        const images = [];
-        console.log(images);
-        return res.status(200).json({ images });
+        // Get the instagram account ID and access token from the database for this user ID
+        const acct = await SocialAccount.findOne({ userId: req.user?.id, service: 'instagram' });
+        if (!acct) {
+            return res.status(404).json({ errors: { general: "Instagram account not found" } });
+        } else if (!acct.accessToken) {
+            return res.status(401).json({ errors: { general: "Instagram account not authorized, please re-link your account" } });
+        }
+        
+        // Call the instagram API to get the user's ID and profile fields
+        const mediaIds = await axios.get(`https://graph.instagram.com/me?fields=id,username,media&access_token=${acct.accessToken}`);
+        console.log("Initial IG API /me data " + JSON.stringify(mediaIds?.data));
+        if (!mediaIds?.data.id) {
+            return res.status(500).json({ errors: { general: "Unable to retrieve Instagram profile picture" } });
+        }
+
+        // Call the instagram graph API w/ media edge to get the user's media
+        const images = await axios.get(`https://graph.instagram.com/${mediaIds?.data.id}/media?fields=id,media_type,media_url,username,timestamp&access_token=${acct.accessToken}`);
+        console.log("IG Images " + JSON.stringify(images?.data));
+        if (!images?.data) {
+            return res.status(500).json({ errors: { general: "Unable to retrieve Instagram images" } });
+        }
+        return res.status(200).json(images?.data);
     } catch (err) {
         console.log(err);
         return res.status(500).json({ errors: { general: "Unable to retrieve Instagram images" } });
@@ -56,6 +81,13 @@ authRouter.post("/instagram/associate", verifyCsrf, passport.authenticate("jwt-s
         const account = await SocialAccount.findOneAndUpdate({ service: 'instagram', accountId: req.cookies?.instagram?.profile?.id }, { userId: req.user?.id });
         if (account) {
             console.log("Associating social account");
+            // Get long-lived access token
+            const longLivedToken = await fetch(`https://graph.instagram.com/access_token?grant_type=ig_exchange_token&client_secret=${process.env.INSTAGRAM_CLIENT_SECRET}&access_token=${req.cookies?.instagram?.accessToken}`);
+            const longLivedTokenJson = await longLivedToken.json();
+            console.log(longLivedTokenJson);
+            // Update the access token in the database
+            account.accessToken = longLivedTokenJson.access_token;
+            await account.save();
             return res.status(201).json({ message: 'Instagram associated successfully' });
         } else {
             console.log("Can't associate IG Acct because the account doesn't exist: " + JSON.stringify(req.cookies?.instagram?.profile?.id));

@@ -9,24 +9,41 @@ if (process.env.NODE_ENV !== "production") {
 // Import dependencies
 const path = require("path");
 const express = require("express");
-const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const MongoStore = require('connect-mongo');
 
 // Import our database connection function
 const dbConnect = require("./services/dbConnect");
 
-// Create an Express to manifest our server
+// Create an Express app and connect to the database
 const app = express();
+
+const client = dbConnect().then(client => { return client });
+
+app.use(session({
+    secret: process.env.COOKIE_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        client: client,
+        dbName: "intrepid",
+        collectionName: "sessions",
+        stringify: false,
+        autoRemove: 'native',
+    }),
+    cookie: {
+        secure: (process.env.NODE_ENV === 'production'),
+        httpOnly: true,
+        // sameSite: (process.env.NODE_ENV === 'production') ? 'none' : 'lax',
+        maxAge: 1000 * 60 * 60 * 24,
+        expires: new Date(Date.now() + 3600000 * 24)
+    }
+}));
 
 // Define any middleware, each request will go through these/have their functionality or processing applied
 // Enable cookies to be parsed, and use the secret defined in our environment variables to sign/decrypt them
-app.use(session({
-  secret: process.env.COOKIE_SECRET,
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false }
-}))
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // Enable request bodies in either json or urlencoded format to be parsed
@@ -86,10 +103,6 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // Start the server
-dbConnect().then(() => {
-    app.listen(process.env.PORT || 5000, () => {
-        console.log(`Server running on port ${process.env.PORT}`);
-    });
-}).catch(err => {
-    console.log("Error connecting to MongoDB \n" + err);
+app.listen(process.env.PORT || 5000, () => {
+    console.log(`Server running on port ${process.env.PORT}`);
 });
