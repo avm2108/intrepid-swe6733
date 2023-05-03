@@ -152,7 +152,7 @@ const UserProvider = ({ children }) => {
             updateUser({ ...data });
         }
         if (firstRender.current) {
-            console.log("UserProvider: user state updated first render: " + JSON.stringify(user));
+            // console.log("UserProvider: user state updated first render: " + JSON.stringify(user));
             check();
         } // else console.log("UserProvider: user state updated else: " + JSON.stringify(user));
     }, []);

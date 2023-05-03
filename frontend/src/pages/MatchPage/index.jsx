@@ -53,7 +53,7 @@ export function MatchPage() {
 
     }).catch(err => {
       toast.error("Error getting prospects, please try again later.");
-      console.log(err.response?.data);
+      console.log("Prospect retrieval error: " + err.response?.data);
     });
 
     setMatches(newMatches);

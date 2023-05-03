@@ -59,7 +59,7 @@ export const MatchesDisplay = ({ matches }) => {
 
     try {
     const res = await axios.post("/api/matches", data)
-    console.log(res.data)
+    // console.log(res.data)
     toast.success("You liked this person! If they like you back, you'll be matched and able to chat on the Messages page.");
   } catch(err) { 
       console.log(err.response?.data);

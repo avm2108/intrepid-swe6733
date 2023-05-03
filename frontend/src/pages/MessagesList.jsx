@@ -12,7 +12,6 @@ export default function MessagingList() {
             axios.get("/api/matches").then(res => {
                 if (res.status === 200) {
                     const chats = res.data?.map(targetUser => {
-                        console.log(targetUser);
                         return {
                             name: targetUser?.name,
                             id: targetUser?.id
@@ -22,7 +21,7 @@ export default function MessagingList() {
                 }
             });
         } catch (err) {
-            console.log(err);
+            console.log("Retrieving matches for chats error: " + err);
         }
     }, []);
 

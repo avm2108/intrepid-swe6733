@@ -42,11 +42,11 @@ function App() {
     // console.log("App: Checking if user is logged in");
     const determineLogin = async () => {
       await checkLoggedIn().then((res) => {
-        console.log("App: User is logged in: " + JSON.stringify(res));
+        // console.log("App: User is logged in: " + JSON.stringify(res));
         if (res?.loggedIn) {
           // console.log("App: User is logged in, updating user context");
           // updateUser(res);
-          console.log("App: User is logged in, redirecting to matching page")
+          console.log("App: User is logged in, redirecting to intended page")
           if (location.pathname === "/" || location.pathname === "/login" || location.pathname === "/register" || location.pathname === "/forgot-password" || location.pathname === "/reset-password") navigate("/matching", { replace: true });
           else navigate(location.pathname, { replace: true });
           if (user?.profileComplete && location.pathname === '/create') {

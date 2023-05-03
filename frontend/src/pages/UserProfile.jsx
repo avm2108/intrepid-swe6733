@@ -20,8 +20,8 @@ export default function UserProfile() {
         if (location.pathname.startsWith("/instagram")) {
             axios.post("/api/auth/instagram/associate").then(res => {
                 if (res.status === 200) {
-                    toast.success("Successfully associated Instagram account");
-                    console.log(JSON.stringify(res.data));
+                    toast.success("Successfully associated Instagram account. You may now pull your Instagram photos into your profile by clicking the Photos button.");
+                    // console.log(JSON.stringify(res.data));
                     // updateUser();
                 }
             }).catch(err => {
@@ -43,6 +43,12 @@ export default function UserProfile() {
     const [editedBio, setEditedBio] = useState(profile?.bio);
     const [agePref, setAgePref] = useState('');
     const [maxDist, setMaxDist] = useState('50');
+
+    useEffect(() => {
+        // Make sure editedName and editedBio are updated when the user changes
+        setEditedName(user?.name);
+        setEditedBio(profile?.bio);
+    }, [user, profile]);
 
     const handleChange = (e) => {
         let obj = {};
@@ -187,7 +193,7 @@ export default function UserProfile() {
                     <div className={styles.userDetails}>
                         <div className={styles.editableInfoContainer}>
                             <input className={styles.editableTextField} type="text" name="name" id="name" value={editedName} onChange={(e) => handleNameChange(e.target.value)} />
-                            {profile?.name !== editedName && <button className={styles.editableInfoButton} onClick={e => handleSave(e, "name")}>Save</button>}
+                            {user?.name !== editedName && <button className={styles.editableInfoButton} onClick={e => handleSave(e, "name")}>Save</button>}
                         </div>
                     </div>
                     <h3>Email Address</h3>

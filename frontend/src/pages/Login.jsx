@@ -133,7 +133,7 @@ export default function Login(props) {
             profileComplete: res.data.user?.profileComplete,
         };
 
-        console.log("newUser: ", newUser);
+        // console.log("newUser: ", newUser);
 
         updateUser(newUser);
 

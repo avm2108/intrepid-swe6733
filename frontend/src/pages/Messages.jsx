@@ -31,7 +31,7 @@ export default function MessagingPage() {
                 }
             });
         } catch (err) {
-            console.log(err);
+            console.log("Load specific chat error: " + err);
         }
     }, [lastMessage]);
 
@@ -88,7 +88,7 @@ export default function MessagingPage() {
                 }
             });
         } catch (err) {
-            console.log(err);
+            console.log("Send message to recip. error: " + err);
             toast.error("Error sending message, please try again.");
         }
 
