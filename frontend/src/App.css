@@ -137,3 +137,7 @@ body {
     padding: 10px;
 }
 /* End validation errors */
+
+button {
+    cursor: pointer;
+}

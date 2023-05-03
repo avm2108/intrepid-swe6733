@@ -132,7 +132,7 @@ matchesRouter.get('/', verifyCsrf, passport.authenticate('jwt-strategy', { sessi
         const transformedMatches = matches.map(match => {
             // Get the user object for the other user in the match
             const otherUser = match?.user1._id?.toString() === req.user?._id?.toString() ? match.user2 : match.user1;
-            console.log("My id is " + req.user._id.toString() + " and the other user is " + otherUser?._id.toString());
+            // console.log("My id is " + req.user._id.toString() + " and the other user is " + otherUser?._id.toString());
             // Return the user object with the match date
             return {
                 name: otherUser?.name,

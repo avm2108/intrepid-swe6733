@@ -35,7 +35,7 @@ authRouter.get('/instagram/callback',
     });
 
 authRouter.get("/instagram/test", verifyCsrf, passport.authenticate("jwt-strategy", { session: false }), async (req, res, next) => {
-    console.log(req.user);
+    // console.log(req.user);
     try {
         // Get the instagram account ID and access token from the database for this user ID
         const acct = await SocialAccount.findOne({ userId: req.user?.id, service: 'instagram' });
@@ -67,7 +67,7 @@ authRouter.get("/instagram/test", verifyCsrf, passport.authenticate("jwt-strateg
 
 authRouter.post("/instagram/associate", verifyCsrf, passport.authenticate("jwt-strategy", { session: false }), async (req, res, next) => {
     // console.log(req.user);
-    console.log(req.cookies);
+    // console.log(req.cookies);
     if (!req.user) {
         return res.status(401).json({
             errors: {
@@ -76,7 +76,7 @@ authRouter.post("/instagram/associate", verifyCsrf, passport.authenticate("jwt-s
         });
     }
 
-    console.log("my cookie is", req.cookies?.instagram?.profile?.id);
+    // console.log("my cookie is", req.cookies?.instagram?.profile?.id);
     try {
         const account = await SocialAccount.findOneAndUpdate({ service: 'instagram', accountId: req.cookies?.instagram?.profile?.id }, { userId: req.user?.id });
         if (account) {
@@ -84,7 +84,7 @@ authRouter.post("/instagram/associate", verifyCsrf, passport.authenticate("jwt-s
             // Get long-lived access token
             const longLivedToken = await fetch(`https://graph.instagram.com/access_token?grant_type=ig_exchange_token&client_secret=${process.env.INSTAGRAM_CLIENT_SECRET}&access_token=${req.cookies?.instagram?.accessToken}`);
             const longLivedTokenJson = await longLivedToken.json();
-            console.log(longLivedTokenJson);
+            // console.log(longLivedTokenJson);
             // Update the access token in the database
             account.accessToken = longLivedTokenJson.access_token;
             await account.save();
