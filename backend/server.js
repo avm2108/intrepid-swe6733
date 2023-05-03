@@ -9,9 +9,10 @@ if (process.env.NODE_ENV !== "production") {
 // Import dependencies
 const path = require("path");
 const express = require("express");
-const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 // Import our database connection function
 const dbConnect = require("./services/dbConnect");
@@ -19,14 +20,27 @@ const dbConnect = require("./services/dbConnect");
 // Create an Express to manifest our server
 const app = express();
 
+// We cannot use express-session's default MemoryStore in production, so we can use MongoDBStore instead
+const store = new MongoDBStore({
+    uri: process.env.MONGODB_URI || "mongodb://localhost:27017",
+    databaseName: 'intrepid',
+    collection: 'sessions'
+});
+
+// Catch errors
+store.on('error', function (error) {
+    console.log(error);
+});
 // Define any middleware, each request will go through these/have their functionality or processing applied
 // Enable cookies to be parsed, and use the secret defined in our environment variables to sign/decrypt them
 app.use(session({
-  secret: process.env.COOKIE_SECRET,
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false }
-}))
+    secret: process.env.COOKIE_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false },
+    store: store
+}));
+
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // Enable request bodies in either json or urlencoded format to be parsed
@@ -50,6 +64,7 @@ const profileRouter = require("./routes/profileRoutes");
 const messageRouter = require("./routes/messageRoutes");
 const matchesRouter = require("./routes/matchRoutes");
 const publicRouter = require("./routes/publicRoutes");
+const { constants } = require("fs/promises");
 
 // For debugging, we can output any incoming requests as well as their bodies
 if (process.env.NODE_ENV === "development") {
