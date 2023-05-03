@@ -88,10 +88,13 @@ h3 {
 }
 
 .userDetails {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    width: 100%;
     color: black;
     font-weight: 700;
     font-size: 20px;
-    display: flex;
 }
 
 .divider {
@@ -165,4 +168,31 @@ input::-ms-fill-lower {
     height: 100px;
     margin: 8px;
     border-radius: 12px;
+}
+
+.editableInfoContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 12px;
+    align-items: center;
+}
+.editableTextField {
+    /* width: 100%; */
+    display: flex;
+    padding: 5px 0 5px 10px;
+    background-color: #F2F2F2;
+    color: black;
+    flex-grow: 1;
+    height: 40px;
+    margin: 0;
+}
+
+.editableInfoButton {
+    padding: 10px;
+    margin: 0;
+    max-height: 40px;
+    background-color: var(--color-dark-green);
+    color: white;
 }

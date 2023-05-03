@@ -78,6 +78,12 @@ accountRouter.post('/delete', verifyCsrf, passport.authenticate("jwt-strategy", 
         const user = await User.findById(req.user._id);
         if (await user.isValidPassword(req.body.password)) {
             // The password is correct, so we can delete the user's account
+            // But first, we need to remove any matches containing the user's ID
+            // And we also need to clear any social accounts that are linked to the user's account
+            await Match.deleteMany({ $or: [{ user1: req.user._id }, { user2: req.user._id }] }).exec();
+            await SocialAccount.deleteMany({ userId: req.user._id }).exec();
+
+            // The password is correct, so we can delete the user's account
             const val = await User.findByIdAndDelete(req.user._id).exec();
             if (!val) {
                 return res.status(404).json({

@@ -76,7 +76,7 @@ authRouter.post("/instagram/associate", verifyCsrf, passport.authenticate("jwt-s
         });
     }
 
-    console.log("my cookie is", req.cookies?.instagram?.profile?.id);
+    // console.log("my cookie is", req.cookies?.instagram?.profile?.id);
     try {
         const account = await SocialAccount.findOneAndUpdate({ service: 'instagram', accountId: req.cookies?.instagram?.profile?.id }, { userId: req.user?.id });
         if (account) {

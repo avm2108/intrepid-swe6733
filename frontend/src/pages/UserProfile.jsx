@@ -16,12 +16,6 @@ export default function UserProfile() {
     const { profile } = user;
 
     useEffect(() => {
-/*         updateUser({
-            IGPhotos: [
-                "https://scontent-iad3-1.cdninstagram.com/v/t51.2885-15/42937059_277357356219816_6325944643517415300_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=8ae9d6&_nc_ohc=ep_ql21F4WQAX_ZozuF&_nc_ht=scontent-iad3-1.cdninstagram.com&edm=ANo9K5cEAAAA&oh=00_AfBrCguJLp7JvSN44i4TMt5NpboCweNjyRXyfsHkH26x2w&oe=6456F5B9",
-                "https://scontent-iad3-2.cdninstagram.com/v/t51.2885-15/25015936_150287338951067_699869868685524992_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=8ae9d6&_nc_ohc=VVKINRvwLYgAX9cf2in&_nc_oc=AQlARXMVVp7f5mNYQBYsHcE_aMykS-k-wNzJ8sXxBlE99ueegDVwBxnCItm5phibAtI&_nc_ht=scontent-iad3-2.cdninstagram.com&edm=ANo9K5cEAAAA&oh=00_AfBYKoBhkpU0UYr-jb081SM-P-_m3wjRFDVy9y6tbP5IFw&oe=64562191", "https://scontent-iad3-2.cdninstagram.com/v/t51.2885-15/25005343_1912912625703933_4674482198391291904_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=8ae9d6&_nc_ohc=bfiH6XGYnkwAX8YXEND&_nc_ht=scontent-iad3-2.cdninstagram.com&edm=ANo9K5cEAAAA&oh=00_AfAcgJSPa5gkQp7Yfhyo1QdnKpFhLzo4qPYTtU9V6DL_7Q&oe=6455F5BA"
-            ],
-        });  */
         // POST instagram/associate request to associate the user's Instagram account with their profile
         if (location.pathname.startsWith("/instagram")) {
             axios.post("/api/auth/instagram/associate").then(res => {
@@ -45,8 +39,8 @@ export default function UserProfile() {
         }
     }, []);
 
-    const [ editedName, setEditedName ] = useState(user?.name);
-    const [ editedBio, setEditedBio ] = useState(profile?.bio);
+    const [editedName, setEditedName] = useState(user?.name);
+    const [editedBio, setEditedBio] = useState(profile?.bio);
     const [agePref, setAgePref] = useState('');
     const [maxDist, setMaxDist] = useState('50');
 
@@ -121,6 +115,42 @@ export default function UserProfile() {
         }
     }
 
+    const handleSave = async (e, field) => {
+        e.preventDefault();
+        try {
+            if (field === "name") {
+                const res = await axios.put('/api/account/', { name: editedName });
+                if (res.status === 200) {
+                    toast.success("Successfully updated name");
+                    updateUser({ name: editedName });
+                } else {
+                    toast.error("Error updating name, please try again later");
+                    throw new Error(res);
+                }
+            } else if (field === "bio") {
+                // The bio is within the user's Profile object
+                const res = await axios.put('/api/profile', { bio: editedBio });
+                if (res.status === 200) {
+                    toast.success("Successfully updated bio");
+                    updateUser((prev) => ({
+                        ...prev,
+                        profile: {
+                            ...prev.profile,
+                            bio: editedBio
+                        }
+                    }));
+                } else {
+                    toast.error("Error updating bio, please try again later");
+                    throw new Error(res);
+                }
+            } else {
+                // ... other fields
+            }
+        } catch (err) {
+            console.log(err?.response?.data || err);
+        }
+    };
+
     return (
         <>
             <Helmet>
@@ -136,12 +166,12 @@ export default function UserProfile() {
                     <h2>{user?.name}{user?.dateOfBirth && ", " + user?.dateOfBirth}</h2>
                     <div className={styles.socials}>
                         <div className={styles.socialsButtons}>
-                            <button onClick={e => e.preventDefault()}>
+                            {/*                            <button onClick={e => e.preventDefault()}>
                                 <i className="fab fa-facebook-f" title="Sign up with Facebook"></i>
                             </button>
                             <button onClick={e => e.preventDefault()}>
                                 <i className="fab fa-google" title="Sign up with Google"></i>
-                            </button>
+                            </button> */}
                             <button onClick={e => beginIGLinking(e)}>
                                 <i className="fab fa-instagram" title="Link your profile with Instagram"></i>
                             </button>
@@ -155,13 +185,15 @@ export default function UserProfile() {
                 <div className={styles.editableInfo}>
                     <h3>Display Name</h3>
                     <div className={styles.userDetails}>
-                        <input type="text" value={editedName} onChange={(e) => handleNameChange(e.target.value)}/>
-                        {/* {user?.name} */}
+                        <div className={styles.editableInfoContainer}>
+                            <input className={styles.editableTextField} type="text" name="name" id="name" value={editedName} onChange={(e) => handleNameChange(e.target.value)} />
+                            {profile?.name !== editedName && <button className={styles.editableInfoButton} onClick={e => handleSave(e, "name")}>Save</button>}
+                        </div>
                     </div>
                     <h3>Email Address</h3>
                     <div className={styles.userDetails}>
                         {user?.email}
-                        </div>
+                    </div>
                     <h3>Location</h3>
                     <div className={styles.userDetails}>{getStateName(profile?.location?.state)}, USA</div>
                     {/*                     <h3>Phone Number</h3>
@@ -171,15 +203,17 @@ export default function UserProfile() {
                         {/* Display little thumbnail boxes for each one */}
                         {user?.IGPhotos?.length > 0 ? (
                             user?.IGPhotos?.map?.((photo, idx) => {
-                            return <img key={idx} src={photo} alt={"Instagram Photo" + idx} className={styles.igPhoto}></img>
+                                return <img key={idx} src={photo} alt={"Instagram Photo" + idx} className={styles.igPhoto}></img>
                             })
                         ) : <p>No photos shared. Connect your Instagram to share photos!</p>}
                     </div>
                     <h3>Bio / About Me</h3>
-                    
+
                     <div className={styles.userDetails}>
-                    <input type="text" value={editedBio} onChange={(e) => handleBioChange(e.target.value)}/>
-                        {/* {profile?.bio} */}
+                        <div className={styles.editableInfoContainer}>
+                            <input className={styles.editableTextField} type="text" name="bio" id="bio" value={editedBio} onChange={(e) => handleBioChange(e.target.value)} />
+                            {profile?.bio !== editedBio && <button className={styles.editableInfoButton} onClick={e => handleSave(e, "bio")}>Save</button>}
+                        </div>
                     </div>
                     <h3>Interests</h3>
                     <div className={styles.userDetails}>
@@ -190,7 +224,7 @@ export default function UserProfile() {
                     <h3 className={styles.h3Black}>Discovery Settings</h3>
                     <div className={styles.location}>
                         <h3>Location</h3>
-                        <p>My Current Location ({getStateName(profile?.location?.state) }, USA)</p>
+                        <p>My Current Location ({getStateName(profile?.location?.state)}, USA)</p>
                     </div>
                     <div className={styles.showMe}>
                         <h3>Show Me</h3>
