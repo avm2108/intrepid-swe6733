@@ -4,86 +4,143 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import styles from './Messages.module.css';
 import axios from 'axios';
 import { UserContext } from "../providers/UserProvider";
+import { toast } from "react-hot-toast";
 
-export default function MessagingPage() {    
-    const { chatId, recipientName } = useParams();
+export default function MessagingPage() {
+    const { recipientId, recipientName } = useParams();
     const navigate = useNavigate();
     const [newMessage, setNewMessage] = useState('');
     const [lastMessage, setLastMessage] = useState(null);
-    
+    const [imageState, setImageState] = useState({ 
+        chatImage: null,
+        chatImageName: "",
+    });
+
     const { user } = React.useContext(UserContext);
-    
+
     const [messages, setMessages] = useState([
         { sender: user.name, recipient: recipientName, content: 'Hi there!' },
         { sender: recipientName, recipient: user.name, content: 'Sup!' },
-      ]);
-    
-    useEffect(
-        () => {
-            try {
-                axios.get("/api/messages/" + chatId).then(res => {
+    ]);
+
+    useEffect(() => {
+        try {
+            axios.get(`/api/messages/${recipientId}`).then(res => {
                 if (res.status === 200) {
                     setMessages(res.data.messages);
                 }
-                });
-            } catch (err) {
-                console.log(err);
-            }      
-        },
-        [lastMessage]
-    );
-    
-      function handleSubmit(event) {
-        event.preventDefault();
-        const message = { sender: user.name, recipient: recipientName, content: newMessage };
-        try {
-            axios.post("/api/messages/" + chatId, { content: newMessage }).then(res => {
-            if (res.status === 201) {
-                setLastMessage(message);
-                setMessages([...messages, message]);
-                setNewMessage('');
-            }
             });
         } catch (err) {
             console.log(err);
-        } 
-      }
-    
-      function handleChange(event) {
+        }
+    }, [lastMessage]);
+
+    function handleChange(event) {
         setNewMessage(event.target.value);
-      }
+    }
+
+    const handleImageChange = (e) => {
+        const { files } = e.target;
+        console.log("Changed to : " + e.target?.files[0]?.name )
+        setImageState({ chatImage: files[0] ?? {}, chatImageName: files[0]?.name || "" });
+    }
+
+    const handleRemoveImage = () => {
+        setImageState({ chatImage: null, chatImageName: "" });
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        // Represent the form's data as a FormData object because we need to send files 
+        // in addition to JSON data while maintaining the multipart/form-data content type
+        const formData = new FormData();
+
+        // Append chat text fields to formData as JSON
+        // Exclude chatImage since we need it appended as files
+        const chatContent = { content: newMessage };
+        formData.append("chatContent", JSON.stringify(chatContent));
+        
+        // Append chatImage to formData as file
+        formData.append("chatImage", imageState.chatImage);
+
+        // Create message object to add to messages array
+        const message = { sender: user.name, recipient: recipientName, content: newMessage, image: imageState?.chatImage, readDate: null };
+        try {
+            axios.post(`/api/messages/${recipientId}`, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                },
+                formData
+            }).then(res => {
+                if (res.status === 201) {
+                    setLastMessage(message);
+                    setMessages([...messages, message]);
+                    setNewMessage('');
+                } else {
+                    toast.error("Error sending message, please try again.");
+                }
+            });
+        } catch (err) {
+            console.log(err);
+            toast.error("Error sending message, please try again.");
+        }
+
+        // Send formData to backend
+        await axios.post("/api/profile", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        }).then(res => {
+            if (res.status === 201) {
+                toast.success("Profile updated successfully!");
+                navigate("/profile");
+            } else {
+                toast.error("Error updating profile, please try again.");
+            }
+        }).catch(err => {
+            console.log(err);
+            toast.error("Error updating profile, please try again.");
+        });
+    }
     
-      return (
+    return (
         <>
-        <Helmet>
+            <Helmet>
                 <title>Intrepid - Chat</title>
-                <script src="https://kit.fontawesome.com/37ce2b2559.js" crossorigin="anonymous"></script>
-        </Helmet>
+            </Helmet>
 
-        <div className={styles.messagingContainer}>
-            <div className={styles.topContainer}>
-                <button className={styles.backButton} onClick={() => navigate(-1)}>{'< Back'}</button>
-                <div className={styles.recipientName}>{recipientName}</div>
-            </div>
-            <div className={styles.chatContainer}>
+            <div className={styles.messagingContainer}>
+                <div className={styles.topContainer}>
+                    <button className={styles.backButton} onClick={() => navigate(-1)}>{'< Back'}</button>
+                    <div className={styles.recipientName}>{recipientName}</div>
+                </div>
+                <div className={styles.chatContainer}>
+                    {messages.map(message => (
+                        <div key={message.id || message.content} className={`${styles.chatBubble} ${message.sender === user.name ? styles.sender : styles.recipient}`}>
+                            <p>{message.content}</p>
+                        </div>
+                    ))}
+                </div>
 
-          {messages.map(message => (
-            <div
-            key={message.id}
-            className={`${styles.chatBubble} ${
-            message.sender === user.name ? styles.sender : styles.recipient
-            }`}
-          >
-              <p>{message.content}</p>
-            </div>
-          ))}
-            </div>
+                <form className={styles.sendMessage} onSubmit={handleSubmit}>
+                    <input className={styles.typeMessage} placeholder="Write your message" type="text" value={newMessage} onChange={handleChange} />
+                    <label htmlFor="chatImage" className={styles.chatImageAddBtn}>
+                        {imageState?.chatImageName ? "Change Image" : "Add Image"}
+                        <input type="file" id="chatImage" name="chatImage" onChange={(e) => handleImageChange(e)} style={{ display: "none" }} />
+                    </label>
+                    <button className={styles.sendBttn} type="submit">Send</button>
+                </form>
 
-          <form className={styles.sendMessage} onSubmit={handleSubmit}>
-            <input className={styles.typeMessage} placeholder="Write your message" type="text" value={newMessage} onChange={handleChange} />
-            <button className={styles.sendBttn} type="submit">Send</button>
-          </form>
-        </div>
-      </>
-      );
+                {imageState?.chatImageName && (
+                    <>
+                        <h3 className={styles.formHeader}>Preview your image</h3>
+                        <div className={styles.chatImgContainer}>
+                            <img src={URL.createObjectURL?.(imageState?.chatImage)} width="125" height="125" alt="Chat Image" />
+                            <button onClick={e => handleRemoveImage(e)}>Remove Image</button>
+                        </div>
+                    </>)}
+            </div>
+            {/* {JSON.stringify(imageState) + JSON.stringify(messages)} */}
+        </>
+    );
 }

@@ -118,7 +118,7 @@ matchesRouter.get('/', verifyCsrf, passport.authenticate('jwt-strategy', { sessi
             // Make sure the match is accepted (mutualAcceptedDate is not null)
             mutualAcceptedDate: { $ne: null }
             // Remove passwords from the returned user objects // Fill the user1 and user2 fields with the actual user objects
-        }).populate('user2').populate('user1').exec();
+        }).populate('user2').populate('user1').select('-password -_v').exec();
 
         if (matches.length === 0) {
             return res.status(404).json({
@@ -128,25 +128,36 @@ matchesRouter.get('/', verifyCsrf, passport.authenticate('jwt-strategy', { sessi
             });
         }
 
+        console.log("Returning matches: " + JSON.stringify(matches));
+
         // Transform the matches array to only include the other user and the match date
         const transformedMatches = matches.map(match => {
             // Get the user object for the other user in the match
-            const otherUser = match.user1._id.toString() === req.user._id.toString() ? match.user2 : match.user1;
+            const otherUser = match?.user1._id?.toString() === req.user?._id?.toString() ? match.user2 : match.user1;
+            console.log("My id is " + req.user._id.toString() + " and the other user is " + otherUser?._id.toString());
             // Return the user object with the match date
             return {
-                targetUser: {
-                    // Exclude the password field from the user object
-                    ...otherUser._doc,
-                    password: undefined
-                },
-                matchDate: match.mutualAcceptedDate
+                name: otherUser?.name,
+                id: otherUser?._id,
             };
+/*             return {
+                targetUser: otherUser,
+                matchDate: match.mutualAcceptedDate
+            }; */
         });
+        // Remove duplicates from the transformedMatches array
+        // Based on targetUser ID
+        const uniqueMatches = transformedMatches.filter((match, index, self) =>
+            index === self.findIndex((m) => (
+                m.id === match.id
+            ))
+        );
 
-        console.log("Returning matches: " + JSON.stringify(transformedMatches));
+
+        console.log("Returning matches: " + JSON.stringify(uniqueMatches));
         
         // Return the matches
-        return res.status(200).json(transformedMatches);
+        return res.status(200).json(uniqueMatches);
     } catch (err) {
         console.log(err);
         return res.status(500).json({

@@ -36,7 +36,7 @@ export default function Login(props) {
         if (user?.loggedIn) {
             navigate('/matching');
         }
-    });
+    }, [user]);
 
     const [formState, setFormState] = useState({
         email: '',
