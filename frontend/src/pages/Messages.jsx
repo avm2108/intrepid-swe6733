@@ -23,7 +23,7 @@ export default function MessagingPage() {
             try {
                 axios.get("/api/messages/" + chatId).then(res => {
                 if (res.status === 200) {
-                    setMessages(res.data);
+                    setMessages(res.data.messages);
                 }
                 });
             } catch (err) {
