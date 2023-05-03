@@ -93,7 +93,6 @@ export default function UserProfile() {
                 toast.success("Successfully retrieved photos from Instagram");
                 // Get only the image urls?
                 const imgUrls = res.data?.data?.map(photo => photo?.media_url);
-                console.log(imgUrls);
                 updateUser({ IGPhotos: imgUrls });
             } else {
                 toast.error("Error retrieving photos from Instagram, please try again later");
@@ -151,9 +150,11 @@ export default function UserProfile() {
                     <h3>Media Shared</h3>
                     <div className={styles.userIGPhotos}>
                         {/* Display little thumbnail boxes for each one */}
-                        {user?.IGPhotos?.map?.((photo, idx) => {
+                        {user?.IGPhotos?.length > 0 ? (
+                            user?.IGPhotos?.map?.((photo, idx) => {
                             return <img key={idx} src={photo} alt={"Instagram Photo" + idx} className={styles.igPhoto}></img>
-                        })}
+                            })
+                        ) : <p>No photos shared. Connect your Instagram to share photos!</p>}
                     </div>
                     <h3>Bio / About Me</h3>
                     <div className={styles.userDetails}>{profile?.bio}</div>

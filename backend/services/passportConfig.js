@@ -1,10 +1,10 @@
 // Create configuration for Passport to use JWT, Google, etc.
-const passport = require("passport");
-const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
-const InstagramStrategy = require('passport-instagram-basic-api').Strategy;
 const SocialAccount = require('../models/SocialAccount');
 const User = require("../models/User");
 const axios = require('axios');
+const passport = require("passport");
+const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
+const InstagramStrategy = require('passport-instagram-basic-api').Strategy;
 
 const signedCookieExtractor = (req) => {
     let token = null;

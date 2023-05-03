@@ -20,32 +20,27 @@ const dbConnect = require("./services/dbConnect");
 // Create an Express app and connect to the database
 const app = express();
 
-try {
-    dbConnect().then(client => {
-        app.use(session({
-            secret: process.env.COOKIE_SECRET,
-            resave: false,
-            saveUninitialized: (process.env.NODE_ENV === 'production'),
-            store: MongoStore.create({
-                client: client,
-                dbName: "intrepid",
-                collectionName: "sessions",
-                stringify: false,
-                autoRemove: 'native',
-            }),
-            cookie: {
-                secure: (process.env.NODE_ENV === 'production'),
-                httpOnly: true,
-                // sameSite: (process.env.NODE_ENV === 'production') ? 'none' : 'lax',
-                maxAge: 1000 * 60 * 60 * 24,
-                expires: new Date(Date.now() + 3600000 * 24)
-            }
-        }));
-    });
-} catch (err) {
-    console.log("Error connecting to MongoDB: " + err);
-    process.exit(1);
-}
+const client = dbConnect().then(client => { return client });
+
+app.use(session({
+    secret: process.env.COOKIE_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        client: client,
+        dbName: "intrepid",
+        collectionName: "sessions",
+        stringify: false,
+        autoRemove: 'native',
+    }),
+    cookie: {
+        secure: (process.env.NODE_ENV === 'production'),
+        httpOnly: true,
+        // sameSite: (process.env.NODE_ENV === 'production') ? 'none' : 'lax',
+        maxAge: 1000 * 60 * 60 * 24,
+        expires: new Date(Date.now() + 3600000 * 24)
+    }
+}));
 
 // Define any middleware, each request will go through these/have their functionality or processing applied
 // Enable cookies to be parsed, and use the secret defined in our environment variables to sign/decrypt them
