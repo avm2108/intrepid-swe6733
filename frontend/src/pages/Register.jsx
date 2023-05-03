@@ -31,8 +31,8 @@ function Register(props) {
     // If the user is already logged in, redirect them to their profile page
     useEffect(() => {
         // If the user is already logged in, redirect them to their profile page
-        if (user.loggedIn) {
-            navigate('/profile');
+        if (user?.loggedIn) {
+            navigate('/matching');
         }
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

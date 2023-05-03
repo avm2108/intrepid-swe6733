@@ -63,9 +63,9 @@ export default function CreateProfile(props) {
     const handleChange = (e) => {
         const { name, value } = e.target;
         // If it's a nested key (e.g. location.city), split it into an array and use the first element as the parent key
-        if (name.includes(".")) {
+        if (name?.includes(".")) {
             // Need to account for doubly nested keys (e.g. preferences.ageRange.min)
-            const [parent, child, subchild=null] = name.split(".");
+            const [parent, child, subchild=null] = name?.split(".");
 
             if (subchild) {
                 setFormState(prevState => ({
@@ -116,7 +116,7 @@ export default function CreateProfile(props) {
 
     const handleImageChange = (e) => {
         const { name, files } = e.target;
-        setFormState({ ...formState, profilePicture: files[0], profilePictureName: files[0].name });
+        setFormState({ ...formState, profilePicture: files[0] ?? {}, profilePictureName: files[0]?.name || "", profilePictureCaption: formState?.profilePictureCaption || "" });
     }
 
     const handleRemoveImage = () => {
@@ -333,7 +333,7 @@ export default function CreateProfile(props) {
                     {!!formState.profilePicture && (
                     <>
                         <div className={styles.profilePictureContainer}>
-                            <img src={URL.createObjectURL?.(formState.profilePicture || "")} width="125" height="125" alt="Profile" />
+                            <img src={URL.createObjectURL?.(formState?.profilePicture || "")} width="125" height="125" alt="Profile" />
                                 <div className={styles.profilePictureControls}>
                                     <div>
                                         <label htmlFor="profilePictureCaption">Give your profile picture a caption</label>
@@ -348,7 +348,7 @@ export default function CreateProfile(props) {
                         </div>
                     </>)}
                     <label htmlFor="profilePicture" className={styles.profilePictureAddBtn}>
-                        {formState.profilePictureName ? "Change Profile Picture" : "Add Profile Picture"}
+                        {formState?.profilePictureName ? "Change Profile Picture" : "Add Profile Picture"}
                         <input type="file" id="profilePicture" name="profilePicture" onChange={(e) => handleImageChange(e)} style={{ display: "none" }} />
                     </label>
                 </div>

@@ -43,13 +43,13 @@ export default function FooterNavigation() {
             label="Profile"
             icon={<AccountCircleOutlinedIcon />}
             className={styles.navButton} />
-            <BottomNavigationAction
+{/*             <BottomNavigationAction
             component={RouterLink}
             to="/settings"
             value="/settings"
             label="Settings"
             icon={<SettingsOutlinedIcon />}
-            className={styles.navButton} />
+            className={styles.navButton} /> */}
         </BottomNavigation>
     )
 }

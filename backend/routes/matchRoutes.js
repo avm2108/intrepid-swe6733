@@ -1,5 +1,5 @@
-const { Match } = require('../models/Match');
 const User = require('../models/User');
+const { Match } = require('../models/Match');
 const passport = require('../services/passportConfig');
 const jwt = require('jsonwebtoken');
 const { generateCsrf, verifyCsrf } = require('../services/csrfProtection');
@@ -39,7 +39,7 @@ matchesRouter.get('/prospects', passport.authenticate('jwt-strategy', { session:
             // Make sure the match is accepted (mutualAcceptedDate is not null) (?)
             mutualAcceptedDate: { $ne: null }
             // Fill the user1 and user2 fields with the actual user objects
-        }).populate('User').exec();
+        }).populate('user2').populate('user1').exec();
 
         // Create an array of user ids that the logged in user has already matched with or blocked
         const blockedOrMatchedUserIds = matches.map(match => {

@@ -31,12 +31,12 @@ export default function Login(props) {
     const { user, updateUser } = useContext(UserContext);
 
     // On first load of this page, check if the user is already logged in
-/*     useEffect(() => {
+    useEffect(() => {
         // If the user is already logged in, redirect them to their profile page
-        if (user.loggedIn) {
-            navigate('/profile');
+        if (user?.loggedIn) {
+            navigate('/matching');
         }
-    }, []); */
+    }, []);
 
     const [formState, setFormState] = useState({
         email: '',
@@ -115,7 +115,7 @@ export default function Login(props) {
 
         // If the login is successful, get the CSRF token from the response body
         // and add it to the all our future requests' headers
-        const csrfToken = res.data.csrfToken;
+        const csrfToken = res.data?.csrfToken;
         axios.defaults.headers.common['X-CSRF-Token'] = csrfToken;
 
         // Set another clientside cookie to represent that we're logged in
@@ -130,6 +130,7 @@ export default function Login(props) {
             loggedIn: true,
             csrfToken: csrfToken,
             ...res.data.user,
+            profileComplete: res.data.user?.profileComplete,
         };
 
         console.log("newUser: ", newUser);
