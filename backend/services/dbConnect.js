@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 // Connect to the database
 const dbConnect = async () => {
-    await mongoose.connect(
+    const clientPromise = await mongoose.connect(
         process.env.MONGODB_URI,{
         useNewUrlParser: true,
         family: 4, // Using IPv6 has caused issues with Mongoose in the past
@@ -15,6 +15,8 @@ const dbConnect = async () => {
         if (mongoose.connection.readyState === 1) {
             console.log("MongoDB connection is open");
         }
+        
+        return mongoose.connection.getClient();
     }).catch(err => {
         console.log("Mongoose Error \n" + err);
         process.exit(1);
@@ -24,6 +26,8 @@ const dbConnect = async () => {
     mongoose.connection.on('error', err => {
         console.log("MongoDB encountered an error: " + err);
     });
+
+    return clientPromise;
 };
 
 // Export the function

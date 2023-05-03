@@ -5,6 +5,7 @@ const validateWithRules = require('../services/validation');
 const { generateCsrf, verifyCsrf } = require('../services/csrfProtection');
 const User = require('../models/User');
 const SocialAccount = require('../models/SocialAccount');
+const axios = require('axios');
 
 authRouter.get('/instagram', passport.authenticate('instagram', { scope: ['basic', 'user_media', 'public_content', 'user_profile'] }), (req, res) => {
     console.log("redirecting to instagram");
@@ -23,13 +24,13 @@ authRouter.get('/instagram/callback',
                 // signed: true,
             });
         // Need to redirect back to the frontend
-        if (res.cookie && res.cookie.instagram) {   
-            console.log("IG Cookie is good, redirecting to frontend");
+        // if (res.cookie && res.cookie.instagram) {   
+        //     console.log("IG Cookie is good, redirecting to frontend");
             return res.status(201).redirect(process.env.CLIENT_ORIGIN + '/instagram/');
-        } else {
-            console.log("Problem with IG Cookie...");
+        // } else {
+            // console.log("Problem with IG Cookie...");
             // return res.status(401).redirect(process.env.CLIENT_ORIGIN + '/login');
-        }
+        // }
         // NOTE: now make a POST to /instagram/associate endpoint which will read the cookie
     });
 
@@ -44,24 +45,20 @@ authRouter.get("/instagram/test", verifyCsrf, passport.authenticate("jwt-strateg
             return res.status(401).json({ errors: { general: "Instagram account not authorized, please re-link your account" } });
         }
         
-        // Call the instagram API to get the user's profilePicture
-        const profilePicture = await fetch(`https://graph.instagram.com/me?fields=id,username,media&access_token=${acct.accessToken}`);
-        const profilePictureJson = await profilePicture.json();
-        console.log("JSON " + profilePictureJson);
-        if (!profilePictureJson || !profilePictureJson.id) {
+        // Call the instagram API to get the user's ID and profile fields
+        const mediaIds = await axios.get(`https://graph.instagram.com/me?fields=id,username,media&access_token=${acct.accessToken}`);
+        console.log("Initial IG API /me data " + JSON.stringify(mediaIds?.data));
+        if (!mediaIds?.data.id) {
             return res.status(500).json({ errors: { general: "Unable to retrieve Instagram profile picture" } });
         }
 
-        // TODO: Get their images from the Instagram API media endpoint
-        const images = await fetch(`https://graph.instagram.com/${profilePictureJson.id}/media?fields=id,media_type,media_url,username,timestamp&access_token=${acct.accessToken}`);
-        const imagesJson = await images.json();
-        console.log("IMAGES " + imagesJson);
-        if (!imagesJson || !imagesJson.data) {
+        // Call the instagram graph API w/ media edge to get the user's media
+        const images = await axios.get(`https://graph.instagram.com/${mediaIds?.data.id}/media?fields=id,media_type,media_url,username,timestamp&access_token=${acct.accessToken}`);
+        console.log("IG Images " + JSON.stringify(images?.data));
+        if (!images?.data) {
             return res.status(500).json({ errors: { general: "Unable to retrieve Instagram images" } });
         }
-        
-        console.log(images);
-        return res.status(200).json({ images });
+        return res.status(200).json(images?.data);
     } catch (err) {
         console.log(err);
         return res.status(500).json({ errors: { general: "Unable to retrieve Instagram images" } });

@@ -41,6 +41,7 @@ const UserProvider = ({ children }) => {
         facebookId: null,
         instagramId: null,
         matches: [],
+        IGPhotos: [],
         profileComplete: false,
     });
 

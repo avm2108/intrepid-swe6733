@@ -60,8 +60,8 @@ export const MatchesDisplay = ({ matches }) => {
     try {
     const res = await axios.post("/api/matches", data)
     console.log(res.data)
-    toast.success("Added to Favorites!");
-  } catch(err) {
+    toast.success("You liked this person! If they like you back, you'll be matched and able to chat on the Messages page.");
+  } catch(err) { 
       console.log(err.response?.data);
   };
   };
@@ -175,4 +175,3 @@ export const MatchesDisplay = ({ matches }) => {
 
   );
 };
-
