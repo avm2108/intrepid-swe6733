@@ -52,8 +52,6 @@ authRouter.get("/instagram/test", verifyCsrf, passport.authenticate("jwt-strateg
             return res.status(500).json({ errors: { general: "Unable to retrieve Instagram profile picture" } });
         }
 
-
-        
         // TODO: Get their images from the Instagram API media endpoint
         const images = await fetch(`https://graph.instagram.com/${profilePictureJson.id}/media?fields=id,media_type,media_url,username,timestamp&access_token=${acct.accessToken}`);
         const imagesJson = await images.json();

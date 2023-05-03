@@ -1,4 +1,10 @@
-require('dotenv').config();
+// Allow our app access to environment variables defined in .env
+console.log("Running in " + process.env.NODE_ENV + " mode.");
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config({ path: "./.env" });
+} else {
+    require("dotenv").config({ path: "./.env.production" });
+}
 const bcrypt = require('bcryptjs');
 const dbConnect = require('./services/dbConnect');
 const User = require('./models/User');
