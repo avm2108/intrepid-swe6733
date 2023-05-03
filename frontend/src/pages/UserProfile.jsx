@@ -45,6 +45,8 @@ export default function UserProfile() {
         }
     }, []);
 
+    const [ editedName, setEditedName ] = useState(user?.name);
+    const [ editedBio, setEditedBio ] = useState(profile?.bio);
     const [agePref, setAgePref] = useState('');
     const [maxDist, setMaxDist] = useState('50');
 
@@ -54,11 +56,23 @@ export default function UserProfile() {
         setMaxDist(obj);
     }
 
+    const handleNameChange = (value) => {
+        setEditedName(value);
+    };
+
+    const handleBioChange = (value) => {
+        setEditedBio(value);
+    }
+
     const beginIGLinking = (e) => {
         e.preventDefault();
         // Navigate to Instagram login page
         window.location.href = `/api/auth/instagram`;
-    }   
+    }
+
+    /* const handleSave = () => {
+        // TODO: API call to see 
+    } */
 
     const handleDelete = async (e) => {
         e.preventDefault();
@@ -140,9 +154,14 @@ export default function UserProfile() {
 
                 <div className={styles.editableInfo}>
                     <h3>Display Name</h3>
-                    <div className={styles.userDetails}>{user?.name}</div>
+                    <div className={styles.userDetails}>
+                        <input type="text" value={editedName} onChange={(e) => handleNameChange(e.target.value)}/>
+                        {/* {user?.name} */}
+                    </div>
                     <h3>Email Address</h3>
-                    <div className={styles.userDetails}>{user?.email}</div>
+                    <div className={styles.userDetails}>
+                        {user?.email}
+                        </div>
                     <h3>Location</h3>
                     <div className={styles.userDetails}>{getStateName(profile?.location?.state)}, USA</div>
                     {/*                     <h3>Phone Number</h3>
@@ -157,7 +176,11 @@ export default function UserProfile() {
                         ) : <p>No photos shared. Connect your Instagram to share photos!</p>}
                     </div>
                     <h3>Bio / About Me</h3>
-                    <div className={styles.userDetails}>{profile?.bio}</div>
+                    
+                    <div className={styles.userDetails}>
+                    <input type="text" value={editedBio} onChange={(e) => handleBioChange(e.target.value)}/>
+                        {/* {profile?.bio} */}
+                    </div>
                     <h3>Interests</h3>
                     <div className={styles.userDetails}>
                         {profile?.interests?.map?.((interest, idx) => {
