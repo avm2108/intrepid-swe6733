@@ -19,7 +19,7 @@ export default function MessagingPage() {
     const { user } = React.useContext(UserContext);
 
     const [messages, setMessages] = useState([
-        { sender: user.name, recipient: recipientName, content: 'Hi there!' },
+        { sender: user.name, recipient: recipientName, content: 'Hi there!', image: "https://via.placeholder.com/100" },
         { sender: recipientName, recipient: user.name, content: 'Sup!' },
     ]);
 
@@ -27,7 +27,7 @@ export default function MessagingPage() {
         try {
             axios.get(`/api/messages/${recipientId}`).then(res => {
                 if (res.status === 200) {
-                    setMessages(res.data.messages);
+                    setMessages(res.data?.messages);
                 }
             });
         } catch (err) {
@@ -51,6 +51,11 @@ export default function MessagingPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // Ensure that the user has entered a message
+        if (newMessage === "" && (imageState.chatImage === null || imageState.chatImageName === "")) {
+            toast.error("Please enter a message or select an image to send.");
+            return;
+        }
         // Represent the form's data as a FormData object because we need to send files 
         // in addition to JSON data while maintaining the multipart/form-data content type
         const formData = new FormData();
@@ -64,18 +69,20 @@ export default function MessagingPage() {
         formData.append("chatImage", imageState.chatImage);
 
         // Create message object to add to messages array
-        const message = { sender: user.name, recipient: recipientName, content: newMessage, image: imageState?.chatImage, readDate: null };
+        const message = { sender: user.name, recipient: recipientName, content: newMessage, image: imageState?.chatImageName, readDate: null };
         try {
-            axios.post(`/api/messages/${recipientId}`, {
+            axios.post(`/api/messages/${recipientId}`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data"
                 },
-                formData
+
             }).then(res => {
                 if (res.status === 201) {
                     setLastMessage(message);
                     setMessages([...messages, message]);
+                    // Clear form fields
                     setNewMessage('');
+                    setImageState({ chatImage: null, chatImageName: "" });
                 } else {
                     toast.error("Error sending message, please try again.");
                 }
@@ -85,22 +92,6 @@ export default function MessagingPage() {
             toast.error("Error sending message, please try again.");
         }
 
-        // Send formData to backend
-        await axios.post("/api/profile", formData, {
-            headers: {
-                "Content-Type": "multipart/form-data"
-            }
-        }).then(res => {
-            if (res.status === 201) {
-                toast.success("Profile updated successfully!");
-                navigate("/profile");
-            } else {
-                toast.error("Error updating profile, please try again.");
-            }
-        }).catch(err => {
-            console.log(err);
-            toast.error("Error updating profile, please try again.");
-        });
     }
     
     return (
@@ -115,9 +106,10 @@ export default function MessagingPage() {
                     <div className={styles.recipientName}>{recipientName}</div>
                 </div>
                 <div className={styles.chatContainer}>
-                    {messages.map(message => (
-                        <div key={message.id || message.content} className={`${styles.chatBubble} ${message.sender === user.name ? styles.sender : styles.recipient}`}>
-                            <p>{message.content}</p>
+                    {messages?.map(message => (
+                        <div key={message?.id || message?.content} className={`${styles.chatBubble} ${message.sender === user.name ? styles.sender : styles.recipient}`}>
+                            {message?.image && <img src={message?.image} className={styles.chatImage} width="100" height="100" alt="Chat Image" />}
+                            {message?.content && <p>{message?.content}</p>}
                         </div>
                     ))}
                 </div>

@@ -49,7 +49,6 @@ const upload = multer({
     }
 });
 
-
 // get list of messages for logged in user for a single parter (conversation)
 messageRouter.get('/:recipient_id', verifyCsrf, passport.authenticate('jwt-strategy', { session: false }), async (req, res, next) => {
     if (!req.user) {
@@ -92,16 +91,9 @@ messageRouter.post('/:recipient_id', verifyCsrf, passport.authenticate('jwt-stra
         });
     }
 
-    if (!req.body?.content && !req.file) {
-        return res.status(400).json({
-            errors: {
-                message: "You must provide a message or image to send"
-            }
-        });
-    }
-
     // Convert the profile data from JSON string passed from the frontend to an object
     const bodyData = JSON.parse(req.body?.chatContent);
+    console.log("bodyData: ", JSON.stringify(bodyData) || bodyData || "No body data");
 
     // If the file's good we need to convert it to basae64 for Heroku to store it in the database
     // Convert the image to base64; The image will be in the req.file.buffer

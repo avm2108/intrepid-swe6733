@@ -128,8 +128,6 @@ matchesRouter.get('/', verifyCsrf, passport.authenticate('jwt-strategy', { sessi
             });
         }
 
-        console.log("Returning matches: " + JSON.stringify(matches));
-
         // Transform the matches array to only include the other user and the match date
         const transformedMatches = matches.map(match => {
             // Get the user object for the other user in the match
