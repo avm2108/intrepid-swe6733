@@ -6,45 +6,56 @@ import axios from 'axios';
 
 export default function MessagingList() {
     const [chats, setChats] = useState([]);
-      
-    useEffect(
-        () => {
-            try {
-                axios.get("/api/matches").then(res => {
+
+    useEffect(() => {
+        try {
+            axios.get("/api/matches").then(res => {
                 if (res.status === 200) {
-                    setChats(res.data);
+                    const chats = res.data?.map(targetUser => {
+                        console.log(targetUser);
+                        return {
+                            name: targetUser?.name,
+                            id: targetUser?.id
+                        }
+                    });
+                    setChats(chats);
                 }
-                });
-            } catch (err) {
-                console.log(err);
-            }      
-        },
-        []
-    );
-    
-      function handleChatClick(chat) {
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    }, []);
+
+    function handleChatClick(chat) {
         // handle opening the chat with the given recipient
         console.log(`Opening chat with ${chat.name}`);
-      }
-    
-      return (
+    }
+
+    return (
         <>
-        <Helmet>
+            <Helmet>
                 <title>Intrepid - Messages</title>
-                <script src="https://kit.fontawesome.com/37ce2b2559.js" crossorigin="anonymous"></script>
-        </Helmet>
+            </Helmet>
 
             <div className={styles.chatListContainer}>
-            <h2 className={styles.messagesHeader}>Messages</h2>
-            <ul className={styles.chatList}>
-                {chats.map(chat => (
-                <li key={chat._id} onClick={() => handleChatClick(chat)}>
-                    <Link className={styles.chatLink} to={`/messages/${chat._id}/${chat.name}`}>{chat.name}</Link>
-                    <p>{'>'}</p>
-                </li>
-                ))}
-            </ul>
+                <h2 className={styles.messagesHeader}>Messages</h2>
+                <ul className={styles.chatList}>
+                    {chats?.length > 0 ? (
+                        chats?.map((chat, idx) => (
+                            <li key={`${chat.id || chat.name}${idx}`} onClick={() => handleChatClick(chat)}>
+                                {chat.id && chat.name ?
+                                    <>
+                                        <Link className={styles.chatLink} to={`/messages/${chat.id}/${chat.name}`}>{chat.name}</Link>
+                                        <p>{'>'}</p>
+                                    </>
+                                : null}
+                            </li>
+                        ))
+                    ) : (
+                        <p className={styles.noChats}>No chats yet!</p>
+                    )}
+                </ul>
             </div>
         </>
-      );
+    );
 }

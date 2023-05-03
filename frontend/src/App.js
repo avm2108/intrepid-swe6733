@@ -93,7 +93,7 @@ function App() {
           <Route path="/matching" element={<MatchPage />} />
           <Route path="/create" element={<CreateProfile />} />
           <Route path="/messages" element={<MessagingList />} />
-          <Route path="/messages/:chatId/:recipientName" element={<MessagingPage />} />
+          <Route path="/messages/:recipientId/:recipientName" element={<MessagingPage />} />
           {/* <Route path="/settings" element={<Settings />} /> */}
         </Route>
         <Route path="/logout" element={<Logout />} />

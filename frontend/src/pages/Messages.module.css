@@ -1,4 +1,3 @@
-
 .messagingContainer {
     margin-top: 40px;
     display: flex;
@@ -15,8 +14,8 @@
 .backButton {
     display: flex;
     align-items: center;
-    background-color: transparent; 
-    border: none; 
+    background-color: transparent;
+    border: none;
     cursor: pointer;
     margin: 0;
 }
@@ -26,63 +25,69 @@
     font-weight: bold;
     padding: 8px;
     margin: auto;
-  }
+}
 
-  .chatContainer {
+.chatContainer {
     display: flex;
     flex-direction: column;
     margin-bottom: 24px;
     border-top: 1px solid #797b7c33;
     border-bottom: 1px solid #797b7c33;
-    padding: 8px 0 8px 0;
-  }
+    padding: 8px 0;
+}
 
 .chatBubble {
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
     width: 50%;
     max-width: 80%;
     padding: 8px;
     margin: 8px;
     border-radius: 8px;
-  }
-  
-  .sender {
+}
+
+.sender {
     background-color: #20a090;
     align-self: flex-end;
-  }
+}
 
-  .sender p {
+.sender p {
     color: white;
-  }
-  
-  .recipient {
+}
+
+.recipient {
     background-color: #f2f7fb;
     align-self: flex-start;
-  }
+}
 
-  .recipient p {
+.recipient p {
     color: black;
-  }
+}
 
-  .sendMessage {
+.sendMessage {
     display: flex;
     align-items: center;
     /* border-top: 1px solid #797c7b; */
-  }
+}
 
-  .typeMessage {
+.typeMessage {
     margin: auto;
     border-radius: 6px;
     height: 32.5px;
     padding: 8px;
     background-color: #EEFAF8;
     border: 1px solid #F3F6F6;
-  }
+}
 
-  .sendBttn {
+.sendBttn {
     padding: 6px;
     background-color: #20a090;
     color: white;
     border: 1px solid;
-  }
+}
+
+.chatImage {
+    display: block;
+    margin: auto;
+}

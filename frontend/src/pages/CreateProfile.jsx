@@ -330,7 +330,7 @@ export default function CreateProfile(props) {
 
                 <div>
                     <h3 className={styles.formHeader}>Add a profile picture</h3>
-                    {!!formState.profilePicture && (
+                    {!!formState.profilePictureName && (
                     <>
                         <div className={styles.profilePictureContainer}>
                             <img src={URL.createObjectURL?.(formState?.profilePicture || "")} width="125" height="125" alt="Profile" />
